@@ -1,0 +1,13 @@
+# Java 
+*.class
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Pdf
+*.pdf
+
+# Txt
+*.txt
