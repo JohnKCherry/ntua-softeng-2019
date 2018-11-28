@@ -11,3 +11,6 @@
 
 # Txt
 *.txt
+
+# Unix Swap files
+*.swp
