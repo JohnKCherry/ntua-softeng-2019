@@ -10,7 +10,7 @@
 *.pdf
 
 # Txt
-*.txt
+#*.txt
 
 # Unix Swap files
 *.swp
