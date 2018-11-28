@@ -1,5 +1,14 @@
 # ntua-softeng-2019
 
+Μέλη της ομάδας (Conqu-ERRORS)
+
+Κεφάλας Γιώργος   - Α.Μ. 03114119
+
+
+
+
+
+
 ## Basic Git Workflow
 
 ### Disclaimer
