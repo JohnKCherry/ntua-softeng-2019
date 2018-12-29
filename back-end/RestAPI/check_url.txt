@@ -1,0 +1,2 @@
+check with:
+http://localhost:8765/app/observatory/api/products
