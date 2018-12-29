@@ -19,13 +19,55 @@ public class ProductsResource extends ServerResource {
 
     @Override
     protected Representation get() throws ResourceException {
+    	String startAttr	= getQuery().getValues("start");
+    	String countAttr	= getQuery().getValues("count");
+    	String statusAttr	= getQuery().getValues("status");
+    	String sortAttr 	= getQuery().getValues("sort");
+    	int start, count, status;
+    	String sort = sortAttr;
+    	
+        try {
+            start = Integer.parseInt(startAttr);
+        } catch(NumberFormatException e) {
+        	start = 0; //default
+        }
+        //////////////////////////////////////////////
+        try {
+            if(sort.equals("id|ASC")) sort = "id ASC";
+            else if(sort.equals("id|DESC")) sort = "id DESC";
+            else if(sort.equals("name|ASC")) sort = "name ASC";
+            else if(sort.equals("name|DESC")) sort = "name DESC";
+            else throw  new NumberFormatException("The sort attribute entered, " + sort + " is invalid."); 
+        } catch(NumberFormatException e) {
+        	sort = "id DESC"; //default
+        }
+        //////////////////////////////////////////////
+    
+        try {
+            count = Integer.parseInt(countAttr);
+        } catch(NumberFormatException e) {
+        	count = 10; //default
+        }
+        //////////////////////////////////////////////
 
-        List<Product> products = dataAccess.getProducts(new Limits(0, 10));
+        try {
+        	if(statusAttr.equals("ACTIVE")) status = 0;
+            else if (statusAttr.equals("WITHDRAWN")) status = 1;
+            else if (statusAttr.equals("ALL")) status = -1; // -1 for all products
+            else throw  new NumberFormatException("The status attribute entered, " + sort + " is invalid."); 
+        } catch(NumberFormatException e) {
+        	status = 0; //default
+        }
+        //////////////////////////////////////////////
+
+        
+    	
+        List<Product> products = dataAccess.getProducts(new Limits(start,count),status,sort);
 
         Map<String, Object> map = new HashMap<>();
-        //map.put("start", xxx);
-        //map.put("count", xxx);
-        //map.put("total", xxx);
+        map.put("start", start);
+        map.put("count", count);
+        map.put("total", products.size());
         map.put("products", products);
 
         return new JsonMapRepresentation(map);

@@ -46,9 +46,12 @@ public class DataAccess {
         jdbcTemplate = new JdbcTemplate(bds);
     }
 
-    public List<Product> getProducts(Limits limits) {
+    public List<Product> getProducts(Limits limits, long status, String sort) {
         //TODO: Support limits
-        return jdbcTemplate.query("select * from products order by id", EMPTY_ARGS, new ProductRowMapper());
+    	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
+    	Long[] params = new Long[]{limits.getStart(),status,(long)limits.getCount() };
+    	if(status == -1) return jdbcTemplate.query("select * from products where id>=? order by "+sort+" limit ?", params_small, new ProductRowMapper());
+    	return jdbcTemplate.query("select * from products where id>=? and withdrawn =? order by "+sort+" limit ?", params, new ProductRowMapper());      
     }
 
     public Product addProduct(String name, String description, String category, boolean withdrawn, String tags ) {

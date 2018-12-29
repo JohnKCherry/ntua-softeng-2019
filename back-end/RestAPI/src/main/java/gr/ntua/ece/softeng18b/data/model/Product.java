@@ -1,5 +1,7 @@
 package gr.ntua.ece.softeng18b.data.model;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Product {
@@ -9,15 +11,15 @@ public class Product {
     private final String description;
     private final String category;
     private final boolean withdrawn;
-    private final String tags;
+    private final List<String> tags;
 
-    public Product(long id, String name, String description, String category, boolean withdrawn, String tags) {
+    public Product(long id, String name, String description, String category, boolean withdrawn, String tags_string) {
         this.id          = id;
         this.name        = name;
         this.description = description;
         this.category    = category;
         this.withdrawn   = withdrawn;
-        this.tags        = tags;
+        this.tags = Arrays.asList(tags_string.split("\\s*(=>|,|\\s)\\s*"));
     }
 
     public long getId() {
@@ -40,7 +42,7 @@ public class Product {
         return withdrawn;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
