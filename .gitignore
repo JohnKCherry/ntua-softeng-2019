@@ -7,10 +7,14 @@
 .settings/
 
 # Pdf
-*.pdf
+#*.pdf
 
 # Txt
 #*.txt
 
 # Unix Swap files
 *.swp
+
+# Gradle
+.gradle
+build/
