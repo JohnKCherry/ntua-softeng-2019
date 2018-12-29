@@ -33,6 +33,7 @@ public class ProductsResource extends ServerResource {
         }
         //////////////////////////////////////////////
         try {
+        	if(sort == null) throw  new NumberFormatException("The sort attribute entered, " + sort + " is invalid."); 
             if(sort.equals("id|ASC")) sort = "id ASC";
             else if(sort.equals("id|DESC")) sort = "id DESC";
             else if(sort.equals("name|ASC")) sort = "name ASC";
@@ -51,6 +52,7 @@ public class ProductsResource extends ServerResource {
         //////////////////////////////////////////////
 
         try {
+        	if(statusAttr == null) throw  new NumberFormatException("The sort attribute entered, " + sort + " is invalid."); 
         	if(statusAttr.equals("ACTIVE")) status = 0;
             else if (statusAttr.equals("WITHDRAWN")) status = 1;
             else if (statusAttr.equals("ALL")) status = -1; // -1 for all products
