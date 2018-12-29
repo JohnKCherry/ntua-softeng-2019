@@ -1,4 +1,4 @@
-29/12/2018
+29/12/2018 - kef
 Creating folders for Database and API (Java+gradle).
 Importing demo API provided in softeng course repository. API development will be done on top of the demo.
 
