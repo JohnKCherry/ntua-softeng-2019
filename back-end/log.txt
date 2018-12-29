@@ -1,4 +1,11 @@
 29/12/2018
 Creating folders for Database and API (Java+gradle).
 Importing demo API provided in softeng course repository. API development will be done on top of the demo.
+
+Έπιασα το API και υλοποίησα τα κομμάτια που λείπανε από το demo για το {baseURL}/products
+τώρα υποστηρίζει (θέλω να πιστεύω) πλήρως τις παραμέτρους που ζητάει το API
+Επίσης (ΣΗΜΑΝΤΙΚΟ) άλλαξα τη δομή του product.java (φάκελος  model) για να υποστηρίζει τη μορφή που πρέπει να παρουσιαστούν τα δεδομένα σε json
+Συγκεκριμένα: στο API θέλει τα tags να γυρνάνε ως λίστα από strings, και όχι σαν ένα μεγάλο string
+οπότε άλλαξα τον τύπο της αντίστοιχης μεταβλητής
+(Στη βάση έχουμε τύπο mediumtext για τα tags, και αυτό καλύτερα να μην αλλάξει)
 --------------------
