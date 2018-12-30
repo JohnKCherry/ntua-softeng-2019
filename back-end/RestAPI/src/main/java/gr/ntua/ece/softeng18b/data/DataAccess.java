@@ -94,7 +94,6 @@ public class DataAccess {
     
     // Update Product: similar to addProduct
     public Product updateProduct(int id, String name, String description, String category, String withdrawn, String tags ) {
-        //Create the new product record using a prepared statement
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -134,7 +133,6 @@ public class DataAccess {
     
     //Patch Product similar to update product
     public Product patchProduct(int id,String update_parameter, String value) {
-        //Create the new product record using a prepared statement
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
@@ -164,6 +162,26 @@ public class DataAccess {
         else {
             throw new RuntimeException("Patch of Product failed");
         }
+    }
+    
+    public void deleteProduct(int id) {
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "DELETE FROM products WHERE id=?",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                
+                ps.setString(1, ""+id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if(cnt !=1 ) throw new RuntimeException("Deletion of Product failed");
+        return;
     }
 
 
