@@ -91,6 +91,47 @@ public class DataAccess {
             throw new RuntimeException("Creation of Product failed");
         }
     }
+    
+    // Update Product: similar to addProduct
+    public Product updateProduct(int id, String name, String description, String category, boolean withdrawn, String tags ) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "update products SET name=? , description=?, category=?, withdrawn=?, tags=? WHERE id=?",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setString(1, name);
+                ps.setString(2, description);
+                ps.setString(3, category);
+                ps.setBoolean(4, withdrawn);
+                ps.setString(5, tags);
+                ps.setString(6, ""+id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //New row has been added
+            Product product = new Product(
+                id, //the newly created project id
+                name,
+                description,
+                category,
+                withdrawn,
+                tags
+            );
+            return product;
+
+        }
+        else {
+            throw new RuntimeException("Creation of Product failed");
+        }
+    }
+
 
     public Optional<Product> getProduct(long id) {
         Long[] params = new Long[]{id};

@@ -90,11 +90,13 @@ public class ProductsResource extends ServerResource {
         //validate the values (in the general case)
         if(name == null || description == null || category == null) throw new ResourceException(400);
         if(tags == null) tags = "";
-        String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+]+$";
-        if(!name.matches(regex) || !description.matches(regex) || !category.matches(regex) || !tags.matches(regex) ) throw new ResourceException(400);
+        String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
+        String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
+        if(!name.matches(regex) || !description.matches(regex) || !category.matches(regex_s) || !tags.matches(regex_s) ) throw new ResourceException(400);
         
         Product product = dataAccess.addProduct(name, description, category, withdrawn, tags);
 
         return new JsonProductRepresentation(product);
     }
+    
 }
