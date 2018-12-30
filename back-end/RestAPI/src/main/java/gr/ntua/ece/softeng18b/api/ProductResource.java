@@ -41,8 +41,29 @@ public class ProductResource extends ServerResource {
 
     @Override
     protected Representation delete() throws ResourceException {
-        //TODO: Implement this
-        throw new ResourceException(Status.SERVER_ERROR_NOT_IMPLEMENTED);
+    	int id;
+    	String id_string = getAttribute("id");
+    	try {
+        	id = Integer.parseInt(id_string);
+        }
+    	catch(NumberFormatException e){
+        	throw new ResourceException(400,"Bad parameter for product id");
+        }
+    	
+        if(!dataAccess.getProduct(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
+
+    	Boolean admin = false;	//TODO: Implement authority detection based on user login
+    	if(!admin) {     
+    		dataAccess.patchProduct(id, "withdrawn","1");
+    		//Check if withdrawal was successful
+    		if(dataAccess.getProduct(id).get().isWithdrawn()) return new JsonMessageRepresentation("OK");
+    		return new JsonMessageRepresentation("Could not complete product withdrawal");
+    	}
+    	else{
+    		dataAccess.deleteProduct(id);
+    		if(!dataAccess.getProduct(id).isPresent()) return new JsonMessageRepresentation("OK");
+    		return new JsonMessageRepresentation("Could not complete product withdrawal");
+    	}
     }
     
     @Override
@@ -72,6 +93,7 @@ public class ProductResource extends ServerResource {
         catch(NumberFormatException e){
         	throw new ResourceException(400,"Bad parameter for product id");
         }
+        if(!dataAccess.getProduct(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
         
         // Status field is not mentioned in the API specs so it is not mandatory
         if(withdrawn == null) {
@@ -82,7 +104,6 @@ public class ProductResource extends ServerResource {
         else if (withdrawn.equals("WITHDRAWN")) withdrawn = "1";
         else throw new ResourceException(400,"Bad parameter for parameter status!");
         
-        if(dataAccess.getProduct(id)==null) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
 
         Product product = dataAccess.updateProduct(id, name, description, category, withdrawn, tags);
 
@@ -103,6 +124,7 @@ public class ProductResource extends ServerResource {
         String tags = form.getFirstValue("tags");
 
         //validate the values (in the general case)
+        //We check to see wich parameter was given (while ensuring that it is the only one)
         String update_parameter, value;
         String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
         String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
@@ -141,7 +163,7 @@ public class ProductResource extends ServerResource {
         catch(NumberFormatException e){
         	throw new ResourceException(400,"Bad parameter for product id");
         }
-        if(dataAccess.getProduct(id)==null) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
+        if(!dataAccess.getProduct(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
 
         Product product = dataAccess.patchProduct(id, update_parameter,value);
 
