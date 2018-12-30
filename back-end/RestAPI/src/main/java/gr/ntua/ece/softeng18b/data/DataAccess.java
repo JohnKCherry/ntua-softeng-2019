@@ -93,7 +93,7 @@ public class DataAccess {
     }
     
     // Update Product: similar to addProduct
-    public Product updateProduct(int id, String name, String description, String category, boolean withdrawn, String tags ) {
+    public Product updateProduct(int id, String name, String description, String category, String withdrawn, String tags ) {
         //Create the new product record using a prepared statement
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
@@ -105,7 +105,7 @@ public class DataAccess {
                 ps.setString(1, name);
                 ps.setString(2, description);
                 ps.setString(3, category);
-                ps.setBoolean(4, withdrawn);
+                ps.setBoolean(4, withdrawn.equals("1"));
                 ps.setString(5, tags);
                 ps.setString(6, ""+id);
                 return ps;
@@ -115,20 +115,54 @@ public class DataAccess {
         int cnt = jdbcTemplate.update(psc, keyHolder);
 
         if (cnt == 1) {
-            //New row has been added
+            //A row has been updated
             Product product = new Product(
                 id, //the newly created project id
                 name,
                 description,
                 category,
-                withdrawn,
+                withdrawn.equals("1"),
                 tags
             );
             return product;
 
         }
         else {
-            throw new RuntimeException("Creation of Product failed");
+            throw new RuntimeException("Update of Product failed");
+        }
+    }
+    
+    //Patch Product similar to update product
+    public Product patchProduct(int id,String update_parameter, String value) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "UPDATE products SET "+update_parameter+"=? where id=?",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                
+                //ps.setString(1, "`"+update_parameter);
+                if(update_parameter.equals("withdrawn") && value.equals("1")) ps.setBoolean(1, true);
+                else if(update_parameter.equals("withdrawn") && value.equals("0")) ps.setBoolean(1,false);
+                else ps.setString(1, value);
+                ps.setString(2, ""+id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //A specific column of a row has been updated
+            Optional<Product> product = this.getProduct(id);
+            if(product.isPresent()) return product.get();
+            throw new RuntimeException("Retrival of patched of Product failed");
+
+        }
+        else {
+            throw new RuntimeException("Patch of Product failed");
         }
     }
 
