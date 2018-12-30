@@ -47,7 +47,6 @@ public class DataAccess {
     }
 
     public List<Product> getProducts(Limits limits, long status, String sort) {
-        //TODO: Support limits
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[]{limits.getStart(),status,(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select * from products where id>=? order by "+sort+" limit ?", params_small, new ProductRowMapper());
