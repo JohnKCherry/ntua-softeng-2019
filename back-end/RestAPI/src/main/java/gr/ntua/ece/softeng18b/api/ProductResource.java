@@ -20,6 +20,9 @@ public class ProductResource extends ServerResource {
     protected Representation get() throws ResourceException {
 
         String idAttr = getAttribute("id");
+        
+        String formatAttr	= getQuery().getValues("format");
+    	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
 
         if (idAttr == null) {
             throw new ResourceException(Status.CLIENT_ERROR_BAD_REQUEST, "Missing product id");

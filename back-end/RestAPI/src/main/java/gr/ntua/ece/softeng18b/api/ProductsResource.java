@@ -23,6 +23,10 @@ public class ProductsResource extends ServerResource {
     	String countAttr	= getQuery().getValues("count");
     	String statusAttr	= getQuery().getValues("status");
     	String sortAttr 	= getQuery().getValues("sort");
+    	String formatAttr	= getQuery().getValues("format");
+    	
+    	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
+    	
     	int start, count, status;
     	String sort = sortAttr;
     	
@@ -87,7 +91,7 @@ public class ProductsResource extends ServerResource {
         String tags = form.getFirstValue("tags");
 
         //validate the values (in the general case)
-        if(name == null || description == null || category == null) throw new ResourceException(400);
+        if(name == null || description == null || category == null) throw new ResourceException(400,"This operation needs more parameters");
         if(tags == null) tags = "";
         String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
         String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
