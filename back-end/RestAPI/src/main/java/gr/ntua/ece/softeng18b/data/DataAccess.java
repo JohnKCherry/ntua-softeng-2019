@@ -2,6 +2,7 @@ package gr.ntua.ece.softeng18b.data;
 
 
 import gr.ntua.ece.softeng18b.data.model.Product;
+import gr.ntua.ece.softeng18b.data.model.Shop;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -51,6 +52,13 @@ public class DataAccess {
     	Long[] params = new Long[]{limits.getStart(),status,(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select * from products where id>=? order by "+sort+" limit ?", params_small, new ProductRowMapper());
     	return jdbcTemplate.query("select * from products where id>=? and withdrawn =? order by "+sort+" limit ?", params, new ProductRowMapper());      
+    }
+    
+    public List<Shop> getShops(Limits limits, long status, String sort) {
+    	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
+    	Long[] params = new Long[]{limits.getStart(),status,(long)limits.getCount() };
+    	if(status == -1) return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where id>=? order by "+sort+" limit ?", params_small, new ShopRowMapper());
+    	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where id>=? and withdrawn =? order by "+sort+" limit ?", params, new ShopRowMapper());      
     }
 
     public Product addProduct(String name, String description, String category, boolean withdrawn, String tags ) {
