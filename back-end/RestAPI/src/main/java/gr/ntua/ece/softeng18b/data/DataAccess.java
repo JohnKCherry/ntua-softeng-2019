@@ -99,6 +99,44 @@ public class DataAccess {
         }
     }
     
+    public Shop addShop(String name, String address, Double lng, Double lat, boolean withdrawn, String tags ) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into shops(name, address, location, tags, withdrawn) values(?, ?, ST_GeomFromText('POINT("+ lng.toString() +" "+ lat.toString() +")',4326), ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setString(1, name);
+                ps.setString(2, address);
+                ps.setString(3, tags);
+                ps.setBoolean(4, withdrawn);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //New row has been added
+            Shop shop = new Shop(
+                keyHolder.getKey().longValue(), //the newly created project id
+                name,
+                address,
+                lng,
+                lat,
+                tags,
+                withdrawn
+            );
+            return shop;
+
+        }
+        else {
+            throw new RuntimeException("Creation of Shop failed");
+        }
+    }
+    
     // Update Product: similar to addProduct
     public Product updateProduct(int id, String name, String description, String category, String withdrawn, String tags ) {
         PreparedStatementCreator psc = new PreparedStatementCreator() {
