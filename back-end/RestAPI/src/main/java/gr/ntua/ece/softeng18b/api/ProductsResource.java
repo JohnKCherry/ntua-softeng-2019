@@ -97,9 +97,15 @@ public class ProductsResource extends ServerResource {
         String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
         if(!name.matches(regex) || !description.matches(regex) || !category.matches(regex_s) || !tags.matches(regex_s) ) throw new ResourceException(400);
         
-        Product product = dataAccess.addProduct(name, description, category, false, tags);
+        try{
+        	Product product = dataAccess.addProduct(name, description, category, false, tags);
+        	return new JsonProductRepresentation(product);
+        }
+        catch(org.springframework.dao.DuplicateKeyException e){
+        	throw new ResourceException(400,"This product already exists in the database");
+        }
 
-        return new JsonProductRepresentation(product);
+        
     }
     
 }
