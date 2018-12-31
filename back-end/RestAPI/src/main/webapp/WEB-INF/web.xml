@@ -55,7 +55,7 @@
         <url-pattern>/static</url-pattern>
     </servlet-mapping>
     -->
-    
+
     <listener>
         <listener-class>gr.ntua.ece.softeng18b.conf.Listener</listener-class>
     </listener>
