@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@SuppressWarnings("rawtypes")
 public class ProductRowMapper implements RowMapper {
 
     @Override

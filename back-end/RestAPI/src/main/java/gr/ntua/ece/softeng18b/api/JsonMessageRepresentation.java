@@ -1,7 +1,6 @@
 package gr.ntua.ece.softeng18b.api;
 
 import com.google.gson.Gson;
-import gr.ntua.ece.softeng18b.data.model.Product;
 import org.restlet.data.MediaType;
 import org.restlet.representation.WriterRepresentation;
 
