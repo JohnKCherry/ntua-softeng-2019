@@ -176,6 +176,48 @@ public class DataAccess {
         }
     }
     
+ // Update Shop: similar to addProduct
+    public Shop updateShop(int id, String name, String address, Double lng, Double lat, String withdrawn, String tags ) {
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+        	String location = "ST_GeomFromText('POINT("+lng.toString()+" "+lat.toString()+")', 4326)";
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "update shops SET name=? , address=?, location="+location+", withdrawn=?, tags=? WHERE id=?",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                
+                ps.setString(1, name);
+                ps.setString(2, address);
+                //ps.setString(3, location); 
+                ps.setBoolean(3, withdrawn.equals("1"));
+                ps.setString(4, tags);
+                ps.setString(5, ""+id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //A row has been updated
+            Shop shop = new Shop(
+                id, //the newly created project id
+                name,
+                address,
+                lng,
+                lat,
+                tags,
+                withdrawn.equals("1")
+            );
+            return shop;
+
+        }
+        else {
+            throw new RuntimeException("Update of Shop failed");
+        }
+    }
+    
     //Patch Product similar to update product
     public Product patchProduct(int id,String update_parameter, String value) {
         PreparedStatementCreator psc = new PreparedStatementCreator() {
@@ -206,6 +248,50 @@ public class DataAccess {
         }
         else {
             throw new RuntimeException("Patch of Product failed");
+        }
+    }
+    
+  //Patch Shop similar to update product
+    public Shop patchShop(int id,String update_parameter, String value) {
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                if(!update_parameter.equals("location")) {
+                	PreparedStatement ps = con.prepareStatement(
+                			"UPDATE shops SET "+update_parameter+"=? where id=?",
+                			Statement.RETURN_GENERATED_KEYS
+                	);
+                
+                	//ps.setString(1, "`"+update_parameter);
+                	if(update_parameter.equals("withdrawn") && value.equals("1")) ps.setBoolean(1, true);
+                	else if(update_parameter.equals("withdrawn") && value.equals("0")) ps.setBoolean(1,false);
+                	else ps.setString(1, value);
+                	ps.setString(2, ""+id);
+                	return ps;
+                }
+                else {
+                	PreparedStatement ps = con.prepareStatement(
+                			"UPDATE shops SET "+update_parameter+"="+value+" where id=?",
+                			Statement.RETURN_GENERATED_KEYS
+                	);
+                	ps.setString(1, ""+id);
+                	return ps;
+                }
+                
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //A specific column of a row has been updated
+            Optional<Shop> shop = this.getShop(id);
+            if(shop.isPresent()) return shop.get();
+            throw new RuntimeException("Retrival of patched of Shop failed");
+
+        }
+        else {
+            throw new RuntimeException("Patch of Shop failed");
         }
     }
     

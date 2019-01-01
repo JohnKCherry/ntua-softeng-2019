@@ -3,6 +3,7 @@ package gr.ntua.ece.softeng18b.api;
 import gr.ntua.ece.softeng18b.conf.Configuration;
 import gr.ntua.ece.softeng18b.data.DataAccess;
 import gr.ntua.ece.softeng18b.data.model.Product;
+import gr.ntua.ece.softeng18b.data.model.Shop;
 
 import org.restlet.data.Form;
 import org.restlet.data.Status;
@@ -107,10 +108,13 @@ public class ProductResource extends ServerResource {
         else if (withdrawn.equals("WITHDRAWN")) withdrawn = "1";
         else throw new ResourceException(400,"Bad parameter for parameter status!");
         
-
-        Product product = dataAccess.updateProduct(id, name, description, category, withdrawn, tags);
-
-        return new JsonProductRepresentation(product);
+        try{
+        	Product product = dataAccess.updateProduct(id, name, description, category, withdrawn, tags);
+            return new JsonProductRepresentation(product);
+        }
+        catch(org.springframework.dao.DuplicateKeyException e){
+        	throw new ResourceException(400,"Input parameters have conflict with another product in the database");
+        } 
     }
     
     @Override
@@ -168,8 +172,14 @@ public class ProductResource extends ServerResource {
         }
         if(!dataAccess.getProduct(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
 
-        Product product = dataAccess.patchProduct(id, update_parameter,value);
+        try{
+        	Product product = dataAccess.patchProduct(id, update_parameter,value);
+            return new JsonProductRepresentation(product);
+        }
+        catch(org.springframework.dao.DuplicateKeyException e){
+        	throw new ResourceException(400,"Input parameters have conflict with another product in the database");
+        } 
 
-        return new JsonProductRepresentation(product);
+        
     }
 }
