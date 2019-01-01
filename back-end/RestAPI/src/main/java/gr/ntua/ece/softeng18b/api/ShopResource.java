@@ -74,7 +74,7 @@ public class ShopResource extends ServerResource {
         	id = Integer.parseInt(id_string);
         }
         catch(NumberFormatException e){
-        	throw new ResourceException(400,"Bad parameter for product id");
+        	throw new ResourceException(400,"Bad parameter for shop id");
         }
         if(!dataAccess.getShop(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Shop not found - id: " + id_string);
         
@@ -118,9 +118,9 @@ public class ShopResource extends ServerResource {
         	id = Integer.parseInt(id_string);
         }
         catch(NumberFormatException e){
-        	throw new ResourceException(400,"Bad parameter for product id");
+        	throw new ResourceException(400,"Bad parameter for shop id");
         }
-        if(!dataAccess.getProduct(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
+        if(!dataAccess.getShop(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Shop not found - id: " + id_string);
         
         String update_parameter, value;
         String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
@@ -171,6 +171,33 @@ public class ShopResource extends ServerResource {
         catch(org.springframework.dao.DuplicateKeyException e){
         	throw new ResourceException(400,"Input parameters have conflict with another shop in the database");
         }    
+    }
+    
+    @Override
+    protected Representation delete() throws ResourceException {
+    	int id;
+    	String id_string = getAttribute("id");
+    	try {
+        	id = Integer.parseInt(id_string);
+        }
+    	catch(NumberFormatException e){
+        	throw new ResourceException(400,"Bad parameter for shop id");
+        }
+    	
+        if(!dataAccess.getShop(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Shop not found - id: " + id_string);
+
+    	Boolean admin = false;	//TODO: Implement authority detection based on user login
+    	if(!admin) {     
+    		dataAccess.patchShop(id, "withdrawn","1");
+    		//Check if withdrawal was successful
+    		if(dataAccess.getShop(id).get().isWithdrawn()) return new JsonMessageRepresentation("OK");
+    		return new JsonMessageRepresentation("Could not complete shop withdrawal");
+    	}
+    	else{
+    		dataAccess.deleteShop(id);
+    		if(!dataAccess.getShop(id).isPresent()) return new JsonMessageRepresentation("OK");
+    		return new JsonMessageRepresentation("Could not complete shop deletion");
+    	}
     }
     
     

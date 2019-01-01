@@ -314,6 +314,26 @@ public class DataAccess {
         if(cnt !=1 ) throw new RuntimeException("Deletion of Product failed");
         return;
     }
+    
+    public void deleteShop(int id) {
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "DELETE FROM shops WHERE id=?",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                
+                ps.setString(1, ""+id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if(cnt !=1 ) throw new RuntimeException("Deletion of Shop failed");
+        return;
+    }
 
 
     public Optional<Product> getProduct(long id) {
