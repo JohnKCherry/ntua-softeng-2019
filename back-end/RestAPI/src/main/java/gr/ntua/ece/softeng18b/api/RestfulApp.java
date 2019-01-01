@@ -9,7 +9,7 @@ public class RestfulApp extends Application {
     @Override
     public synchronized Restlet createInboundRoot() {
 
-        Router router = new Router(getContext());
+    	Router router = new Router(getContext());
 
         //GET, POST
         router.attach("/products", ProductsResource.class);
@@ -17,8 +17,11 @@ public class RestfulApp extends Application {
         //GET, PATCH, PUT, DELETE
         router.attach("/products/{id}", ProductResource.class);
         
-      //GET, POST
-        router.attach("/shops", ShopsResource.class);
+       //GET, POST
+       router.attach("/shops", ShopsResource.class);
+        
+     //GET, PATCH, PUT, DELETE
+       router.attach("/shops/{id}", ShopResource.class);
 
         return router;
     }
