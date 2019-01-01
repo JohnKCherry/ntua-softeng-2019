@@ -66,7 +66,7 @@ public class ProductResource extends ServerResource {
     	else{
     		dataAccess.deleteProduct(id);
     		if(!dataAccess.getProduct(id).isPresent()) return new JsonMessageRepresentation("OK");
-    		return new JsonMessageRepresentation("Could not complete product withdrawal");
+    		return new JsonMessageRepresentation("Could not complete product deletion");
     	}
     }
     
