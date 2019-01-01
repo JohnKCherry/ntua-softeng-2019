@@ -93,25 +93,26 @@ public class ShopsResource extends ServerResource {
         String lat_string	= form.getFirstValue("lat");
         String tags			= form.getFirstValue("tags");
         Double lng, lat;
-        System.out.println("Καλό store");
-        System.out.println(name);
+        //System.out.println("Καλό store");
+        //System.out.println(name);
+        
         //validate the values (in the general case)
         if(name == null || address == null || lng_string == null || lat_string == null) throw new ResourceException(400,"This operation needs more parameters for a new shop");
         if(tags == null) tags = "";
         String regex = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
         String regex_s = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
         if(!name.matches(regex) || !address.matches(regex) || !tags.matches(regex_s) ) throw new ResourceException(400,"Forbidden characters in parameters");
-        System.out.println(name);
+        //System.out.println(name);
         lng = toDouble(lng_string);
         lat = toDouble(lat_string);     
-        if(lng == null || lat == null)throw new ResourceException(400,"Bad parameter for product id");
+        if(lng == null || lat == null)throw new ResourceException(400,"Bad parameter for shop's long or lat");
          
         try{
         	Shop shop = dataAccess.addShop(name, address, lng, lat, false, tags);
         	return new JsonShopRepresentation(shop);
         }
         catch(org.springframework.dao.DuplicateKeyException e){
-        	throw new ResourceException(400,"This product already exists in the database");
+        	throw new ResourceException(400,"This shop already exists in the database");
         }
       
     }
