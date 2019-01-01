@@ -240,6 +240,17 @@ public class DataAccess {
             return Optional.empty();
         }
     }
+    
+    public Optional<Shop> getShop(long id) {
+        Long[] params = new Long[]{id};
+        List<Shop> shops = jdbcTemplate.query("SELECT ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn from shops where id = ?", params, new ShopRowMapper());
+        if (shops.size() == 1)  {
+            return Optional.of(shops.get(0));
+        }
+        else {
+            return Optional.empty();
+        }
+    }
 
 
 }
