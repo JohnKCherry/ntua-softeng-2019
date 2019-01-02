@@ -1,6 +1,7 @@
 package gr.ntua.ece.softeng18b.data;
 
 
+import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 import org.apache.commons.dbcp2.BasicDataSource;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -49,16 +51,16 @@ public class DataAccess {
 
     public List<Product> getProducts(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
-    	Long[] params = new Long[]{limits.getStart(),status,(long)limits.getCount() };
-    	if(status == -1) return jdbcTemplate.query("select * from products where id>=? order by "+sort+" limit ?", params_small, new ProductRowMapper());
-    	return jdbcTemplate.query("select * from products where id>=? and withdrawn =? order by "+sort+" limit ?", params, new ProductRowMapper());      
+    	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
+    	if(status == -1) return jdbcTemplate.query("select * from products where 1 order by "+sort+" limit ?,?", params_small, new ProductRowMapper());
+    	return jdbcTemplate.query("select * from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
     }
     
     public List<Shop> getShops(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
-    	Long[] params = new Long[]{limits.getStart(),status,(long)limits.getCount() };
-    	if(status == -1) return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where id>=? order by "+sort+" limit ?", params_small, new ShopRowMapper());
-    	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where id>=? and withdrawn =? order by "+sort+" limit ?", params, new ShopRowMapper());      
+    	Long[] params = new Long[]{status,limits.getStart(),(long)limits.getCount() };
+    	if(status == -1) return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 order by "+sort+" limit ?,?", params_small, new ShopRowMapper());
+    	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ShopRowMapper());      
     }
 
     public Product addProduct(String name, String description, String category, boolean withdrawn, String tags ) {
@@ -134,6 +136,43 @@ public class DataAccess {
         }
         else {
             throw new RuntimeException("Creation of Shop failed");
+        }
+    }
+    
+    public Price addPrice(int product_id, int shop_id, Double price, Date dateFrom, Date dateTo) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into prices(product_id, shop_id, price, dateFrom, dateTo) values(?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setInt(1, product_id);
+                ps.setInt(2, shop_id);
+                ps.setDouble(3, price);
+                ps.setDate(4, dateFrom);
+                ps.setDate(5, dateTo);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //New row has been added
+            Price price_r = new Price(
+                product_id,
+                shop_id,
+                price,
+                dateFrom,
+                dateTo
+            );
+            return price_r;
+
+        }
+        else {
+            throw new RuntimeException("Creation of Price failed");
         }
     }
     
