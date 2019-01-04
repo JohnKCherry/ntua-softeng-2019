@@ -3,6 +3,7 @@ package gr.ntua.ece.softeng18b.data;
 
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.Product;
+import gr.ntua.ece.softeng18b.data.model.ProductWithImage;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -380,6 +381,17 @@ public class DataAccess {
         List<Product> products = jdbcTemplate.query("select * from products where id = ?", params, new ProductRowMapper());
         if (products.size() == 1)  {
             return Optional.of(products.get(0));
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+    
+    public Optional<ProductWithImage> getProductWithImage(long id) {
+        Long[] params = new Long[]{id};
+        List<ProductWithImage> productswithimage = jdbcTemplate.query("select * from products join images on products.id = images.id where products.id = ?", params, new ProductWithImageRowMapper());
+        if (productswithimage.size() == 1)  {
+            return Optional.of(productswithimage.get(0));
         }
         else {
             return Optional.empty();
