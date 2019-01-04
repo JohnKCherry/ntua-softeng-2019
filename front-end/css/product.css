@@ -6,3 +6,8 @@
 #tagsHeader, #tags{
     display: inline;
 }
+
+#productDescription {
+    word-wrap:break-word;
+}
+
