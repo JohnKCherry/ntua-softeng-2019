@@ -1,8 +1,14 @@
 package gr.ntua.ece.softeng18b.api;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
+import org.restlet.service.CorsService;
+import org.restlet.routing.Filter;
+import org.restlet.engine.application.CorsFilter;
 
 public class RestfulApp extends Application {
 
@@ -29,7 +35,12 @@ public class RestfulApp extends Application {
         //GET, POST
         router.attach("/prices", PricesResource.class);
 
-        return router;
+        CorsFilter corsFilter = new CorsFilter(getContext(), router);
+    	corsFilter.setAllowedOrigins(new HashSet(Arrays.asList("*")));
+    	corsFilter.setAllowedCredentials(true);
+    	corsFilter.setAllowingAllRequestedHeaders(true);
+        return corsFilter;
+        //return router;
     }
 
 }
