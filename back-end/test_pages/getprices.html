@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Prices</title>
+</head>
+<body>
+  <h1>Get Prices</h1></br>
+
+  <form action="http://localhost:8765/app/observatory/api/prices">
+    <p> Search for many products: </p>
+    start:<br>
+    <input type="text" name="start" value="0"><br>
+    count:<br>
+    <input type="text" name="count" value="10"><br><br>
+    sort (valid only for geo.dist, price, date and ASC, DESC):<br>
+    <input type="text" name="sort" value="price|ASC"><br><br>
+    GeoDist:<br>
+    <input type="text" name="geoDist" value=""><br><br>
+    GeoLng:<br>
+    <input type="text" name="geoLng" value=""><br><br>
+    GeoLat:<br>
+    <input type="text" name="geoLat" value=""><br><br>
+    DateFrom:<br>
+    <input type="text" name="dateFrom" value=""><br><br>
+    DateTo:<br>
+    <input type="text" name="dateTo" value=""><br><br>
+    Shops:<br>
+    <input type="text" name="shops" value=""><br><br>
+    Products:<br>
+    <input type="text" name="products" value=""><br><br>
+    Tags:<br>
+    <input type="text" name="tags" value=""><br><br>
+    <input type="submit" value="Submit">
+  </form>
+
+</body>
+</html>
