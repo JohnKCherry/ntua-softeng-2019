@@ -53,8 +53,8 @@ public class DataAccess {
     public List<Product> getProducts(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
-    	if(status == -1) return jdbcTemplate.query("select * from products where 1 order by "+sort+" limit ?,?", params_small, new ProductRowMapper());
-    	return jdbcTemplate.query("select * from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
+    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 order by "+sort+" limit ?,?", params_small, new ProductRowMapper());
+    	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
     }
     
     public List<Shop> getShops(Limits limits, long status, String sort) {
@@ -378,7 +378,7 @@ public class DataAccess {
 
     public Optional<Product> getProduct(long id) {
         Long[] params = new Long[]{id};
-        List<Product> products = jdbcTemplate.query("select * from products where id = ?", params, new ProductRowMapper());
+        List<Product> products = jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where id = ?", params, new ProductRowMapper());
         if (products.size() == 1)  {
             return Optional.of(products.get(0));
         }
@@ -389,7 +389,7 @@ public class DataAccess {
     
     public Optional<ProductWithImage> getProductWithImage(long id) {
         Long[] params = new Long[]{id};
-        List<ProductWithImage> productswithimage = jdbcTemplate.query("select * from products join images on products.id = images.id where products.id = ?", params, new ProductWithImageRowMapper());
+        List<ProductWithImage> productswithimage = jdbcTemplate.query("select * from products where id = ?", params, new ProductWithImageRowMapper());
         if (productswithimage.size() == 1)  {
             return Optional.of(productswithimage.get(0));
         }
