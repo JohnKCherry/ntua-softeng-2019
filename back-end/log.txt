@@ -79,4 +79,4 @@ Bug fix για το cross-origin disabled access. Ουσιαστικά έφτι�
 
 ------------------------------------------------------------------------------------------------------------------------
 08/01/2019 - raf
-έφτιαξα το get functionality για τα prices, και διορθώθηκαν μερικά bugs στο api (όπως στα products).
+έφτιαξα το get functionality για τα prices και το test page, και διορθώθηκαν μερικά bugs στο api (όπως στα products).
