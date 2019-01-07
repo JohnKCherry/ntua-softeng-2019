@@ -17,7 +17,7 @@ public class PriceRowMapper implements RowMapper {
     	long shop_id       = rs.getLong("shop_id");
         Double price       = rs.getDouble("price");
         Date dateFrom 	   = rs.getDate("dateFrom");
-        Date dateTo  	   = rs.getDate("dateTo");
+        Date dateTo  	   = rs.getDate("dateTo");;
 
         return new Price(product_id, shop_id, price, dateFrom, dateTo);
     }

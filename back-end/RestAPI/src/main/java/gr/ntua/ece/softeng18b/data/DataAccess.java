@@ -2,7 +2,6 @@ package gr.ntua.ece.softeng18b.data;
 
 
 import gr.ntua.ece.softeng18b.data.model.Price;
-import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.ProductWithImage;
 import gr.ntua.ece.softeng18b.data.model.Shop;
@@ -63,12 +62,6 @@ public class DataAccess {
     	Long[] params = new Long[]{status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 order by "+sort+" limit ?,?", params_small, new ShopRowMapper());
     	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ShopRowMapper());      
-    }
-    
-    public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist) {
-    	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
-    	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
-    	return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());      
     }
 
     public Product addProduct(String name, String description, String category, boolean withdrawn, String tags ) {
