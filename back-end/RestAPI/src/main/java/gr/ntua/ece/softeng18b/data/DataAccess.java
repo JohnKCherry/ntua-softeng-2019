@@ -65,9 +65,10 @@ public class DataAccess {
     	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ShopRowMapper());      
     }
     
-    public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist) {
+    public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause) {
     	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
-    	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
+    	System.out.println("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?");
+    	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause + " "+ have_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
     	return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());      
     }
 

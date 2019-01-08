@@ -16,6 +16,9 @@ public class RestfulApp extends Application {
     public synchronized Restlet createInboundRoot() {
 
     	Router router = new Router(getContext());
+    	
+    	//TODO: POST
+        router.attach("/login", LoginResource.class);
 
         //GET, POST
         router.attach("/products", ProductsResource.class);
@@ -23,7 +26,7 @@ public class RestfulApp extends Application {
         //GET, PATCH, PUT, DELETE
         router.attach("/products/{id}", ProductResource.class);
         
-        //GET, PATCH, PUT, DELETE
+        //TODO: GET, PATCH, PUT, DELETE 
         router.attach("/productswithimage/{id}", ProductWithImageResource.class);
         
         //GET, POST
