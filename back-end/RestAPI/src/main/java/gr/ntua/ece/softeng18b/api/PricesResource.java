@@ -14,6 +14,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,8 @@ public class PricesResource extends ServerResource {
     	String dateToAttr		= getQuery().getValues("dateTo");
     	String shops_string		= getQuery().getValues("shops");
     	String products_string	= getQuery().getValues("products");
-    	String tags_string		= getQuery().getValues("tags");
+    	String product_tags_string		= getQuery().getValues("productTags");
+    	String shop_tags_string		= getQuery().getValues("shopTags");
     	
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
@@ -119,13 +121,14 @@ public class PricesResource extends ServerResource {
         String where_clause = "";
         String shopDist ="";
         Boolean geo = false;
+        String have_clause= "";
        	if(!geoDistAttr.isEmpty() && !geoLngAttr.isEmpty() && !geoLatAttr.isEmpty() ) {
             Double check_lng = toDouble(geoLngAttr);
             Double check_lat = toDouble(geoLatAttr);
             Double check_dist = toDouble(geoDistAttr);
             if(check_lng == null || check_lat == null || geoDistAttr == null) throw new ResourceException(400,"Bad parameters for lng or lat");
-        	where_clause += " AND shopDist <="+ geoDistAttr;
-        	shopDist = "(6371 * acos (cos ( radians(\"+geoLngAttr +\") )* cos( radians( ST_Y(shops.location) ) )* cos( radians( ST_X(shops.location) ) - radians(\"+geoLatAttr+\") )+ sin ( radians(\"+geoLngAttr+\") )* sin( radians( ST_Y(shops.location) ) ))) as shopDist";
+        	have_clause += " HAVING shopDist <="+ geoDistAttr;
+        	shopDist = "(6371 * acos (cos ( radians("+geoLngAttr +") )* cos( radians( ST_Y(shops.location) ) )* cos( radians( ST_X(shops.location) ) - radians("+geoLatAttr+") )+ sin ( radians("+geoLngAttr+") )* sin( radians( ST_Y(shops.location) ) ))) as shopDist";
         	geo = true;
         }
        	else if(!geoDistAttr.isEmpty() || !geoLngAttr.isEmpty() || !geoLatAttr.isEmpty()) throw new ResourceException(400,"Not enough parameters for geolocation processing");
@@ -141,10 +144,31 @@ public class PricesResource extends ServerResource {
        	}
        	else if(!products_string.isEmpty()) throw new ResourceException(400,"Bad value for products list");
        	
-       	if(!tags_string.isEmpty() && !tags_string.contains(";")) {
-       		where_clause += " AND products.tags in ("+tags_string+")";
+       	if(!product_tags_string.isEmpty() && !product_tags_string.contains(";")) {
+       		//where_clause += " AND products.tags in ("+tags_string+")";
+       		List<String> ptags = Arrays.asList(product_tags_string.split("\\s*(=>|,|\\s)\\s*"));
+       		if(!ptags.isEmpty()) {
+       			where_clause += " AND ( 0 ";
+       			for(String s : ptags){
+       				where_clause += "OR (products.tags LIKE '%"+s+"%')";
+       			}
+       			where_clause+= ") ";
+       		}
        	}
-       	else if(!tags_string.isEmpty()) throw new ResourceException(400,"Bad value for tags list");
+       	else if(!product_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for product tags list");
+       	
+       	if(!shop_tags_string.isEmpty() && !shop_tags_string.contains(";")) {
+       		//where_clause += " AND products.tags in ("+tags_string+")";
+       		List<String> stags = Arrays.asList(shop_tags_string.split("\\s*(=>|,|\\s)\\s*"));
+       		if(!stags.isEmpty()) {
+       			where_clause += " AND ( 0 ";	
+       			for(String s : stags){
+       				where_clause += "OR (shops.tags LIKE '%"+s+"%')";
+       			}
+       			where_clause+= ") ";
+       		}
+       	}
+       	else if(!shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
        	
        	Date dateFrom, dateTo;
         try{
@@ -161,7 +185,7 @@ public class PricesResource extends ServerResource {
         
         //TODO Set product status == 0 for valid results!!!
         
-        List<PriceResult> prices = dataAccess.getPrices(new Limits(start,count),where_clause,sort,geo,shopDist);
+        List<PriceResult> prices = dataAccess.getPrices(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause);
 
         Map<String, Object> map = new HashMap<>();
         map.put("start", start);
