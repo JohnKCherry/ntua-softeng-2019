@@ -1,7 +1,9 @@
 $(document).ready(function(){
-
     console.log("ready");
 
+    // Set default order = 1 asceding 
+    var order = 1;
+    $("#order").val("1");
     var productID = 2;
     $.ajax({
         type: "GET",
@@ -30,4 +32,8 @@ $(document).ready(function(){
         }
     });
 
+    $("#order").change(function() {
+        order = $("#order").val();
+        console.log("Allakse h order se "+order);
+    });
 });
