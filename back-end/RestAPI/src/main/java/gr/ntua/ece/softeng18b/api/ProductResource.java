@@ -6,10 +6,12 @@ import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 
 import org.restlet.data.Form;
+import org.restlet.data.Header;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import java.util.Optional;
 
@@ -87,9 +89,9 @@ public class ProductResource extends ServerResource {
         if(name == null || description == null || category == null) throw new ResourceException(400);
         if(tags == null) tags = "";
         	
-        String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
-        String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
-        if(!name.matches(regex) || !description.matches(regex) || !category.matches(regex_s) || !tags.matches(regex_s) ) throw new ResourceException(400);
+        //String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
+        //String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
+        //if(!name.matches(regex) || !description.matches(regex) || !category.matches(regex_s) || !tags.matches(regex_s) ) throw new ResourceException(400, "Invalid characters");
         int id;
         try {
         	id = Integer.parseInt(id_string);
@@ -133,20 +135,20 @@ public class ProductResource extends ServerResource {
         //validate the values (in the general case)
         //We check to see wich parameter was given (while ensuring that it is the only one)
         String update_parameter, value;
-        String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
-        String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
+        //String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
+        //String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
         if(name!=null && description == null && category == null && withdrawn == null && tags == null) {
-        	if(!name.matches(regex)) throw new ResourceException(400,"Bad parameter for name!");
+        	//if(!name.matches(regex)) throw new ResourceException(400,"Bad parameter for name!");
         	update_parameter = "name";
         	value = name;
         }
         else if(description!=null && name == null && category == null && withdrawn == null && tags == null) {
-        	if(!description.matches(regex)) throw new ResourceException(400,"Bad parameter for description!");
+        	//if(!description.matches(regex)) throw new ResourceException(400,"Bad parameter for description!");
         	update_parameter = "description";
         	value = description;
         }
         else if(category!=null && name == null && description == null && withdrawn == null && tags == null) {
-        	if(!name.matches(regex_s)) throw new ResourceException(400,"Bad parameter for category!");
+        	//if(!name.matches(regex_s)) throw new ResourceException(400,"Bad parameter for category!");
         	update_parameter = "category";
         	value = category;
         }
@@ -157,7 +159,7 @@ public class ProductResource extends ServerResource {
         	else value = "1";
         }
         else if(tags!=null && name == null && description == null && category == null && form.getFirstValue("withdrawn") == null) {
-        	if(!tags.matches(regex_s)) throw new ResourceException(400,"Bad parameter for tags!");
+        	//if(!tags.matches(regex_s)) throw new ResourceException(400,"Bad parameter for tags!");
         	update_parameter = "tags";
         	value = tags;
         }

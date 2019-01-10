@@ -61,9 +61,9 @@ public class ShopResource extends ServerResource {
         if(name == null || address == null || lng_string == null || lat_string== null) throw new ResourceException(400);
         if(tags == null) tags = "";
         	
-        String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
-        String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
-        if(!name.matches(regex) || !address.matches(regex) || !tags.matches(regex_s) ) throw new ResourceException(400);
+        //String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
+        //String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
+        //if(!name.matches(regex) || !address.matches(regex) || !tags.matches(regex_s) ) throw new ResourceException(400);
         int id;
         Double lng, lat;
         lng = toDouble(lng_string);
@@ -123,15 +123,15 @@ public class ShopResource extends ServerResource {
         if(!dataAccess.getShop(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Shop not found - id: " + id_string);
         
         String update_parameter, value;
-        String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
-        String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
+        //String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
+        //String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
         if(name!=null && address == null && lng_string == null && lat_string== null && withdrawn == null && tags == null) {
-        	if(!name.matches(regex)) throw new ResourceException(400,"Bad parameter for name!");
+        	//if(!name.matches(regex)) throw new ResourceException(400,"Bad parameter for name!");
         	update_parameter = "name";
         	value = name;
         }
         else if(address!=null && name == null && lng_string == null && lat_string == null && withdrawn == null && tags == null) {
-        	if(!address.matches(regex)) throw new ResourceException(400,"Bad parameter for address!");
+        	//if(!address.matches(regex)) throw new ResourceException(400,"Bad parameter for address!");
         	update_parameter = "address";
         	value = address;
         }
@@ -158,7 +158,7 @@ public class ShopResource extends ServerResource {
         	else value = "1";
         }
         else if(tags!=null && name == null && address == null && lng_string == null && lat_string == null && form.getFirstValue("withdrawn") == null) {
-        	if(!tags.matches(regex_s)) throw new ResourceException(400,"Bad parameter for tags!");
+        	//if(!tags.matches(regex_s)) throw new ResourceException(400,"Bad parameter for tags!");
         	update_parameter = "tags";
         	value = tags;
         }
