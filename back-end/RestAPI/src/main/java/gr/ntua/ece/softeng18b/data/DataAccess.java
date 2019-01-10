@@ -7,6 +7,7 @@ import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.ProductWithImage;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.restlet.resource.ResourceException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,6 +20,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+import java.math.BigInteger; 
+import java.security.MessageDigest; 
+import java.security.NoSuchAlgorithmException; 
 
 public class DataAccess {
 
@@ -67,7 +72,7 @@ public class DataAccess {
     
     public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause) {
     	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
-    	System.out.println("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?");
+    	//System.out.println("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?");
     	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause + " "+ have_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
     	return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());      
     }
@@ -417,5 +422,107 @@ public class DataAccess {
         }
     }
 
+    public String addUser(String fullname, String username, String password, String email, int auth) {
+    	//Add new user through a prepared statement
+    	PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into users(fullname, username, password , email, authorization, salt) values(?, ?, ?, ?, ?,?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setString(1, fullname);
+                ps.setString(2, username);
+                ps.setString(3, getSHA(password));
+                ps.setString(4, email);
+                ps.setInt(5, auth);
+                ps.setInt(6,ThreadLocalRandom.current().nextInt(1000, 10000000 + 1));
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            return "Succesfull creation of new user";
+
+        }
+        else {
+            throw new RuntimeException("Creation of Price failed");
+        }
+    }
+    
+    public Optional<String> getUserApiToken(String username, String password) {
+    	password = getSHA(password);
+    	String[] params = new String[]{username,password};
+        List<String> pswd_salt = jdbcTemplate.query("select password, salt from users where username = ? AND password = ? ", params, new ApiRowMapper());
+        if (pswd_salt.size() == 1)  {
+            return Optional.of(getSHA(pswd_salt.get(0)));
+        }
+        else {
+            return null;
+        }
+    }
+    
+    public Optional<String> getUserApiToken_username_only(String username) {
+    	String[] params = new String[]{username};
+        List<String> pswd_salt = jdbcTemplate.query("select password, salt from users where username = ? ", params, new ApiRowMapper());
+        if (pswd_salt.size() == 1)  {
+            return Optional.of(getSHA(pswd_salt.get(0)));
+        }
+        else {
+            return null;
+        }
+    }
+    
+    public Boolean isLogedIn(String user_token) {
+    	String username = user_token.substring(64);
+    	String api_token = user_token.substring(0,64);
+    	//System.out.println(">>>>>>@@@@@@@@@@@@@@@@@@@@@@@@>>>>>>>>>>>>>>>>");
+    	//System.out.println(">>>>>>User is: "+username);
+    	//System.out.println(">>>>>>API_token  is: "+api_token);
+    	
+    	Optional<String> optional = getUserApiToken_username_only(username);
+    	if(optional == null) return false;
+    	String test_token = optional.orElseThrow(() -> new ResourceException(401, "Login failed. Wrong username or password"));
+    	
+    	if(test_token.equals(api_token)) return true;
+    	return false;
+    }
+    
+    public static String getSHA(String input) 
+    { 
+  
+        try { 
+  
+            // Static getInstance method is called with hashing SHA 
+            MessageDigest md = MessageDigest.getInstance("SHA-256"); 
+  
+            // digest() method called 
+            // to calculate message digest of an input 
+            // and return array of byte 
+            byte[] messageDigest = md.digest(input.getBytes()); 
+  
+            // Convert byte array into signum representation 
+            BigInteger no = new BigInteger(1, messageDigest); 
+  
+            // Convert message digest into hex value 
+            String hashtext = no.toString(16); 
+  
+            while (hashtext.length() < 32) { 
+                hashtext = "0" + hashtext; 
+            } 
+  
+            return hashtext; 
+        } 
+  
+        // For specifying wrong message digest algorithms 
+        catch (NoSuchAlgorithmException e) { 
+            System.out.println("Exception thrown"
+                               + " for incorrect algorithm: " + e); 
+  
+            return null; 
+        } 
+    } 
 
 }

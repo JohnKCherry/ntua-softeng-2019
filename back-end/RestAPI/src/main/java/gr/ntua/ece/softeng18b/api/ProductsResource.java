@@ -5,9 +5,11 @@ import gr.ntua.ece.softeng18b.data.DataAccess;
 import gr.ntua.ece.softeng18b.data.Limits;
 import gr.ntua.ece.softeng18b.data.model.Product;
 import org.restlet.data.Form;
+import org.restlet.data.Header;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import java.util.HashMap;
 import java.util.List;
@@ -89,13 +91,21 @@ public class ProductsResource extends ServerResource {
         String description = form.getFirstValue("description");
         String category = form.getFirstValue("category");
         String tags = form.getFirstValue("tags");
+        
+        //TODO: Complete authorization of user
+        //Series<Header> auth = this.
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        //System.out.println(">>>>>>>000 User token is: "+user_token);
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to add product");
+        System.out.println(">>>>>>>>>> User token is: "+user_token);
 
         //validate the values (in the general case)
         if(name == null || description == null || category == null) throw new ResourceException(400,"This operation needs more parameters");
         if(tags == null) tags = "";
-        String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
-        String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
-        if(!name.matches(regex) || !description.matches(regex) || !category.matches(regex_s) || !tags.matches(regex_s) ) throw new ResourceException(400);
+        //String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
+        //String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
+        //if(!name.matches(regex) || !description.matches(regex) || !category.matches(regex_s) || !tags.matches(regex_s) ) throw new ResourceException(400);
         
         try{
         	Product product = dataAccess.addProduct(name, description, category, false, tags);

@@ -19,6 +19,9 @@ public class RestfulApp extends Application {
     	
     	//TODO: POST
         router.attach("/login", LoginResource.class);
+        
+        //POST
+        router.attach("/signup", SignupResource.class);
 
         //GET, POST
         router.attach("/products", ProductsResource.class);

@@ -144,7 +144,7 @@ public class PricesResource extends ServerResource {
        	}
        	else if(!products_string.isEmpty()) throw new ResourceException(400,"Bad value for products list");
        	
-       	if(!product_tags_string.isEmpty() && !product_tags_string.contains(";")) {
+       	if(!product_tags_string.isEmpty() && !product_tags_string.contains(";") && !product_tags_string.contains("'")){
        		//where_clause += " AND products.tags in ("+tags_string+")";
        		List<String> ptags = Arrays.asList(product_tags_string.split("\\s*(=>|,|\\s)\\s*"));
        		if(!ptags.isEmpty()) {
