@@ -32,9 +32,9 @@ public class LoginResource extends ServerResource {
         String api_token = optional.orElseThrow(() -> new ResourceException(401, "Login failed. Wrong username or password"));
         Map<String, Object> map = new HashMap<>();
         map.put("X-OBSERVATORY-AUTH", api_token + username);
-        if(dataAccess.isLogedIn(api_token + username)) System.out.println("Succesfull login check");
-        dataAccess.logoutUser(api_token + username);
-        if(!dataAccess.isLogedIn(api_token + username)) System.out.println("Succesfull logout check");
+        //if(dataAccess.isLogedIn(api_token + username)) System.out.println("Succesfull login check");
+        //dataAccess.logoutUser(api_token + username);
+        //if(!dataAccess.isLogedIn(api_token + username)) System.out.println("Succesfull logout check");
         return new JsonMapRepresentation(map);
     }
 }
