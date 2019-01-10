@@ -30,3 +30,7 @@
     -webkit-transform: scale(1.15); /* Safari and Chrome */
 
 }
+
+#price{
+    float: right;
+}
