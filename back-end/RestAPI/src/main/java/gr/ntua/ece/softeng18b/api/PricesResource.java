@@ -115,14 +115,14 @@ public class PricesResource extends ServerResource {
         try {
             count = Integer.parseInt(countAttr);
         } catch(NumberFormatException e) {
-        	count = 10; //default
+        	count = 20; //default
         }
         //////////////////////////////////////////////
         String where_clause = "";
         String shopDist ="";
         Boolean geo = false;
         String have_clause= "";
-       	if(!geoDistAttr.isEmpty() && !geoLngAttr.isEmpty() && !geoLatAttr.isEmpty() ) {
+       	if(geoDistAttr!= null && geoLngAttr != null && geoLatAttr != null && !geoDistAttr.isEmpty() && !geoLngAttr.isEmpty()) {
             Double check_lng = toDouble(geoLngAttr);
             Double check_lat = toDouble(geoLatAttr);
             Double check_dist = toDouble(geoDistAttr);
@@ -131,20 +131,20 @@ public class PricesResource extends ServerResource {
         	shopDist = "(6371 * acos (cos ( radians("+geoLngAttr +") )* cos( radians( ST_Y(shops.location) ) )* cos( radians( ST_X(shops.location) ) - radians("+geoLatAttr+") )+ sin ( radians("+geoLngAttr+") )* sin( radians( ST_Y(shops.location) ) ))) as shopDist";
         	geo = true;
         }
-       	else if(!geoDistAttr.isEmpty() || !geoLngAttr.isEmpty() || !geoLatAttr.isEmpty()) throw new ResourceException(400,"Not enough parameters for geolocation processing");
+       	else if((geoDistAttr!= null && !geoDistAttr.isEmpty()) || (geoLngAttr != null && !geoLngAttr.isEmpty()) || (geoLatAttr != null && !geoLatAttr.isEmpty())) throw new ResourceException(400,"Not enough parameters for geolocation processing");
        	
        	String regex = "^[0-9\\,]+$";
-       	if(!shops_string.isEmpty() && shops_string.matches(regex)) {
+       	if( shops_string!= null && !shops_string.isEmpty() && shops_string.matches(regex)) {
        		where_clause += " AND shop_id in ("+shops_string +")";
        	}
-       	else if(!shops_string.isEmpty()) throw new ResourceException(400,"Bad value for shops list");
+       	else if(shops_string!= null && !shops_string.isEmpty()) throw new ResourceException(400,"Bad value for shops list");
        	
-       	if(!products_string.isEmpty() && products_string.matches(regex)) {
+       	if(products_string != null && !products_string.isEmpty() && products_string.matches(regex)) {
        		where_clause += " AND product_id in("+products_string +")";
        	}
-       	else if(!products_string.isEmpty()) throw new ResourceException(400,"Bad value for products list");
+       	else if(products_string != null && !products_string.isEmpty()) throw new ResourceException(400,"Bad value for products list");
        	
-       	if(!product_tags_string.isEmpty() && !product_tags_string.contains(";") && !product_tags_string.contains("'")){
+       	if(product_tags_string != null && !product_tags_string.isEmpty() && !product_tags_string.contains(";") && !product_tags_string.contains("'")){
        		//where_clause += " AND products.tags in ("+tags_string+")";
        		List<String> ptags = Arrays.asList(product_tags_string.split("\\s*(=>|,|\\s)\\s*"));
        		if(!ptags.isEmpty()) {
@@ -155,9 +155,9 @@ public class PricesResource extends ServerResource {
        			where_clause+= ") ";
        		}
        	}
-       	else if(!product_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for product tags list");
+       	else if(product_tags_string != null && !product_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for product tags list");
        	
-       	if(!shop_tags_string.isEmpty() && !shop_tags_string.contains(";")) {
+       	if(shop_tags_string != null &&!shop_tags_string.isEmpty() && !shop_tags_string.contains(";")) {
        		//where_clause += " AND products.tags in ("+tags_string+")";
        		List<String> stags = Arrays.asList(shop_tags_string.split("\\s*(=>|,|\\s)\\s*"));
        		if(!stags.isEmpty()) {
@@ -168,7 +168,7 @@ public class PricesResource extends ServerResource {
        			where_clause+= ") ";
        		}
        	}
-       	else if(!shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
+       	else if(shop_tags_string != null &&!shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
        	
        	Date dateFrom, dateTo;
         try{
