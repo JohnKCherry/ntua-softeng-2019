@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 06, 2019 at 11:10 PM
+-- Generation Time: Jan 10, 2019 at 07:29 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.2.12
 
@@ -59,8 +59,9 @@ CREATE TABLE `prices` (
 --
 
 INSERT INTO `prices` (`product_id`, `shop_id`, `price`, `dateFrom`, `dateTo`) VALUES
-(2, 1, '1500', '2018-12-29', NULL),
+(2, 1, '1500', '2018-12-29', '2019-01-31'),
 (2, 28, '1640', '2019-01-01', '2019-01-03'),
+(5, 4, '150', '2019-01-03', '2019-01-31'),
 (8, 5, '1640', '2019-01-06', '2019-01-23'),
 (12, 1, '1640', '2019-01-01', '2019-01-16'),
 (12, 5, '1200', '2019-01-01', '2019-01-31');
@@ -95,7 +96,10 @@ INSERT INTO `products` (`id`, `name`, `description`, `category`, `withdrawn`, `t
 (11, 'Toshiba Satellite 28BP10', 'Office laptop built to endure many boring meetings.', 'Laptops', b'0', 'Laptop, Toshiba, Satellite', NULL),
 (12, 'pengu', 'smart penguine', 'pengu', b'0', 'penguine', NULL),
 (14, 'pengu2', 'smart penguine', 'pengu', b'0', 'penguine', NULL),
-(15, 'Tamakotchi', 'Useless but funny toy', 'Kids', b'0', 'Games, Kids', NULL);
+(15, 'Tamakotchi', 'Useless but funny toy', 'Kids', b'0', 'Games, Kids', NULL),
+(16, 'Mate Pro 20', 'octacore phone from huawei', 'Mobile phones', b'0', '4G, FHD, Smartphone', NULL),
+(17, 'Mate Pro 20 Plus', 'octacore phone from huawei', 'Mobile phones', b'0', '4G, FHD, Smartphone', NULL),
+(19, 'Mate Pro 20 Plus Xs', 'octacore phone from huawei', 'Mobile phones', b'0', '4G, FHD, Smartphone', NULL);
 
 -- --------------------------------------------------------
 
@@ -131,21 +135,23 @@ INSERT INTO `shops` (`id`, `name`, `address`, `location`, `tags`, `withdrawn`) V
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(50) COLLATE utf8_bin NOT NULL,
-  `password` varchar(50) COLLATE utf8_bin NOT NULL,
+  `password` varchar(64) COLLATE utf8_bin NOT NULL,
   `authorization` int(1) NOT NULL DEFAULT '1',
   `email` varchar(255) COLLATE utf8_bin NOT NULL,
-  `fullname` varchar(255) COLLATE utf8_bin NOT NULL
+  `fullname` varchar(255) COLLATE utf8_bin NOT NULL,
+  `salt` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `authorization`, `email`, `fullname`) VALUES
-(1, 'gkef1996', 'asfalhskwdikos', 3, 'g.kef@hotmail.com', 'Γιώργος Κεφάλας'),
-(2, 'johndoe', 'eukoloskwdikos', 1, 'donotreply@john.doe', 'John Doe'),
-(3, 'master_Roshi', 'Kamehouse', 2, 'master_roshi@dragonball.com', 'Master Roshi'),
-(4, 'ethelontarathskardiasmas', 'zwgianauphretw', 2, 'charity@gmail.com', 'Mike Green');
+INSERT INTO `users` (`id`, `username`, `password`, `authorization`, `email`, `fullname`, `salt`) VALUES
+(1, 'gkef1996', 'asfalhskwdikos', 3, 'g.kef@hotmail.com', 'Γιώργος Κεφάλας', 135416521),
+(2, 'johndoe', 'eukoloskwdikos', 1, 'donotreply@john.doe', 'John Doe', 1654523),
+(3, 'master_Roshi', 'Kamehouse', 2, 'master_roshi@dragonball.com', 'Master Roshi', 9564552),
+(4, 'ethelontarathskardiasmas', 'zwgianauphretw', 2, 'charity@gmail.com', 'Mike Green', 65645845),
+(7, 'dcrs001', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 2, 'crds2@ntua.gr', 'Dummy Crowdsourcer', 1931780);
 
 --
 -- Indexes for dumped tables
@@ -199,7 +205,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `shops`
@@ -211,7 +217,7 @@ ALTER TABLE `shops`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
