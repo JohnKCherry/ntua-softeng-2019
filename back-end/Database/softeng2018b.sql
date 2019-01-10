@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2019 at 07:29 PM
+-- Generation Time: Jan 10, 2019 at 11:12 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.2.12
 
@@ -151,7 +151,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `authorization`, `email`, `fu
 (2, 'johndoe', 'eukoloskwdikos', 1, 'donotreply@john.doe', 'John Doe', 1654523),
 (3, 'master_Roshi', 'Kamehouse', 2, 'master_roshi@dragonball.com', 'Master Roshi', 9564552),
 (4, 'ethelontarathskardiasmas', 'zwgianauphretw', 2, 'charity@gmail.com', 'Mike Green', 65645845),
-(7, 'dcrs001', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 2, 'crds2@ntua.gr', 'Dummy Crowdsourcer', 1931780);
+(7, 'dcrs001', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 2, 'crds2@ntua.gr', 'Dummy Crowdsourcer', 3633681);
 
 --
 -- Indexes for dumped tables
@@ -179,6 +179,7 @@ ALTER TABLE `prices`
 ALTER TABLE `products`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `name` (`name`);
+ALTER TABLE `products` ADD FULLTEXT KEY `name_fulltext_index` (`name`);
 
 --
 -- Indexes for table `shops`
