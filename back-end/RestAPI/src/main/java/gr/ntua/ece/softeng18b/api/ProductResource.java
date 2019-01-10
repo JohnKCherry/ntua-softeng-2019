@@ -59,6 +59,15 @@ public class ProductResource extends ServerResource {
         if(!dataAccess.getProduct(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Product not found - id: " + id_string);
 
     	Boolean admin = false;	//TODO: Implement authority detection based on user login
+    	
+    	//authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        //System.out.println(">>>>>>>000 User token is: "+user_token);
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to add product");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to add product");
+        //System.out.println(">>>>>>>>>> User token is: "+user_token);
+        
     	if(!admin) {     
     		dataAccess.patchProduct(id, "withdrawn","1");
     		//Check if withdrawal was successful

@@ -466,7 +466,7 @@ public class DataAccess {
     
     public Optional<String> getUserApiToken_username_only(String username) {
     	String[] params = new String[]{username};
-        List<String> pswd_salt = jdbcTemplate.query("select password, salt from users where username = ? ", params, new ApiRowMapper());
+        List<String> pswd_salt = jdbcTemplate.query("select password, salt from users where username = ? AND authorization > 1", params, new ApiRowMapper());
         if (pswd_salt.size() == 1)  {
             return Optional.of(getSHA(pswd_salt.get(0)));
         }
