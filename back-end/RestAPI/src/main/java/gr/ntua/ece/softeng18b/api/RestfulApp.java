@@ -17,11 +17,14 @@ public class RestfulApp extends Application {
 
     	Router router = new Router(getContext());
     	
-    	//TODO: POST
+    	//POST
         router.attach("/login", LoginResource.class);
         
         //POST
         router.attach("/signup", SignupResource.class);
+        
+        //POST
+        router.attach("/logout", LogoutResource.class);
 
         //GET, POST
         router.attach("/products", ProductsResource.class);
@@ -29,8 +32,14 @@ public class RestfulApp extends Application {
         //GET, PATCH, PUT, DELETE
         router.attach("/products/{id}", ProductResource.class);
         
-        //TODO: GET, PATCH, PUT, DELETE 
+        // GET 
         router.attach("/productswithimage/{id}", ProductWithImageResource.class);
+        
+        //GET
+        router.attach("/productswithimage", ProductsWithImageResource.class);
+        
+        //GET 
+        router.attach("/productsbynamewithimage/{name}", ProductsByNameWithImageResource.class);
         
         //GET, POST
         router.attach("/shops", ShopsResource.class);
