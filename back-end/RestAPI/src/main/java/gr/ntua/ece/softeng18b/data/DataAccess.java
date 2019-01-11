@@ -63,6 +63,18 @@ public class DataAccess {
     	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
     }
     
+    public List<ProductWithImage> getProductsWithImage(Limits limits, long status, String sort) {
+    	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
+    	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
+    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where 1 order by "+sort+" limit ?,?", params_small, new ProductWithImageRowMapper());
+    	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products, image where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductWithImageRowMapper());      
+    }
+    
+    public List<ProductWithImage> getProductsByNameWithImage(String name) {
+    	String[] params = new String[]{name};
+    	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = 0 ", params, new ProductWithImageRowMapper());      
+    }
+    
     public List<Shop> getShops(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[]{status,limits.getStart(),(long)limits.getCount() };
@@ -488,6 +500,33 @@ public class DataAccess {
     	
     	if(test_token.equals(api_token)) return true;
     	return false;
+    }
+    
+    public void logoutUser(String user_token) {
+    	String username = user_token.substring(64);
+    	String api_token = user_token.substring(0,64);
+    	int tr = 10;
+    	while(isLogedIn(user_token)) { // in case the same salt is generated again...
+    		// Try to logout
+    		tr--;
+    		if(tr==0) throw new RuntimeException("Logout of Price failed");
+    		PreparedStatementCreator psc = new PreparedStatementCreator() {
+                @Override
+                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                    PreparedStatement ps = con.prepareStatement(
+                            "UPDATE users SET salt = ? WHERE username = ? ",
+                            Statement.RETURN_GENERATED_KEYS
+                    );
+                    ps.setLong(1, Integer.toUnsignedLong(ThreadLocalRandom.current().nextInt(1000, 10000000 + 1)));
+                    ps.setString(2, username);
+                    return ps;
+                }
+            };
+            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+            int cnt = jdbcTemplate.update(psc, keyHolder);
+
+            if (cnt != 1) throw new RuntimeException("Logout of Price failed");
+    	}
     }
     
     public static String getSHA(String input) 
