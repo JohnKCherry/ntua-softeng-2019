@@ -1,13 +1,29 @@
+
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+    sURLVariables = sPageURL.split('&'),
+    sParameterName,
+    i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};
+
 $(document).ready(function(){
     console.log("ready");
 
-
-    // Set default order = 1 asceding 
-    var order = 1;
-    $("#order").val("1");
+    var gps = new Array();
     var productID = getUrlParameter('id');
+    if (productID == null) productID = 12;
     var lowestPrice;
     var map = null;
+
     // get product general info
     $.ajax({
         type: "GET",
@@ -35,7 +51,7 @@ $(document).ready(function(){
         },
         error: function(){
             console.log("Product.js : Error product with id " + productID + " not found !");
-            window.location.replace("404.html");
+            window.location.href = "404.html?error=1";
         }
     });
 
@@ -43,16 +59,24 @@ $(document).ready(function(){
     function shopsUpdate(reload){
         $("#shops").empty();        // Clear previous list
         $("#lowestPrice").empty();  // Clear previous lowest price
-        var geoDist = "";
-        var geoLng = "";
+        var sort = $("#sort").val();
+        var geoDist = $("#distance").val();
         var geoLat = "";
-        var dateFrom = "";
-        var dateTo = "";
+        var geoLng = "";
+        var dateFrom = $("#dateFrom").val();
+        var dateTo = $("#dateTo").val();
         var shops = "";
         var products = productID;
         var tags = "";
-        var sort = "price";
+        var sortStr;
+        if ( sort == 1 ) sortStr = "price";
+        else if ( sort == 2 ) sortStr = "date";
+        else sortStr = "dist";
         var orderStr = (order==1) ? "ASC" : "DESC";
+        if(gps!=null) {
+            geoLng = gps[0];
+            geoLat = gps[1];
+        }
         var url = "http://localhost:8765/app/observatory/api/prices?geo.dist="+geoDist
         +"&geo.lng="+geoLng
         +"&geo.lat="+geoLat
@@ -61,7 +85,7 @@ $(document).ready(function(){
         +"&shops="+shops
         +"&products="+products
         +"&tags="+tags
-        +"&sort="+sort
+        +"&sort="+sortStr
         +"|"+orderStr;
         console.log(url); 
         var shopsID = new Array();
@@ -73,21 +97,15 @@ $(document).ready(function(){
                 console.log(data);
                 var obj = JSON.parse(JSON.stringify(data));
                 var shops = obj.prices;
-                console.log("PLithos katastimatwn " + shops.length);
-                console.log("Megethos pinaka shopsID " + shopsID.length);
+                
                 // Update lowest Price
                 lowestPrice = (order==1 ? shops[0].price : shops[obj.total-1].price);
                 $("#lowestPrice").append(lowestPrice + " &euro;");
-                var i = 0;
                 $.each(shops, function(key,value){
-                    console.log(key);
                     var shop_id = value.shop_id;
-                    console.log(++i);
                     shopsID.push(shop_id);
-                    console.log("Megethos shopsid " + shopsID.length);
                     var price = value.price;
                     var shopName = value.shop_name;
-                    console.log("Price: "+price + " Name: " + shopName);
                     $("#shops").append("<li class=\"list-group-item\"><a href=\"http://localhost:8765/app/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
                                        +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
                 });
@@ -95,13 +113,12 @@ $(document).ready(function(){
             },
             error: function(){
                 console.log("Product.js :Prices GET Error product with id " + products + " not found !");
+                 window.location.href = "404.html?error=2";
             }
         });
 
     }
 
-    // Get prices
-    shopsUpdate(1);
 
     // get shop by id
     // input shop id
@@ -120,6 +137,7 @@ $(document).ready(function(){
             },
             error: function(){
                 console.log("Product.js :Shop with id " + id + " not found !");
+                window.location.href = "404.html?error=3";
             }
         });
 
@@ -150,7 +168,9 @@ $(document).ready(function(){
             map.off();
             map.remove();
         }
-        map = L.map('map').setView([37.592724,23.441932], 8);
+        if( gps[0] == "") map = L.map('map').setView([37.592724,23.441932], 8);
+        else map = L.map('map').setView([gps[0],gps[1]], 12);
+
         mapLink = 
             '<a href="http://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
@@ -165,24 +185,64 @@ $(document).ready(function(){
             .addTo(map);
         }
     }
+
+    // event listener order
     // order change reload shops
     $("#order").change(function() {
         order = $("#order").val();
         // doesn't need to reload map so reload = 0
         shopsUpdate(0);
     });
-});
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = window.location.search.substring(1),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
 
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
 
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+
+    // event listener distance input
+    $("#distance").on("change mousemove", function() {
+        $("#geoDist").html($("#distance").val() + " Khm");
+    });
+
+    // event listener submit form
+    $("#filters").submit(function() {
+        console.log("Form submitted");
+        // update shops and reload map
+        shopsUpdate(1);
+
+        return false;   //prevent default
+    });
+
+
+    // init
+
+
+    // Set default order = 1 asceding 
+    var order = 1;
+    $("#order").val("1");
+    $("#sort").val("1");
+
+    // Get prices
+    shopsUpdate(1);
+
+    // set default distance
+    $("#distance").val("5");
+    $("#geoDist").html($("#distance").val() + " Khm");
+
+    var findLocation = function() {
+        gps[0] = "";
+        gps[1] = "";
+        if ("geolocation" in navigator){  
+            navigator.geolocation.getCurrentPosition(function(position){
+                gps[0] = position.coords.latitude;
+                gps[1] = position.coords.longitude;
+                shopsUpdate(1);
+            }, function() {
+                console.log("Don't allow location");
+            });
+        }else{
+            console.log("Browser doesn't support geolocation!");
         }
-    }
-};
+
+    };
+
+    findLocation();
+});
+
