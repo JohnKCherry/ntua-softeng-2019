@@ -40,7 +40,7 @@ $(document).ready(function(){
     });
 
     // get prices and shops
-    function shopsUpdate(){
+    function shopsUpdate(reload){
         $("#shops").empty();        // Clear previous list
         $("#lowestPrice").empty();  // Clear previous lowest price
         var geoDist = "";
@@ -91,7 +91,7 @@ $(document).ready(function(){
                     $("#shops").append("<li class=\"list-group-item\"><a href=\"http://localhost:8765/app/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
                                        +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
                 });
-                setMap(shopsID);
+                if (reload == 1) setMap(shopsID);
             },
             error: function(){
                 console.log("Product.js :Prices GET Error product with id " + products + " not found !");
@@ -101,7 +101,7 @@ $(document).ready(function(){
     }
 
     // Get prices
-    shopsUpdate();
+    shopsUpdate(1);
 
     // get shop by id
     // input shop id
@@ -168,7 +168,8 @@ $(document).ready(function(){
     // order change reload shops
     $("#order").change(function() {
         order = $("#order").val();
-        shopsUpdate();
+        // doesn't need to reload map so reload = 0
+        shopsUpdate(0);
     });
 });
 var getUrlParameter = function getUrlParameter(sParam) {
