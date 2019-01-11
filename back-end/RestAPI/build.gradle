@@ -52,7 +52,7 @@ gretty {
     httpEnabled = true
     httpsEnabled = false
     httpPort = 8765
-    contextPath = 'app'
+    contextPath = ''
     //servletContainer = 'tomcat8' //use the default (jetty)
 
     integrationTestTask = 'test'

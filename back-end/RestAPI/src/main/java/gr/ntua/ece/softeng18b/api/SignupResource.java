@@ -40,7 +40,7 @@ public class SignupResource extends ServerResource {
             return new JsonMapRepresentation(map);
         }
         catch(org.springframework.dao.DuplicateKeyException e){
-        	throw new ResourceException(400,"This product already exists in the database");
+        	throw new ResourceException(400,"This username already exists in the database");
         }   
     }
 }

@@ -133,7 +133,7 @@ public class DataAccess {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
-                        "insert into shops(name, address, location, tags, withdrawn) values(?, ?, ST_GeomFromText('POINT("+ lng.toString() +" "+ lat.toString() +")',4326), ?, ?)",
+                        "insert into shops(name, address, location, tags, withdrawn) values(?, ?, ST_GeomFromText('POINT("+ lat.toString() +" "+ lng.toString() +")',4326), ?, ?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 ps.setString(1, name);
@@ -460,7 +460,7 @@ public class DataAccess {
 
         }
         else {
-            throw new RuntimeException("Creation of Price failed");
+            throw new RuntimeException("Creation of new user failed");
         }
     }
     
@@ -527,6 +527,16 @@ public class DataAccess {
 
             if (cnt != 1) throw new RuntimeException("Logout of Price failed");
     	}
+    }
+    
+    public Boolean isAdmin(String user_token) {
+    	String username = user_token.substring(64);
+    	
+    	String[] params = new String[]{username};
+        List<String> pswd_salt = jdbcTemplate.query("select password, salt from users where username = ? AND authorization = 3 ", params, new ApiRowMapper());
+        if (pswd_salt.size() == 1) return true;
+    	
+    	return false;
     }
     
     public static String getSHA(String input) 
