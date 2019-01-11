@@ -91,7 +91,7 @@ public class ShopsResource extends ServerResource {
         String address 		= form.getFirstValue("address");
         String lng_string	= form.getFirstValue("lng");
         String lat_string	= form.getFirstValue("lat");
-        String tags			= form.getFirstValue("tags");
+        String tags			= form.getValues("tags");
         Double lng, lat;
         //System.out.println("Καλό store");
         //System.out.println(name);
@@ -99,9 +99,9 @@ public class ShopsResource extends ServerResource {
         //validate the values (in the general case)
         if(name == null || address == null || lng_string == null || lat_string == null) throw new ResourceException(400,"This operation needs more parameters for a new shop");
         if(tags == null) tags = "";
-        String regex = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
-        String regex_s = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
-        if(!name.matches(regex) || !address.matches(regex) || !tags.matches(regex_s) ) throw new ResourceException(400,"Forbidden characters in parameters");
+        //String regex = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
+        //String regex_s = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
+        //if(!name.matches(regex) || !address.matches(regex) || !tags.matches(regex_s) ) throw new ResourceException(400,"Forbidden characters in parameters");
         //System.out.println(name);
         lng = toDouble(lng_string);
         lat = toDouble(lat_string);     

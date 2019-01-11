@@ -90,7 +90,7 @@ public class ProductsResource extends ServerResource {
         String name = form.getFirstValue("name");
         String description = form.getFirstValue("description");
         String category = form.getFirstValue("category");
-        String tags = form.getFirstValue("tags");
+        String tags = form.getValues("tags");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");

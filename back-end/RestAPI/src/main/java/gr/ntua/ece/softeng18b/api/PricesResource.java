@@ -177,7 +177,7 @@ public class PricesResource extends ServerResource {
         	if(dateTo.before(dateFrom)) {
             	throw new ResourceException(400,"Bad parameter for dates, dateFrom must be erlier than dateTo");
             }
-        	where_clause += " AND prices.dateFrom >= "+ dateFrom.toString() +"AND prices.dateTo <= " + dateTo.toString();
+        	where_clause += " AND prices.dateFrom >= "+ dateFrom.toString() +" AND prices.dateTo >= " + dateTo.toString();
         }
         catch(IllegalArgumentException e){
         	where_clause += " AND prices.dateTo >= CURDATE() ";
