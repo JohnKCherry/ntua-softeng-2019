@@ -5,7 +5,7 @@ import gr.ntua.ece.softeng18b.data.DataAccess;
 import gr.ntua.ece.softeng18b.data.Limits;
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.PriceResult;
-import gr.ntua.ece.softeng18b.data.model.Product;
+import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDate;
 
 import org.restlet.data.Form;
 import org.restlet.data.Status;
@@ -14,7 +14,11 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,19 +76,20 @@ public class PricesResource extends ServerResource {
     
     @Override
     protected Representation get() throws ResourceException {
-    	String startAttr		= getQuery().getValues("start");
-    	String countAttr		= getQuery().getValues("count");
-    	String geoDistAttr		= getQuery().getValues("geoDist");
-    	String geoLngAttr		= getQuery().getValues("geoLng");
-    	String geoLatAttr		= getQuery().getValues("geoLat");
-    	String sortAttr 		= getQuery().getValues("sort");
-    	String formatAttr   	= getQuery().getValues("format");
-    	String dateFromAttr		= getQuery().getValues("dateFrom");
-    	String dateToAttr		= getQuery().getValues("dateTo");
-    	String shops_string		= getQuery().getValues("shops");
-    	String products_string	= getQuery().getValues("products");
-    	String product_tags_string		= getQuery().getValues("productTags");
+    	String startAttr			= getQuery().getValues("start");
+    	String countAttr			= getQuery().getValues("count");
+    	String geoDistAttr			= getQuery().getValues("geoDist");
+    	String geoLngAttr			= getQuery().getValues("geoLng");
+    	String geoLatAttr			= getQuery().getValues("geoLat");
+    	String sortAttr 			= getQuery().getValues("sort");
+    	String formatAttr   		= getQuery().getValues("format");
+    	String dateFromAttr			= getQuery().getValues("dateFrom");
+    	String dateToAttr			= getQuery().getValues("dateTo");
+    	String shops_string			= getQuery().getValues("shops");
+    	String products_string		= getQuery().getValues("products");
+    	String product_tags_string	= getQuery().getValues("productTags");
     	String shop_tags_string		= getQuery().getValues("shopTags");
+    	String verbose				= getQuery().getValues("shopTags");
     	
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
@@ -170,12 +175,12 @@ public class PricesResource extends ServerResource {
        	}
        	else if(shop_tags_string != null &&!shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
        	
-       	Date dateFrom, dateTo;
+       	Date dateFrom = null, dateTo = null ;
         try{
         	dateFrom = Date.valueOf(dateFromAttr);
         	dateTo	 = Date.valueOf(dateToAttr);
         	if(dateTo.before(dateFrom)) {
-            	throw new ResourceException(400,"Bad parameter for dates, dateFrom must be erlier than dateTo");
+            	throw new ResourceException(400,"Bad parameter for dates, dateFrom must be earlier than dateTo");
             }
         	where_clause += " AND prices.dateFrom >= "+ dateFrom.toString() +" AND prices.dateTo >= " + dateTo.toString();
         }
@@ -183,17 +188,55 @@ public class PricesResource extends ServerResource {
         	where_clause += " AND prices.dateTo >= CURDATE() ";
         }
         
-        //TODO Set product status == 0 for valid results!!!
+        //Set product status == 0 for valid results!!!
+        where_clause += " AND products.withdrawn = 0 ";
         
         List<PriceResult> prices = dataAccess.getPrices(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause);
-
+        
+        // Convert PriceResult to PriceResultSingleDate
+        List<PriceResultSingleDate> prices_single = new ArrayList<PriceResultSingleDate>();
+        for(PriceResult pr : prices) {
+        	prices_single.addAll(convertPriceResult(pr));
+        }
+        
+        // Clean invalid dates
+        List<PriceResultSingleDate> prices_single_final = new ArrayList<PriceResultSingleDate>();
+        if(dateFrom != null && dateTo != null) {
+        	for(PriceResultSingleDate prs : prices_single) {
+        		if(!(prs.getDate().before(dateFrom) && prs.getDate().compareTo(dateFrom) != 0) && !(prs.getDate().after(dateTo) && prs.getDate().compareTo(dateTo) != 0)) prices_single_final.add(prs); 
+        	}
+        }
+        else prices_single_final = prices_single;
+        
         Map<String, Object> map = new HashMap<>();
         map.put("start", start);
         map.put("count", count);
         map.put("total", prices.size());
-        map.put("prices", prices);
+        if(verbose != null && verbose.equals("false")) map.put("prices", prices);
+        else map.put("prices", prices_single_final);
 
         return new JsonMapRepresentation(map);
+    }
+    
+    public List<PriceResultSingleDate> convertPriceResult(PriceResult p){
+    	List<PriceResultSingleDate> result = new ArrayList<PriceResultSingleDate>();
+    	Date temp = p.getDateFrom();
+    	while(temp.before(p.getDateTo())) {
+    		result.add(new PriceResultSingleDate(p.getProductId(),p.getShoptId(),p.getPrice(),temp,p.getProductName(),p.getProductTags(),p.getShopName(),p.getShopTags(),p.getShopAddress(),(double) p.getShopDist()));
+
+    		String dt = temp.toString();  // Start date
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    		Calendar c = Calendar.getInstance();
+    		try {
+				c.setTime(sdf.parse(dt));
+			} catch (ParseException e) {
+				throw new ResourceException(500,"PriceResult converter did something bad...");
+			}
+    		c.add(Calendar.DATE, 1);  // number of days to add
+    		dt = sdf.format(c.getTime());  // dt is now the new date
+    		temp = Date.valueOf(dt);
+    	}
+		return result;
     }
     
 }
