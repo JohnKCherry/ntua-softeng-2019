@@ -1,10 +1,11 @@
 $(document).ready(function(){
     console.log("ready");
 
+
     // Set default order = 1 asceding 
     var order = 1;
     $("#order").val("1");
-    var productID = 12;
+    var productID = getUrlParameter('id');
     var lowestPrice;
 
     // get product general info
@@ -34,6 +35,7 @@ $(document).ready(function(){
         },
         error: function(){
             console.log("Product.js : Error product with id " + productID + " not found !");
+            window.location.replace("404.html");
         }
     });
 
@@ -165,3 +167,17 @@ $(document).ready(function(){
         shopsUpdate();
     });
 });
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};
