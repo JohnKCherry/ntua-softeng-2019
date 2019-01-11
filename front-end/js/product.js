@@ -7,7 +7,7 @@ $(document).ready(function(){
     $("#order").val("1");
     var productID = getUrlParameter('id');
     var lowestPrice;
-
+    var map = null;
     // get product general info
     $.ajax({
         type: "GET",
@@ -146,7 +146,11 @@ $(document).ready(function(){
         var locations = [];
         locations = shopsLocation(shopsID);
         // Athens View
-        var map = L.map('map').setView([37.592724,23.441932], 8);
+        if ( map != null ) {
+            map.off();
+            map.remove();
+        }
+        map = L.map('map').setView([37.592724,23.441932], 8);
         mapLink = 
             '<a href="http://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
