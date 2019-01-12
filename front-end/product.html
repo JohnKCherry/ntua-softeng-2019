@@ -60,38 +60,40 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
             <hr class="col-xs-12">
 
-            <!-- Filters and Shops -->
 
+            <!-- Filters -->
+            <div class="float-left ">
+                <p class="h2">Filters</p>
+                <hr class="col-xs-12">
+                <form id="filters">
+                    <ul class="list-group">
+                    <li class="list-group-item">
+                        <label class="col-form-label"> Ταξινόμηση με βάση </label>
+                        <select id="sort" class="form-control form-control-sm">
+                            <option value="1">Τιμή</option>
+                            <option value="2">Ημέρα καταχώρησης</option>
+                            <option value="3">Απόσταση</option>
+                        </select>
+                    </li>
+                    <li class="list-group-item">
+                        <label class="col-form-label" for="distance">Distance: <span class="h6" id="geoDist"></span></label>
+                        <input type="range" name="distance" id="distance" value="" min="0" max="100">
+                    </li>
+                    <li class="list-group-item">
+                        <label class="col-form-label">Date From</label>
+                        <input class="form-control" type="date" value="" id="dateFrom">
+                    </li>
+                    <li class="list-group-item">
+                        <label class="col-form-label">Date To</label>
+                        <input class="form-control" type="date" value="" id="dateTo">
+                    </li>
+                </ul>
+                    <input type="submit" value="Refresh Filters">
+                </form>
+            </div>
+
+            <!-- Shops -->
             <div class="row justify-content-start">
-                <div class="col-md-3 ">
-                    <p class="h2">Filters</p>
-                    <hr class="col-xs-12">
-                    <form id="filters">
-                        <ul class="list-group">
-                        <li class="list-group-item">
-                            <label class="col-form-label"> Ταξινόμηση με βάση </label>
-                            <select id="sort" class="form-control form-control-sm">
-                                <option value="1">Τιμή</option>
-                                <option value="2">Ημέρα καταχώρησης</option>
-                                <option value="3">Απόσταση</option>
-                            </select>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="col-form-label" for="distance">Distance: <span class="h6" id="geoDist"></span></label>
-                            <input type="range" name="distance" id="distance" value="" min="0" max="100">
-                        </li>
-                        <li class="list-group-item">
-                            <label class="col-form-label">Date From</label>
-                            <input class="form-control" type="date" value="" id="dateFrom">
-                        </li>
-                        <li class="list-group-item">
-                            <label class="col-form-label">Date To</label>
-                            <input class="form-control" type="date" value="" id="dateTo">
-                        </li>
-                    </ul>
-                        <input type="submit" value="Refresh Filters">
-                    </form>
-                </div>
                 <div id="shopsDiv" class="col">
                     <p class="h2">Shops</p>
                     <hr class="col-xs-12">
