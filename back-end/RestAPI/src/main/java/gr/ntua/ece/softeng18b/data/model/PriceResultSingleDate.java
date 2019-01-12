@@ -5,13 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class PriceResult {
+public class PriceResultSingleDate {
 
     private final long product_id;
     private final long shop_id;
     private final Double price;
-    private final Date dateFrom;
-    private final Date dateTo;
+    private final Date date;
     private final String product_name;
     private final List<String> product_tags;
     private final String shop_name;
@@ -21,16 +20,15 @@ public class PriceResult {
     
     
 
-    public PriceResult(long product_id, long shop_id, Double price, Date dateFrom, Date dateTo, String product_name, String product_tags, String shop_name, String shop_tags, String shop_address, Double shop_dist) {
+    public PriceResultSingleDate(long product_id, long shop_id, Double price, Date date, String product_name, List<String> product_tags, String shop_name, List<String> shop_tags, String shop_address, Double shop_dist) {
         this.product_id          = product_id;
         this.shop_id        	 = shop_id;
         this.price			   	 = price;
-        this.dateFrom    		 = dateFrom;
-        this.dateTo   			 = dateTo;
+        this.date    			 = date;
         this.product_name		 = product_name;
-        this.product_tags 		 = Arrays.asList(product_tags.split("\\s*(=>|,|\\s)\\s*"));
+        this.product_tags 		 = product_tags;
         this.shop_name			 = shop_name;
-        this.shop_tags 			 = Arrays.asList(shop_tags.split("\\s*(=>|,|\\s)\\s*"));
+        this.shop_tags 			 = shop_tags;
         this.shop_address	 	 = shop_address;
         this.shop_dist			 = Integer.valueOf((int) Math.round(shop_dist));
         
@@ -48,12 +46,8 @@ public class PriceResult {
         return price;
     }
 
-    public Date getDateFrom() {
-        return dateFrom;
-    }
-    
-    public Date getDateTo() {
-        return dateTo;
+    public Date getDate() {
+        return date;
     }
     
     public String getProductName() {
@@ -76,7 +70,7 @@ public class PriceResult {
         return product_tags;
     }
     
-    public List<String> getShopTags() {
+    public List<String> getShop() {
         return shop_tags;
     }
 
