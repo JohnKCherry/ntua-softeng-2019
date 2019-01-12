@@ -77,7 +77,7 @@ $(document).ready(function(){
             geoLng = gps[0];
             geoLat = gps[1];
         }
-        var url = "http://localhost:8765/observatory/api/prices?geo.dist="+geoDist
+        var url = "http://localhost:8765/observatory/api/prices?verbose=false&geo.dist="+geoDist
         +"&geo.lng="+geoLng
         +"&geo.lat="+geoLat
         +"&dateFrom="+dateFrom
@@ -93,7 +93,6 @@ $(document).ready(function(){
             type: "GET",
             dataType: "json",
             url: url,
-            verbose: false,
             success: function(data){
                 console.log(data);
                 var obj = JSON.parse(JSON.stringify(data));
