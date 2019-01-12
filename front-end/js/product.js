@@ -28,7 +28,7 @@ $(document).ready(function(){
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "http://localhost:8765/app/observatory/api/productswithimage/"+productID,
+        url: "http://localhost:8765/observatory/api/productswithimage/"+productID,
         success: function(data){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
@@ -77,7 +77,7 @@ $(document).ready(function(){
             geoLng = gps[0];
             geoLat = gps[1];
         }
-        var url = "http://localhost:8765/app/observatory/api/prices?geo.dist="+geoDist
+        var url = "http://localhost:8765/observatory/api/prices?geo.dist="+geoDist
         +"&geo.lng="+geoLng
         +"&geo.lat="+geoLat
         +"&dateFrom="+dateFrom
@@ -93,20 +93,21 @@ $(document).ready(function(){
             type: "GET",
             dataType: "json",
             url: url,
+            verbose: false,
             success: function(data){
                 console.log(data);
                 var obj = JSON.parse(JSON.stringify(data));
                 var shops = obj.prices;
-                
+               
                 // Update lowest Price
-                lowestPrice = (order==1 ? shops[0].price : shops[obj.total-1].price);
+                lowestPrice = (order==1 ? shops[0].price : shops[shops.length-1].price);
                 $("#lowestPrice").append(lowestPrice + " &euro;");
                 $.each(shops, function(key,value){
                     var shop_id = value.shop_id;
                     shopsID.push(shop_id);
                     var price = value.price;
                     var shopName = value.shop_name;
-                    $("#shops").append("<li class=\"list-group-item\"><a href=\"http://localhost:8765/app/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
+                    $("#shops").append("<li class=\"list-group-item\"><a href=\"http://localhost:8765/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
                                        +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
                 });
                 if (reload == 1) setMap(shopsID);
@@ -130,7 +131,7 @@ $(document).ready(function(){
             type: "GET",
             async: false,
             dataType: "json",
-            url: "http://localhost:8765/app/observatory/api/shops/"+id,
+            url: "http://localhost:8765/observatory/api/shops/"+id,
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 shopsArray = [obj.name,obj.lat,obj.lng];
