@@ -1,5 +1,3 @@
-
-
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
     sURLVariables = sPageURL.split('&'),
@@ -51,7 +49,9 @@ $(document).ready(function(){
         },
         error: function(){
             console.log("Product.js : Error product with id " + productID + " not found !");
-            window.location.href = "404.html?error=1";
+            $("body").load("404.html");
+            return false;
+            // window.location.href = "404.html?error=1";
         }
     });
 
@@ -97,7 +97,7 @@ $(document).ready(function(){
                 console.log(data);
                 var obj = JSON.parse(JSON.stringify(data));
                 var shops = obj.prices;
-               
+
                 // Update lowest Price
                 lowestPrice = (order==1 ? shops[0].price : shops[shops.length-1].price);
                 $("#lowestPrice").append(lowestPrice + " &euro;");
@@ -113,7 +113,8 @@ $(document).ready(function(){
             },
             error: function(){
                 console.log("Product.js :Prices GET Error product with id " + products + " not found !");
-                 window.location.href = "404.html?error=2";
+                $("html").load("404.html");
+                return ;
             }
         });
 
@@ -137,7 +138,8 @@ $(document).ready(function(){
             },
             error: function(){
                 console.log("Product.js :Shop with id " + id + " not found !");
-                window.location.href = "404.html?error=3";
+                $("html").load("404.html");
+                return ;
             }
         });
 
@@ -242,7 +244,6 @@ $(document).ready(function(){
         }
 
     };
-
     findLocation();
 });
 
