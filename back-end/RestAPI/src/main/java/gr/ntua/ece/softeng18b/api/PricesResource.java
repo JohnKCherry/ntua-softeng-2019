@@ -89,7 +89,7 @@ public class PricesResource extends ServerResource {
     	String products_string		= getQuery().getValues("products");
     	String product_tags_string	= getQuery().getValues("productTags");
     	String shop_tags_string		= getQuery().getValues("shopTags");
-    	String verbose				= getQuery().getValues("shopTags");
+    	String verbose				= getQuery().getValues("verbose");
     	
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
