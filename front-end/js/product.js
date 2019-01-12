@@ -113,7 +113,10 @@ $(document).ready(function(){
             },
             error: function(){
                 console.log("Product.js :Prices GET Error product with id " + products + " not found !");
-                $("html").load("404.html");
+                $("#shopsDiv").text("Shops Not Found");
+                $("#map").text("Error Map");
+                //$("#shopsDiv").load("404.html");
+                //$("html").load("404.html");
                 return ;
             }
         });
@@ -138,7 +141,8 @@ $(document).ready(function(){
             },
             error: function(){
                 console.log("Product.js :Shop with id " + id + " not found !");
-                $("html").load("404.html");
+                $("#shopsDiv").text("Shops Not Found");
+                $("#map").text("Error Map");
                 return ;
             }
         });
