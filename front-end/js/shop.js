@@ -15,16 +15,15 @@ var getUrlParameter = function getUrlParameter(sParam) {
 
 $(document).ready(function(){
     console.log("ready");
-	
+
     var shopID = getUrlParameter('id');
     if (shopID == null) shopID = 4;
-	var map = null;
-	var shopArray = new Array();
-	var loc = new Array();
-	
-	
-	//GET info
-	 $.ajax({
+    var map = null;
+    var shopArray = new Array();
+
+
+    //GET info
+    $.ajax({
         type: "GET",
         dataType: "json",
         url: "http://localhost:8765/observatory/api/shops/"+shopID,
@@ -32,16 +31,16 @@ $(document).ready(function(){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
             shopArray = [obj.name,obj.lat,obj.lng];           
-   		    $("#shopName").text(obj.name);
+            $("#shopName").text(obj.name);
             $("#shopAddress").append("<span class=\"h6\">"+obj.address+"</span>");
             $("#shopType").append("<span class=\"h6\">"+obj.category+"</span>");
-			$("#shopWebsite").append("<span class=\"h6\">"+obj.website+"</span>");
-			$("#shopTel").append("<span class=\"h6\">"+obj.phone+"</span>");
+            $("#shopWebsite").append("<span class=\"h6\">"+obj.website+"</span>");
+            $("#shopTel").append("<span class=\"h6\">"+obj.phone+"</span>");
             var tags = obj.tags;
             $.each(tags, function(key,value){
                 $("#tags").append("<li class=\"list-inline-item\"><span class=\"h6\">"+value+"</span></li>");
             });
-			
+
 
         },
         error: function(){
@@ -51,9 +50,9 @@ $(document).ready(function(){
             // window.location.href = "404.html?error=1";
         }
     });
-	
-	
-	function getLocation(id) {
+
+
+    function getLocation(id) {
 
         $.ajax({
             type: "GET",
@@ -63,11 +62,11 @@ $(document).ready(function(){
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 shopArray = [obj.name,obj.lat,obj.lng];
-					console.log(shopArray[0]);
-	     console.log(shopArray[1]);
-	            console.log(shopArray[2]);
-				return shopArray;
-			
+                console.log(shopArray[0]);
+                console.log(shopArray[1]);
+                console.log(shopArray[2]);
+         //       return shopArray;
+
             },
             error: function(){
                 console.log("shop.js :Shop with id " + id + " not found !");
@@ -81,16 +80,15 @@ $(document).ready(function(){
 
 
     function setMap(shopID) {
-        var loc = [];
-		loc = getLocation(shopID);
+        getLocation(shopID);
         // Athens View
         if ( map != null ) {
             map.off();
             map.remove();
         }
-		console.log(loc[0]);
-	    console.log(loc[1]);
-	    console.log(loc[2]);
+        console.log(shopArray[0]);
+        console.log(shopArray[1]);
+        console.log(shopArray[2]);
         map = L.map('map').setView([37.592724,23.441932], 8);
 
         mapLink = 
@@ -101,22 +99,22 @@ $(document).ready(function(){
             maxZoom: 18,
         }).addTo(map);
 
-        marker = new L.marker([loc[1],loc[2]])
-            .bindPopup(loc[0])
-            .addTo(map);
+        marker = new L.marker([shopArray[1],shopArray[2]])
+        .bindPopup(shopArray[0])
+        .addTo(map);
     }
 
-	setMap(shopID);
+    setMap(shopID);
 
 
 
 
 
 });
-	
-	
-	
 
-	
-	
-	
+
+
+
+
+
+
