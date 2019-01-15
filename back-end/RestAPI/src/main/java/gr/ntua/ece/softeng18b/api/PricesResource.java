@@ -91,7 +91,7 @@ public class PricesResource extends ServerResource {
     	String products_string		= getQuery().getValues("products");
     	String product_tags_string	= getQuery().getValues("productTags");
     	String shop_tags_string		= getQuery().getValues("shopTags");
-    	String verbose				= getQuery().getValues("shopTags");
+    	String verbose				= getQuery().getValues("verbose");
     	
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
@@ -253,11 +253,8 @@ public class PricesResource extends ServerResource {
         	shop_id = Integer.parseInt(shop_id_string);
         }
     	catch(NumberFormatException e){
-    		System.out.println(">>>>>>>>>>>>>>>>>> Product id: " + product_id_string + "   Shop id: " + shop_id_string);
         	throw new ResourceException(400,"Bad parameter for product_id or shop_id");
         }
-        
-        System.out.println(">>>>>>>>>>>>>>>>>> Product id: " + product_id_string + "   Shop id: " + shop_id_string);
         dataAccess.deletePrice(product_id, shop_id);
         
         return new JsonMessageRepresentation("OK");
