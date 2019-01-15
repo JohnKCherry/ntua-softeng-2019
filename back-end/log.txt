@@ -145,4 +145,4 @@ Major update για να συμβαδίζουμε με τον test client. Το 
 το url). Τέλος, ένα url (profile) όπου με POST επιστρέφει το προφίλ ενός χρήστη (δεν χρειάζεται παράμετρο, απλώς 
 πρέπει να υπάρχει η custom επικεφαλίδα στο http) και το PATCH αλλάζει ΜΟΝΟ μία από τις εξής τιμές (fullname, username,
 email, password) και παίρνει ως παραμέτρο την τιμή που θα αλλάξει -και τη νέα τιμή ως value - π.χ. fullname='NewFullName'.
-Σύντομα θα προσθέσω και τρία url σχετικά με τον πίνακα favourites της βάσης (GET,POST,DELETE).
+Σύντομα θα προσθέσω και τρία url σχετικά με τον πίνακα favourites της βάσης (GET,POST,DELETE). Προσοχή, αν αλλάξει το username ή το password τότε ο χρήστης γίνεται αυτόματα logged out.
