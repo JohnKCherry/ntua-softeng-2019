@@ -6,6 +6,8 @@ import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.ProductWithImage;
 import gr.ntua.ece.softeng18b.data.model.Shop;
+import gr.ntua.ece.softeng18b.data.model.User;
+
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.restlet.resource.ResourceException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -70,9 +72,11 @@ public class DataAccess {
     	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products, image where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductWithImageRowMapper());      
     }
     
-    public List<ProductWithImage> getProductsByNameWithImage(String name) {
+    public List<ProductWithImage> getProductsByNameWithImage(Limits limits, long status, String name) {
     	String[] params = new String[]{name};
-    	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = 0 ", params, new ProductWithImageRowMapper());      
+    	String[] params_status = new String[]{name,""+status};
+    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductWithImageRowMapper());      
+    	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductWithImageRowMapper()); 
     }
     
     public List<Shop> getShops(Limits limits, long status, String sort) {
@@ -399,6 +403,27 @@ public class DataAccess {
         if(cnt !=1 ) throw new RuntimeException("Deletion of Shop failed");
         return;
     }
+    
+    public void deletePrice(int product_id, int shop_id) {
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "DELETE FROM prices WHERE product_id = ? AND shop_id = ? ",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                
+                ps.setInt(1, product_id);
+                ps.setInt(2, shop_id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        //if(cnt !=1 ) throw new RuntimeException("Deletion of Price failed");
+        return;
+    }
 
 
     public Optional<Product> getProduct(long id) {
@@ -537,6 +562,40 @@ public class DataAccess {
         if (pswd_salt.size() == 1) return true;
     	
     	return false;
+    }
+    
+    public User getUserProfile(String user_token) {
+    	String username = user_token.substring(64);
+    	
+    	String[] params = new String[]{username};
+        List<User> users = jdbcTemplate.query("select id, username, fullname, email, authorization from users where username = ? ", params, new UserRowMapper());
+        if(users.size() == 1) return users.get(0);
+        else throw new ResourceException(404, "User not found");
+    }
+    
+    public User patchUser(String user_token, String update_parameter, String value) {
+		
+    	PreparedStatementCreator psc = new PreparedStatementCreator() {
+    		String username = user_token.substring(64);
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "UPDATE users SET "+update_parameter+"=? where username =?",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setString(1, value);
+                ps.setString(2, username);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt != 1) {
+            throw new RuntimeException("Patch of User failed");
+        }
+    	return null;
+    	
     }
     
     public static String getSHA(String input) 

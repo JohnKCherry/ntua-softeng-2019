@@ -8,10 +8,12 @@ import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDate;
 
 import org.restlet.data.Form;
+import org.restlet.data.Header;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -89,7 +91,7 @@ public class PricesResource extends ServerResource {
     	String products_string		= getQuery().getValues("products");
     	String product_tags_string	= getQuery().getValues("productTags");
     	String shop_tags_string		= getQuery().getValues("shopTags");
-    	String verbose				= getQuery().getValues("verbose");
+    	String verbose				= getQuery().getValues("shopTags");
     	
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
@@ -237,6 +239,29 @@ public class PricesResource extends ServerResource {
     		temp = Date.valueOf(dt);
     	}
 		return result;
+    }
+    
+    protected Representation delete() throws ResourceException {
+        //Read the parameters
+        String shop_id_string = getAttribute("shop_id");
+        String product_id_string = getAttribute("product_id");
+        
+        //validate the values (in the general case)
+        int product_id, shop_id; 
+        try {
+        	product_id = Integer.parseInt(product_id_string);
+        	shop_id = Integer.parseInt(shop_id_string);
+        }
+    	catch(NumberFormatException e){
+    		System.out.println(">>>>>>>>>>>>>>>>>> Product id: " + product_id_string + "   Shop id: " + shop_id_string);
+        	throw new ResourceException(400,"Bad parameter for product_id or shop_id");
+        }
+        
+        System.out.println(">>>>>>>>>>>>>>>>>> Product id: " + product_id_string + "   Shop id: " + shop_id_string);
+        dataAccess.deletePrice(product_id, shop_id);
+        
+        return new JsonMessageRepresentation("OK");
+        
     }
     
 }

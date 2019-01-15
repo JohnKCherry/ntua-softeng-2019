@@ -21,6 +21,7 @@ import spock.lang.Stepwise
         
         then:
         api.isLoggedIn()
+		
     }
     
     def "User adds product" () {
