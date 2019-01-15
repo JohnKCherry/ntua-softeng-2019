@@ -25,6 +25,9 @@ public class RestfulApp extends Application {
         
         //POST
         router.attach("/logout", LogoutResource.class);
+        
+        //POST, PATCH
+        router.attach("/profile", ProfileResource.class);
 
         //GET, POST
         router.attach("/products", ProductsResource.class);
@@ -47,8 +50,11 @@ public class RestfulApp extends Application {
         //GET, PATCH, PUT, DELETE
         router.attach("/shops/{id}", ShopResource.class);
        
-        //GET, POST
+        //GET, POST, DELETE
         router.attach("/prices", PricesResource.class);
+        
+        //DELETE
+        router.attach("/prices/{product_id}/{shop_id}", PricesResource.class);
 
         CorsFilter corsFilter = new CorsFilter(getContext(), router);
     	corsFilter.setAllowedOrigins(new HashSet(Arrays.asList("*")));

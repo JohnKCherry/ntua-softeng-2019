@@ -58,11 +58,11 @@ public class ProductsResource extends ServerResource {
         //////////////////////////////////////////////
 
         try {
-        	if(statusAttr == null) throw  new NumberFormatException("The sort attribute entered, " + sort + " is invalid."); 
+        	if(statusAttr == null) throw  new NumberFormatException("The status attribute entered, " + statusAttr + " is invalid."); 
         	if(statusAttr.equals("ACTIVE")) status = 0;
             else if (statusAttr.equals("WITHDRAWN")) status = 1;
             else if (statusAttr.equals("ALL")) status = -1; // -1 for all products
-            else throw  new NumberFormatException("The status attribute entered, " + sort + " is invalid."); 
+            else throw  new NumberFormatException("The status attribute entered, " + statusAttr+ " is invalid."); 
         } catch(NumberFormatException e) {
         	status = 0; //default
         }
