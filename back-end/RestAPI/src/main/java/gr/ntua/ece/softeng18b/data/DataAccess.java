@@ -79,6 +79,12 @@ public class DataAccess {
     	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductWithImageRowMapper()); 
     }
     
+    public List<ProductWithImage> getFavouriteProductsWithImage(String user_token){
+    	String username = user_token.substring(64);
+    	String[] params = new String[]{username};
+    	return jdbcTemplate.query("select products.id as id, products.name as name, products.description as description, products.category as category, products.withdrawn as withdrawn, products.tags as tags, products.image as image from users join favourites on users.id = favourites.user_id join products on favourites.product_id = products.id where users.username = ? ", params, new ProductWithImageRowMapper());
+    }
+    
     public List<Shop> getShops(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[]{status,limits.getStart(),(long)limits.getCount() };
@@ -204,6 +210,24 @@ public class DataAccess {
         else {
             throw new RuntimeException("Creation of Price failed");
         }
+    }
+    
+    public void addFavourite(String user_token, long product_id ) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into favourites(user_id, product_id) values(?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setLong(1, getUserProfile(user_token).getId());
+                ps.setLong(2, product_id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
     }
     
     // Update Product: similar to addProduct
@@ -422,6 +446,25 @@ public class DataAccess {
         int cnt = jdbcTemplate.update(psc, keyHolder);
 
         //if(cnt !=1 ) throw new RuntimeException("Deletion of Price failed");
+        return;
+    }
+    
+    public void deleteFavourite(String user_token, int product_id) {
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "DELETE FROM favourites WHERE product_id=? and user_id=? ",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                
+                ps.setInt(1, product_id);
+                ps.setLong(2, getUserProfile(user_token).getId());
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
         return;
     }
 

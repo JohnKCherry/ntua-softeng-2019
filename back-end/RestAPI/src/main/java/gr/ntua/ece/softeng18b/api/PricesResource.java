@@ -44,6 +44,12 @@ public class PricesResource extends ServerResource {
         String dateFrom_string = form.getFirstValue("dateFrom");
         String dateTo_string = form.getFirstValue("dateTo");
         
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to post price");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to post price");
+        
       //validate the values (in the general case)
         int product_id, shop_id; 
         try {
@@ -245,6 +251,12 @@ public class PricesResource extends ServerResource {
         //Read the parameters
         String shop_id_string = getAttribute("shop_id");
         String product_id_string = getAttribute("product_id");
+        
+      //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to delete price");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to delete price");
         
         //validate the values (in the general case)
         int product_id, shop_id; 

@@ -6,9 +6,11 @@ import gr.ntua.ece.softeng18b.data.Limits;
 import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 import org.restlet.data.Form;
+import org.restlet.data.Header;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import java.util.HashMap;
 import java.util.List;
@@ -93,8 +95,12 @@ public class ShopsResource extends ServerResource {
         String lat_string	= form.getFirstValue("lat");
         String tags			= form.getValues("tags");
         Double lng, lat;
-        //System.out.println("Καλό store");
-        //System.out.println(name);
+        
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to post shop");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to post shop");
         
         //validate the values (in the general case)
         if(name == null || address == null || lng_string == null || lat_string == null) throw new ResourceException(400,"This operation needs more parameters for a new shop");
@@ -102,7 +108,7 @@ public class ShopsResource extends ServerResource {
         //String regex = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
         //String regex_s = "^[p{IsGreek}.\\a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
         //if(!name.matches(regex) || !address.matches(regex) || !tags.matches(regex_s) ) throw new ResourceException(400,"Forbidden characters in parameters");
-        //System.out.println(name);
+        
         lng = toDouble(lng_string);
         lat = toDouble(lat_string);     
         if(lng == null || lat == null)throw new ResourceException(400,"Bad parameter for shop's long or lat");
