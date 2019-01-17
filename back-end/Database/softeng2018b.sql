@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2019 at 11:12 PM
+-- Generation Time: Jan 17, 2019 at 11:49 PM
 -- Server version: 10.1.37-MariaDB
 -- PHP Version: 7.2.12
 
@@ -38,7 +38,10 @@ CREATE TABLE `favourites` (
 --
 
 INSERT INTO `favourites` (`user_id`, `product_id`) VALUES
-(3, 4);
+(3, 4),
+(8, 2),
+(8, 14),
+(8, 19);
 
 -- --------------------------------------------------------
 
@@ -51,7 +54,7 @@ CREATE TABLE `prices` (
   `shop_id` int(11) NOT NULL,
   `price` decimal(11,0) NOT NULL,
   `dateFrom` date NOT NULL,
-  `dateTo` date DEFAULT NULL
+  `dateTo` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -59,12 +62,12 @@ CREATE TABLE `prices` (
 --
 
 INSERT INTO `prices` (`product_id`, `shop_id`, `price`, `dateFrom`, `dateTo`) VALUES
+(2, 1, '1', '2019-02-03', '2019-02-03'),
 (2, 1, '1500', '2018-12-29', '2019-01-31'),
 (2, 28, '1640', '2019-01-01', '2019-01-03'),
 (5, 4, '150', '2019-01-03', '2019-01-31'),
 (8, 5, '1640', '2019-01-06', '2019-01-23'),
-(12, 1, '1640', '2019-01-01', '2019-01-16'),
-(12, 5, '1200', '2019-01-01', '2019-01-31');
+(12, 1, '1640', '2019-01-01', '2019-01-16');
 
 -- --------------------------------------------------------
 
@@ -99,7 +102,9 @@ INSERT INTO `products` (`id`, `name`, `description`, `category`, `withdrawn`, `t
 (15, 'Tamakotchi', 'Useless but funny toy', 'Kids', b'0', 'Games, Kids', NULL),
 (16, 'Mate Pro 20', 'octacore phone from huawei', 'Mobile phones', b'0', '4G, FHD, Smartphone', NULL),
 (17, 'Mate Pro 20 Plus', 'octacore phone from huawei', 'Mobile phones', b'0', '4G, FHD, Smartphone', NULL),
-(19, 'Mate Pro 20 Plus Xs', 'octacore phone from huawei', 'Mobile phones', b'0', '4G, FHD, Smartphone', NULL);
+(19, 'Mate Pro 20 Plus Xs', 'octacore phone from huawei', 'Mobile phones', b'0', '4G, FHD, Smartphone', NULL),
+(24, 'Product', 'Description', 'Category', b'0', 'x,y,z', NULL),
+(25, '??????', 'Description', 'Category', b'0', 'x,y,z', NULL);
 
 -- --------------------------------------------------------
 
@@ -151,7 +156,8 @@ INSERT INTO `users` (`id`, `username`, `password`, `authorization`, `email`, `fu
 (2, 'johndoe', 'eukoloskwdikos', 1, 'donotreply@john.doe', 'John Doe', 1654523),
 (3, 'master_Roshi', 'Kamehouse', 2, 'master_roshi@dragonball.com', 'Master Roshi', 9564552),
 (4, 'ethelontarathskardiasmas', 'zwgianauphretw', 2, 'charity@gmail.com', 'Mike Green', 65645845),
-(7, 'dcrs001', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 2, 'crds2@ntua.gr', 'Dummy Crowdsourcer', 3633681);
+(7, 'dcrs001', '15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225', 2, 'crds2@ntua.gr', 'Dummy Crowdsourcer', 3633681),
+(8, 'user', 'd74ff0ee8da3b9806b18c877dbf29bbde50b5bd8e4dad7a3a725000feb82e8f1', 2, 'tu@tu.gr', 'test user', 700033);
 
 --
 -- Indexes for dumped tables
@@ -169,7 +175,7 @@ ALTER TABLE `favourites`
 -- Indexes for table `prices`
 --
 ALTER TABLE `prices`
-  ADD PRIMARY KEY (`product_id`,`shop_id`),
+  ADD PRIMARY KEY (`product_id`,`shop_id`,`price`,`dateFrom`,`dateTo`) USING BTREE,
   ADD KEY `prices_product_id_index` (`product_id`),
   ADD KEY `prices_shop_id_index` (`shop_id`);
 
@@ -206,7 +212,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `shops`
@@ -218,7 +224,7 @@ ALTER TABLE `shops`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
