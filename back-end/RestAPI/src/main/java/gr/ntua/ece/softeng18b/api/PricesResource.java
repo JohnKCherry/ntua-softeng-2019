@@ -129,8 +129,8 @@ public class PricesResource extends ServerResource {
             else if(sort.equals("geo.dist|DESC")) sort = "distance DESC";
             else if(sort.equals("price|ASC")) sort = "price ASC";
             else if(sort.equals("price|DESC")) sort = "price DESC";
-            else if(sort.equals("date|ASC")) sort = "date ASC";
-            else if(sort.equals("date|DESC")) sort = "date DESC";
+            else if(sort.equals("date|ASC") && !(verbose != null && verbose.equals("false"))) sort = "date ASC";
+            else if(sort.equals("date|DESC") && !(verbose != null && verbose.equals("false"))) sort = "date DESC";
             else throw  new NumberFormatException("The sort attribute entered, " + sort + " is invalid."); 
         } catch(NumberFormatException e) {
         	sort = "price ASC"; //default
