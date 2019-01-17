@@ -6,6 +6,7 @@ import gr.ntua.ece.softeng18b.data.Limits;
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDate;
+import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDateXprimal;
 
 import org.restlet.data.Form;
 import org.restlet.data.Header;
@@ -18,6 +19,7 @@ import org.restlet.util.Series;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -39,7 +41,13 @@ public class PricesResource extends ServerResource {
         //Read the parameters
         String shop_id_string = form.getFirstValue("shopId");
         String product_id_string = form.getFirstValue("productId");
-        Double price = toDouble(form.getFirstValue("price"));
+        Double price;
+        try{
+        	price = toDouble(form.getFirstValue("price"));
+        }
+        catch(NumberFormatException e) {
+        	throw new ResourceException(400,"Bad value for price");
+        }
         if(price == null || price <= 0)  throw new ResourceException(400,"Bad value for price!");
         String dateFrom_string = form.getFirstValue("dateFrom");
         String dateTo_string = form.getFirstValue("dateTo");
@@ -47,6 +55,7 @@ public class PricesResource extends ServerResource {
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
         String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        user_token = dataAccess.getUserApiToken_username_only("user").get()+"user";
         if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to post price");
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to post price");
         
@@ -78,6 +87,9 @@ public class PricesResource extends ServerResource {
         }
         catch(org.springframework.dao.DuplicateKeyException e){
         	throw new ResourceException(400,"A price for this product in this shop already exists in the database");
+        }
+        catch(org.springframework.dao.DataIntegrityViolationException e) {
+        	throw new ResourceException(400,"Invalid productId or ShopId");
         }
 
     }
@@ -190,39 +202,31 @@ public class PricesResource extends ServerResource {
         	if(dateTo.before(dateFrom)) {
             	throw new ResourceException(400,"Bad parameter for dates, dateFrom must be earlier than dateTo");
             }
-        	where_clause += " AND prices.dateFrom >= "+ dateFrom.toString() +" AND prices.dateTo >= " + dateTo.toString();
+        	where_clause += " AND prices.dateFrom <= '"+ dateTo.toString() +"' AND prices.dateTo >= '" + dateFrom.toString()+"'";
         }
         catch(IllegalArgumentException e){
-        	where_clause += " AND prices.dateTo >= CURDATE() ";
+        	where_clause += " AND prices.dateTo >= CURDATE() AND prices.dateFrom <= CURDATE() ";
+        	dateFrom = Date.valueOf(LocalDateTime.now().toLocalDate());
+        	dateTo	 = Date.valueOf(LocalDateTime.now().toLocalDate());
         }
         
         //Set product status == 0 for valid results!!!
         where_clause += " AND products.withdrawn = 0 ";
         
-        List<PriceResult> prices = dataAccess.getPrices(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause);
-        
-        // Convert PriceResult to PriceResultSingleDate
-        List<PriceResultSingleDate> prices_single = new ArrayList<PriceResultSingleDate>();
-        for(PriceResult pr : prices) {
-        	prices_single.addAll(convertPriceResult(pr));
-        }
-        
-        // Clean invalid dates
-        List<PriceResultSingleDate> prices_single_final = new ArrayList<PriceResultSingleDate>();
-        if(dateFrom != null && dateTo != null) {
-        	for(PriceResultSingleDate prs : prices_single) {
-        		if(!(prs.getDate().before(dateFrom) && prs.getDate().compareTo(dateFrom) != 0) && !(prs.getDate().after(dateTo) && prs.getDate().compareTo(dateTo) != 0)) prices_single_final.add(prs); 
-        	}
-        }
-        else prices_single_final = prices_single;
-        
         Map<String, Object> map = new HashMap<>();
+        if(verbose != null && verbose.equals("false")) {
+        	List<PriceResult> prices = dataAccess.getPrices(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause,dateFrom,dateTo);
+        	map.put("prices", prices);
+        	map.put("total", prices.size());
+        }
+        else {
+        	List<PriceResultSingleDateXprimal> prices = dataAccess.getPricesXprimal(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause,dateFrom,dateTo);
+        	map.put("prices", prices);
+        	map.put("total", prices.size());
+        }
         map.put("start", start);
         map.put("count", count);
-        map.put("total", prices.size());
-        if(verbose != null && verbose.equals("false")) map.put("prices", prices);
-        else map.put("prices", prices_single_final);
-
+        
         return new JsonMapRepresentation(map);
     }
     
