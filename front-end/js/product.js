@@ -23,6 +23,7 @@ $(document).ready(function(){
         token = window.sessionStorage.getItem("token");
      //   $("#loginBtn").hide();
         $("#loginBtn").text(window.sessionStorage.getItem("username"));
+        $("#loginBtn").attr("href","");
     }
     else {
         $("#loginBtn").show();

@@ -34,6 +34,8 @@ $(document).ready(function(){
                 location.reload();
             },
             error: function(){
+                $("#error").text("Wrong username or password");
+                $("#formLogin")[0].reset();
                 console.log("Login.js : Error to login");
             }
         });
