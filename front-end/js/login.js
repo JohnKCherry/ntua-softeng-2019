@@ -1,14 +1,10 @@
 $(document).ready(function(){
 
 
-    // post login
-    var login = function($payload) {
-        console.log($payload.username);
-    }
+    function login(event) {
 
-
-    $("#btnLogin").click(function(event) {
-
+        event.preventDefault()
+        event.stopPropagation()
         //Fetch form to apply custom Bootstrap validation
         var form = $("#formLogin")
 
@@ -18,7 +14,7 @@ $(document).ready(function(){
         }
 
         console.log("PErasan ton elegxo");
-      //  event.preventDefault()
+        //  event.preventDefault()
         form.addClass('was-validated');
 
         $.ajax({
@@ -31,15 +27,28 @@ $(document).ready(function(){
                 var obj = JSON.parse(JSON.stringify(data));
                 var token = obj.token;
                 console.log(token);
-                window.localStorage.setItem("token", token);
-                window.localStorage.setItem("username", $("#username").val());
-                var b = window.localStorage.getItem("token");
+                window.sessionStorage.setItem("token", token);
+                window.sessionStorage.setItem("username", $("#username").val());
+                var b = window.sessionStorage.getItem("token");
                 console.log(b);
-             //   location.reload();
+                location.reload();
             },
             error: function(){
                 console.log("Login.js : Error to login");
             }
         });
+    };
+
+    $("#formLogin").keypress(function(event) {
+        if(event.keyCode==13) {
+            console.log("Enter");
+            login(event);
+        }
+    }); 
+
+    $("#btnLogin").click(function(event) {
+
+        login(event);
     });
+
 });
