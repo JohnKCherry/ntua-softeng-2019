@@ -13,14 +13,15 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
     console.log("ready");
 
-    var token = window.sessionStorage.getItem("token");
     console.log("Token ");
     console.log(token);
     if (token != null) {
-        $("#loginBtn").hide();
+        token = window.sessionStorage.getItem("token");
+     //   $("#loginBtn").hide();
         $("#loginBtn").text(window.sessionStorage.getItem("username"));
     }
     else {
@@ -41,6 +42,7 @@ $(document).ready(function(){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
             $("#productName").text(obj.name);
+            document.title = obj.name;
             $("#productDescription").append("<span class=\"h6\">"+obj.description+"</span>");
             $("#productCategory").append("<span class=\"h6\">"+obj.category+"</span>");
             var tags = obj.tags;
