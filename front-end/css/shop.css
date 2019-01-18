@@ -1,0 +1,41 @@
+#buttonLocation{
+	position:absolute;
+    transition: .5s ease;
+    top: 35%;
+    left: 55%;
+}
+
+#buttonTel{
+	position:absolute;
+    transition: .5s ease;
+    top: 60%;
+    left: 30%;
+}
+
+#buttonName{
+	position:absolute;
+    transition: .5s ease;
+    top: 8%;
+    left: 40%;
+}
+
+#buttonWebsite{
+	position:absolute;
+    transition: .5s ease;
+    top: 5%;
+    left: 40%;
+}
+
+#buttonTags{
+	position:absolute;
+    transition: .5s ease;
+    top: 80%;
+    left: 30%;
+}
+
+#buttonType{
+	position:absolute;
+    transition: .5s ease;
+    top: 40%;
+    left: 30%;
+}
