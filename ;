@@ -39,14 +39,12 @@ $(document).ready(function(){
                 $(".modal-dialog").hide();
                 $("#signup").html("<div class=\"h2\">Welcome "+$("#username").val()+"</div>");
                 //redirect after 2 seconds
-                $("body").load("success.html");
+                $("body").load("404.html");
                 window.setTimeout(function() {
                     window.location.href = 'product.html';}, 2000);
                     //window.location.href="product.html";
             },
             error: function(){
-                $("#error").text("Error to create new account");
-                $("#formSignUp")[0].reset();
                 console.log("signup.js : Error to singup");
             }
         });
