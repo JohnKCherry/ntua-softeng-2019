@@ -76,6 +76,8 @@ $(document).ready(function(){
         });
 
     }
+	
+	
 
 
 
@@ -103,6 +105,43 @@ $(document).ready(function(){
         .bindPopup(shopArray[0])
         .addTo(map);
     }
+	
+	$("#buttonWebsite").click(function(){
+		$("#shopWebsite").replaceWith($('<textarea id=\"shopWebsite\" class=\'edit\' rows=\"1\" cols=\"30\">'+
+		$("#shopWebsite").text() +
+		'</textarea>'));
+	});
+	$("#buttonTel").click(function(){
+		$("#shopTel").replaceWith($('<textarea id=\"shopTel\" class=\'edit\' rows=\"1\" cols=\"30\">'+
+		$("#shopTel").text() +
+		'</textarea>'));
+	});
+	
+	$("#buttonLocation").click(function(){
+		$("#shopLocation").replaceWith($('<textarea id=\"shopLocation\" class=\'edit\' rows=\"1\" cols=\"30\">'+
+		$("#shopLocation").text() +
+		'</textarea>'));
+	});
+	
+	$("#buttonName").click(function(){
+		$("#shopName").replaceWith($('<textarea id=\"shopName\" class=\'edit\' rows=\"1\" cols=\"30\">'+
+		$("#shopName").text() +
+		'</textarea>'));
+	});
+	
+	
+	$("#buttonType").click(function(){
+		$("#shopType").replaceWith($('<textarea id=\"shopType\" class=\'edit\' rows=\"1\" cols=\"30\">'+
+		$("#shopType").text() +
+		'</textarea>'));
+	});
+	
+	$("#buttonTags").click(function(){
+		$("#shopWebsite").replaceWith($('<textarea id=\"shopTags\" class=\'edit\' rows=\"1\" cols=\"30\">'+
+		$("#shopTags").text() +
+		'</textarea>'));
+	});
+	
 
     setMap(shopID);
 
