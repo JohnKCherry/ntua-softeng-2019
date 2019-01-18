@@ -16,6 +16,12 @@ var getUrlParameter = function getUrlParameter(sParam) {
 $(document).ready(function(){
     console.log("ready");
 
+    var token = window.localStorage.getItem("token");
+    console.log("Token ");
+    console.log(token);
+    if (token != null) {
+        $("#loginBtn").text(window.localStorage.getItem("username"));
+    }
     var gps = new Array();
     var productID = getUrlParameter('id');
     if (productID == null) productID = 12;

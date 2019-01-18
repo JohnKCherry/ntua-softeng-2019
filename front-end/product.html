@@ -34,22 +34,37 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
         <!-- Header -->
         <div id="header"></div>
+        <a id="loginBtn" href="#loginModal" role="button" class="btn btn-primary btn-lg" data-toggle="modal" style="float: right">Login</a>
 
-        <div id="login">
-        <button id="loginBtn" class="btn btn-primary btn-lg" style="float: right" >Login</button>
-            <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                <div class="modal-dialog">
-                    <div class="loginmodal-container">
-                        <h1>Login to Your Account</h1><br>
-                        <form>
-                            <input type="text" name="user" placeholder="Username">
-                            <input type="password" name="pass" placeholder="Password">
-                            <input type="submit" name="login" class="login loginmodal-submit" value="Login">
+        <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Login</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                            <div class="form-group">
+                                <a href="" class="float-right">New user?</a>
+                                <label for="uname1">Username</label>
+                                <input type="text" class="form-control form-control-lg" name="uname1" id="username" required="">
+                                <div class="invalid-feedback">Oops, you missed this one.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control form-control-lg" id="password" required="" autocomplete="new-password">
+                                <div class="invalid-feedback">Enter your password too!</div>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="rememberMe">
+                                <label class="custom-control-label" for="rememberMe">Remember me on this computer</label>
+                            </div>
+                            <div class="form-group py-4">
+                                <button class="btn btn-outline-secondary btn-lg" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                <button type="submit" class="btn btn-success btn-lg float-right" id="btnLogin">Login</button>
+                            </div>
                         </form>
-
-                        <div class="login-help">
-                            <a href="#">Register</a> - <a href="#">Forgot Password</a>
-                        </div>
                     </div>
                 </div>
             </div>
