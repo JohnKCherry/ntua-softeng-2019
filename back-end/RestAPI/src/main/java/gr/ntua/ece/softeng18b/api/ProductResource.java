@@ -61,10 +61,8 @@ public class ProductResource extends ServerResource {
     	//authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
         String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
-        //System.out.println(">>>>>>>000 User token is: "+user_token);
         if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to delete product");
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to delete product");
-        //System.out.println(">>>>>>>>>> User token is: "+user_token);
         
         Boolean admin = dataAccess.isAdmin(user_token);
         
@@ -93,6 +91,12 @@ public class ProductResource extends ServerResource {
         String category = form.getFirstValue("category");
         String withdrawn = form.getFirstValue("status");
         String tags = form.getFirstValue("tags");
+        
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to update product");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to update product");
 
         //validate the values (in the general case)
         if(name == null || description == null || category == null) throw new ResourceException(400);
@@ -140,6 +144,12 @@ public class ProductResource extends ServerResource {
         String category = form.getFirstValue("category");
         String withdrawn = form.getFirstValue("status");
         String tags = form.getFirstValue("tags");
+        
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to patch product");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to patch product");
 
         //validate the values (in the general case)
         //We check to see wich parameter was given (while ensuring that it is the only one)

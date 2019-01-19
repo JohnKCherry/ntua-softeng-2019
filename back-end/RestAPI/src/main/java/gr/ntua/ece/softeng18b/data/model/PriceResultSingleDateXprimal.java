@@ -5,13 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class PriceResult {
+public class PriceResultSingleDateXprimal {
 
     private final long product_id;
     private final long shop_id;
     private final Double price;
-    private final Date dateFrom;
-    private final Date dateTo;
+    private final Date date;
     private final String product_name;
     private final List<String> product_tags;
     private final String shop_name;
@@ -21,12 +20,11 @@ public class PriceResult {
     
     
 
-    public PriceResult(long product_id, long shop_id, Double price, Date dateFrom, Date dateTo, String product_name, String product_tags, String shop_name, String shop_tags, String shop_address, Double shop_dist) {
+    public PriceResultSingleDateXprimal(long product_id, long shop_id, Double price, Date date, String product_name, String product_tags, String shop_name, String shop_tags, String shop_address, Double shop_dist) {
         this.product_id          = product_id;
         this.shop_id        	 = shop_id;
         this.price			   	 = price;
-        this.dateFrom    		 = dateFrom;
-        this.dateTo   			 = dateTo;
+        this.date    		 = date;
         this.product_name		 = product_name;
         this.product_tags 		 = Arrays.asList(product_tags.split("\\s*(=>|,|\\s)\\s*"));
         this.shop_name			 = shop_name;
@@ -48,12 +46,8 @@ public class PriceResult {
         return price;
     }
 
-    public Date getDateFrom() {
-        return dateFrom;
-    }
-    
-    public Date getDateTo() {
-        return dateTo;
+    public Date getDate() {
+        return date;
     }
     
     public String getProductName() {
@@ -84,12 +78,12 @@ public class PriceResult {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Price price = (Price) o;
-        return (this.product_id == price.getProductId() && this.shop_id == price.getShoptId() && this.getPrice() == price.getPrice() && this.dateTo.equals(price.getDateTo()) && this.dateFrom.equals(price.getDateFrom()));
+        PriceResultSingleDateXprimal price = (PriceResultSingleDateXprimal) o;
+        return (this.product_id == price.getProductId() && this.shop_id == price.getShoptId() && this.getPrice() == price.getPrice() && this.date.equals(price.getDate()));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product_id,shop_id,dateFrom,dateTo);
+        return Objects.hash(product_id,shop_id,date);
     }
 }

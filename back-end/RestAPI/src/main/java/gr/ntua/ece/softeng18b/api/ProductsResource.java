@@ -95,10 +95,8 @@ public class ProductsResource extends ServerResource {
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
         String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
-        //System.out.println(">>>>>>>000 User token is: "+user_token);
         if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to add product");
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to add product");
-        //System.out.println(">>>>>>>>>> User token is: "+user_token);
 
         //validate the values (in the general case)
         if(name == null || description == null || category == null) throw new ResourceException(400,"This operation needs more parameters");
