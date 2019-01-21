@@ -110,7 +110,7 @@ public class PricesResource extends ServerResource {
     	String product_tags_string	= getQuery().getValues("productTags");
     	String shop_tags_string		= getQuery().getValues("shopTags");
     	String verbose				= getQuery().getValues("verbose");
-    	
+    	String tagsAttr				= getQuery().getValues("tags");
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
     	
@@ -151,7 +151,7 @@ public class PricesResource extends ServerResource {
             Double check_lng = toDouble(geoLngAttr);
             Double check_lat = toDouble(geoLatAttr);
             Double check_dist = toDouble(geoDistAttr);
-            if(check_lng == null || check_lat == null || geoDistAttr == null) throw new ResourceException(400,"Bad parameters for lng or lat");
+            if(check_lng == null || check_lat == null || check_dist == null) throw new ResourceException(400,"Bad parameters for lng or lat");
         	have_clause += " HAVING shopDist <="+ geoDistAttr;
         	shopDist = "(6371 * acos (cos ( radians("+geoLngAttr +") )* cos( radians( ST_Y(shops.location) ) )* cos( radians( ST_X(shops.location) ) - radians("+geoLatAttr+") )+ sin ( radians("+geoLngAttr+") )* sin( radians( ST_Y(shops.location) ) ))) as shopDist";
         	geo = true;
@@ -169,8 +169,11 @@ public class PricesResource extends ServerResource {
        	}
        	else if(products_string != null && !products_string.isEmpty()) throw new ResourceException(400,"Bad value for products list");
        	
-       	if(product_tags_string != null && !product_tags_string.isEmpty() && !product_tags_string.contains(";") && !product_tags_string.contains("'")){
-       		//where_clause += " AND products.tags in ("+tags_string+")";
+       	
+       	Boolean notags = (tagsAttr == null || tagsAttr.isEmpty());
+       	if(!notags) product_tags_string = shop_tags_string = null;
+       	
+       	if(product_tags_string != null && !product_tags_string.isEmpty() && !product_tags_string.contains(";")){
        		List<String> ptags = Arrays.asList(product_tags_string.split("\\s*(=>|,|\\s)\\s*"));
        		if(!ptags.isEmpty()) {
        			where_clause += " AND ( 0 ";
@@ -182,8 +185,7 @@ public class PricesResource extends ServerResource {
        	}
        	else if(product_tags_string != null && !product_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for product tags list");
        	
-       	if(shop_tags_string != null &&!shop_tags_string.isEmpty() && !shop_tags_string.contains(";")) {
-       		//where_clause += " AND products.tags in ("+tags_string+")";
+       	if(shop_tags_string != null && !shop_tags_string.isEmpty() && !shop_tags_string.contains(";")) {
        		List<String> stags = Arrays.asList(shop_tags_string.split("\\s*(=>|,|\\s)\\s*"));
        		if(!stags.isEmpty()) {
        			where_clause += " AND ( 0 ";	
@@ -193,7 +195,26 @@ public class PricesResource extends ServerResource {
        			where_clause+= ") ";
        		}
        	}
-       	else if(shop_tags_string != null &&!shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
+       	else if(shop_tags_string != null && !shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
+       	
+       	if(tagsAttr != null && !tagsAttr.isEmpty() && !tagsAttr.contains(";")) {
+       		List<String> gtags = Arrays.asList(tagsAttr.split("\\s*(=>|,|\\s)\\s*"));
+       		if(!gtags.isEmpty()) {
+       			where_clause += " AND ( ( 0 ";
+       			for(String s : gtags){
+       				where_clause += "OR (products.tags LIKE '%"+s+"%')";
+       			}
+       			where_clause+= ") ";
+       			
+       			where_clause += " OR ( 0 ";	
+       			for(String s : gtags){
+       				where_clause += "OR (shops.tags LIKE '%"+s+"%')";
+       			}
+       			where_clause+= ") ) ";
+       		}
+       	}
+       	else if( tagsAttr != null && !tagsAttr.isEmpty()) throw new ResourceException(400,"Bad value for tags list");
+       	
        	
        	Date dateFrom = null, dateTo = null ;
         try{
