@@ -6,16 +6,20 @@ import gr.ntua.ece.softeng18b.data.Limits;
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDate;
+import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDateXprimal;
 
 import org.restlet.data.Form;
+import org.restlet.data.Header;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -37,10 +41,23 @@ public class PricesResource extends ServerResource {
         //Read the parameters
         String shop_id_string = form.getFirstValue("shopId");
         String product_id_string = form.getFirstValue("productId");
-        Double price = toDouble(form.getFirstValue("price"));
+        Double price;
+        try{
+        	price = toDouble(form.getFirstValue("price"));
+        }
+        catch(NumberFormatException e) {
+        	throw new ResourceException(400,"Bad value for price");
+        }
         if(price == null || price <= 0)  throw new ResourceException(400,"Bad value for price!");
         String dateFrom_string = form.getFirstValue("dateFrom");
         String dateTo_string = form.getFirstValue("dateTo");
+        
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        user_token = dataAccess.getUserApiToken_username_only("user").get()+"user";
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to post price");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to post price");
         
       //validate the values (in the general case)
         int product_id, shop_id; 
@@ -71,6 +88,9 @@ public class PricesResource extends ServerResource {
         catch(org.springframework.dao.DuplicateKeyException e){
         	throw new ResourceException(400,"A price for this product in this shop already exists in the database");
         }
+        catch(org.springframework.dao.DataIntegrityViolationException e) {
+        	throw new ResourceException(400,"Invalid productId or ShopId");
+        }
 
     }
     
@@ -90,7 +110,7 @@ public class PricesResource extends ServerResource {
     	String product_tags_string	= getQuery().getValues("productTags");
     	String shop_tags_string		= getQuery().getValues("shopTags");
     	String verbose				= getQuery().getValues("verbose");
-    	
+    	String tagsAttr				= getQuery().getValues("tags");
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
     	
@@ -109,8 +129,8 @@ public class PricesResource extends ServerResource {
             else if(sort.equals("geo.dist|DESC")) sort = "distance DESC";
             else if(sort.equals("price|ASC")) sort = "price ASC";
             else if(sort.equals("price|DESC")) sort = "price DESC";
-            else if(sort.equals("date|ASC")) sort = "date ASC";
-            else if(sort.equals("date|DESC")) sort = "date DESC";
+            else if(sort.equals("date|ASC") && !(verbose != null && verbose.equals("false"))) sort = "date ASC";
+            else if(sort.equals("date|DESC") && !(verbose != null && verbose.equals("false"))) sort = "date DESC";
             else throw  new NumberFormatException("The sort attribute entered, " + sort + " is invalid."); 
         } catch(NumberFormatException e) {
         	sort = "price ASC"; //default
@@ -131,7 +151,7 @@ public class PricesResource extends ServerResource {
             Double check_lng = toDouble(geoLngAttr);
             Double check_lat = toDouble(geoLatAttr);
             Double check_dist = toDouble(geoDistAttr);
-            if(check_lng == null || check_lat == null || geoDistAttr == null) throw new ResourceException(400,"Bad parameters for lng or lat");
+            if(check_lng == null || check_lat == null || check_dist == null) throw new ResourceException(400,"Bad parameters for lng or lat");
         	have_clause += " HAVING shopDist <="+ geoDistAttr;
         	shopDist = "(6371 * acos (cos ( radians("+geoLngAttr +") )* cos( radians( ST_Y(shops.location) ) )* cos( radians( ST_X(shops.location) ) - radians("+geoLatAttr+") )+ sin ( radians("+geoLngAttr+") )* sin( radians( ST_Y(shops.location) ) ))) as shopDist";
         	geo = true;
@@ -149,8 +169,11 @@ public class PricesResource extends ServerResource {
        	}
        	else if(products_string != null && !products_string.isEmpty()) throw new ResourceException(400,"Bad value for products list");
        	
-       	if(product_tags_string != null && !product_tags_string.isEmpty() && !product_tags_string.contains(";") && !product_tags_string.contains("'")){
-       		//where_clause += " AND products.tags in ("+tags_string+")";
+       	
+       	Boolean notags = (tagsAttr == null || tagsAttr.isEmpty());
+       	if(!notags) product_tags_string = shop_tags_string = null;
+       	
+       	if(product_tags_string != null && !product_tags_string.isEmpty() && !product_tags_string.contains(";")){
        		List<String> ptags = Arrays.asList(product_tags_string.split("\\s*(=>|,|\\s)\\s*"));
        		if(!ptags.isEmpty()) {
        			where_clause += " AND ( 0 ";
@@ -162,8 +185,7 @@ public class PricesResource extends ServerResource {
        	}
        	else if(product_tags_string != null && !product_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for product tags list");
        	
-       	if(shop_tags_string != null &&!shop_tags_string.isEmpty() && !shop_tags_string.contains(";")) {
-       		//where_clause += " AND products.tags in ("+tags_string+")";
+       	if(shop_tags_string != null && !shop_tags_string.isEmpty() && !shop_tags_string.contains(";")) {
        		List<String> stags = Arrays.asList(shop_tags_string.split("\\s*(=>|,|\\s)\\s*"));
        		if(!stags.isEmpty()) {
        			where_clause += " AND ( 0 ";	
@@ -173,7 +195,26 @@ public class PricesResource extends ServerResource {
        			where_clause+= ") ";
        		}
        	}
-       	else if(shop_tags_string != null &&!shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
+       	else if(shop_tags_string != null && !shop_tags_string.isEmpty()) throw new ResourceException(400,"Bad value for shop tags list");
+       	
+       	if(tagsAttr != null && !tagsAttr.isEmpty() && !tagsAttr.contains(";")) {
+       		List<String> gtags = Arrays.asList(tagsAttr.split("\\s*(=>|,|\\s)\\s*"));
+       		if(!gtags.isEmpty()) {
+       			where_clause += " AND ( ( 0 ";
+       			for(String s : gtags){
+       				where_clause += "OR (products.tags LIKE '%"+s+"%')";
+       			}
+       			where_clause+= ") ";
+       			
+       			where_clause += " OR ( 0 ";	
+       			for(String s : gtags){
+       				where_clause += "OR (shops.tags LIKE '%"+s+"%')";
+       			}
+       			where_clause+= ") ) ";
+       		}
+       	}
+       	else if( tagsAttr != null && !tagsAttr.isEmpty()) throw new ResourceException(400,"Bad value for tags list");
+       	
        	
        	Date dateFrom = null, dateTo = null ;
         try{
@@ -182,39 +223,31 @@ public class PricesResource extends ServerResource {
         	if(dateTo.before(dateFrom)) {
             	throw new ResourceException(400,"Bad parameter for dates, dateFrom must be earlier than dateTo");
             }
-        	where_clause += " AND prices.dateFrom >= "+ dateFrom.toString() +" AND prices.dateTo >= " + dateTo.toString();
+        	where_clause += " AND prices.dateFrom <= '"+ dateTo.toString() +"' AND prices.dateTo >= '" + dateFrom.toString()+"'";
         }
         catch(IllegalArgumentException e){
-        	where_clause += " AND prices.dateTo >= CURDATE() ";
+        	where_clause += " AND prices.dateTo >= CURDATE() AND prices.dateFrom <= CURDATE() ";
+        	dateFrom = Date.valueOf(LocalDateTime.now().toLocalDate());
+        	dateTo	 = Date.valueOf(LocalDateTime.now().toLocalDate());
         }
         
         //Set product status == 0 for valid results!!!
         where_clause += " AND products.withdrawn = 0 ";
         
-        List<PriceResult> prices = dataAccess.getPrices(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause);
-        
-        // Convert PriceResult to PriceResultSingleDate
-        List<PriceResultSingleDate> prices_single = new ArrayList<PriceResultSingleDate>();
-        for(PriceResult pr : prices) {
-        	prices_single.addAll(convertPriceResult(pr));
-        }
-        
-        // Clean invalid dates
-        List<PriceResultSingleDate> prices_single_final = new ArrayList<PriceResultSingleDate>();
-        if(dateFrom != null && dateTo != null) {
-        	for(PriceResultSingleDate prs : prices_single) {
-        		if(!(prs.getDate().before(dateFrom) && prs.getDate().compareTo(dateFrom) != 0) && !(prs.getDate().after(dateTo) && prs.getDate().compareTo(dateTo) != 0)) prices_single_final.add(prs); 
-        	}
-        }
-        else prices_single_final = prices_single;
-        
         Map<String, Object> map = new HashMap<>();
+        if(verbose != null && verbose.equals("false")) {
+        	List<PriceResult> prices = dataAccess.getPrices(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause,dateFrom,dateTo);
+        	map.put("prices", prices);
+        	map.put("total", prices.size());
+        }
+        else {
+        	List<PriceResultSingleDateXprimal> prices = dataAccess.getPricesXprimal(new Limits(start,count),where_clause,sort,geo,shopDist,have_clause,dateFrom,dateTo);
+        	map.put("prices", prices);
+        	map.put("total", prices.size());
+        }
         map.put("start", start);
         map.put("count", count);
-        map.put("total", prices.size());
-        if(verbose != null && verbose.equals("false")) map.put("prices", prices);
-        else map.put("prices", prices_single_final);
-
+        
         return new JsonMapRepresentation(map);
     }
     
@@ -237,6 +270,32 @@ public class PricesResource extends ServerResource {
     		temp = Date.valueOf(dt);
     	}
 		return result;
+    }
+    
+    protected Representation delete() throws ResourceException {
+        //Read the parameters
+        String shop_id_string = getAttribute("shop_id");
+        String product_id_string = getAttribute("product_id");
+        
+      //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to delete price");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to delete price");
+        
+        //validate the values (in the general case)
+        int product_id, shop_id; 
+        try {
+        	product_id = Integer.parseInt(product_id_string);
+        	shop_id = Integer.parseInt(shop_id_string);
+        }
+    	catch(NumberFormatException e){
+        	throw new ResourceException(400,"Bad parameter for product_id or shop_id");
+        }
+        dataAccess.deletePrice(product_id, shop_id);
+        
+        return new JsonMessageRepresentation("OK");
+        
     }
     
 }

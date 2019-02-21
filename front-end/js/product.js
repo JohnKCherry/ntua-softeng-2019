@@ -12,11 +12,25 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-
+var gps = new Array();
+gps[0] = "";
+gps[1] = "";
+var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
     console.log("ready");
 
-    var gps = new Array();
+    console.log("Token ");
+    console.log(token);
+    if (token != null) {
+        token = window.sessionStorage.getItem("token");
+     //   $("#loginBtn").hide();
+        $("#loginBtn").text(window.sessionStorage.getItem("username"));
+        $("#loginBtn").attr("href","");
+    }
+    else {
+        $("#loginBtn").show();
+    }
+//    var gps = new Array();
     var productID = getUrlParameter('id');
     if (productID == null) productID = 12;
     var lowestPrice;
@@ -31,6 +45,7 @@ $(document).ready(function(){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
             $("#productName").text(obj.name);
+            document.title = obj.name;
             $("#productDescription").append("<span class=\"h6\">"+obj.description+"</span>");
             $("#productCategory").append("<span class=\"h6\">"+obj.category+"</span>");
             var tags = obj.tags;
@@ -60,7 +75,8 @@ $(document).ready(function(){
         $("#shops").empty();        // Clear previous list
         $("#lowestPrice").empty();  // Clear previous lowest price
         var sort = $("#sort").val();
-        var geoDist = $("#distance").val();
+        var geoDist  = "";
+      //  var geoDist = $("#distance").val();
         var geoLat = "";
         var geoLng = "";
         var dateFrom = $("#dateFrom").val();
@@ -73,13 +89,19 @@ $(document).ready(function(){
         else if ( sort == 2 ) sortStr = "date";
         else sortStr = "dist";
         var orderStr = (order==1) ? "ASC" : "DESC";
-        if(gps!=null) {
+        if(gps==null && gps[0]!="" && gps[1]!="") {
             geoLng = gps[0];
             geoLat = gps[1];
+            geoDist = $("#distance").val();
         }
-        var url = "http://localhost:8765/observatory/api/prices?verbose=false&geo.dist="+geoDist
-        +"&geo.lng="+geoLng
-        +"&geo.lat="+geoLat
+        else {
+            geoDist = "";
+            geoLat = "";
+            geoLng = "";
+        }
+        var url = "http://localhost:8765/observatory/api/prices?verbose=false&geoDist="+geoDist
+        +"&geoLng="+geoLng
+        +"&geoLat="+geoLat
         +"&dateFrom="+dateFrom
         +"&dateTo="+dateTo
         +"&shops="+shops
@@ -98,6 +120,10 @@ $(document).ready(function(){
                 var obj = JSON.parse(JSON.stringify(data));
                 var shops = obj.prices;
 
+                if(obj.total == 0) {
+                    console.log("Shops not found total = 0");
+                    shopsNotFound();
+                }
                 // Update lowest Price
                 lowestPrice = (order==1 ? shops[0].price : shops[shops.length-1].price);
                 $("#lowestPrice").append(lowestPrice + " &euro;");
@@ -123,6 +149,16 @@ $(document).ready(function(){
 
     }
 
+
+    function shopsNotFound() {
+                console.log("Product.js :Prices GET Error product with id " + products + " not found !");
+                $("#shopsDiv").text("Shops Not Found");
+                $("#map").text("Error Map");
+                //$("#shopsDiv").load("404.html");
+                //$("html").load("404.html");
+                return ;
+        
+    }
 
     // get shop by id
     // input shop id
@@ -207,6 +243,9 @@ $(document).ready(function(){
         $("#geoDist").html($("#distance").val() + " Khm");
     });
 
+    $("#distance").on("change", function() {
+        findLocation();
+    });
     // event listener submit form
     $("#filters").submit(function() {
         console.log("Form submitted");
@@ -233,13 +272,11 @@ $(document).ready(function(){
     $("#geoDist").html($("#distance").val() + " Khm");
 
     var findLocation = function() {
-        gps[0] = "";
-        gps[1] = "";
         if ("geolocation" in navigator){  
             navigator.geolocation.getCurrentPosition(function(position){
                 gps[0] = position.coords.latitude;
                 gps[1] = position.coords.longitude;
-                shopsUpdate(1);
+               // shopsUpdate(1);
             }, function() {
                 console.log("Don't allow location");
             });
@@ -248,6 +285,5 @@ $(document).ready(function(){
         }
 
     };
-    findLocation();
 });
 

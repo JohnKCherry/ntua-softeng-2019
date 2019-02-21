@@ -37,6 +37,7 @@ public class SignupResource extends ServerResource {
         	String message = dataAccess.addUser(fullname, username, password, email, auth);
         	Map<String, Object> map = new HashMap<>();
             map.put("message", message);
+            map.put("token", dataAccess.getUserApiToken_username_only(username) + username);
             return new JsonMapRepresentation(map);
         }
         catch(org.springframework.dao.DuplicateKeyException e){
