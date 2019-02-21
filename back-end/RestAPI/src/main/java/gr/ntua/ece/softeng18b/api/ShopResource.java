@@ -6,10 +6,12 @@ import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 
 import org.restlet.data.Form;
+import org.restlet.data.Header;
 import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import java.util.Optional;
 
@@ -56,6 +58,12 @@ public class ShopResource extends ServerResource {
         String lat_string = form.getFirstValue("lat");
         String withdrawn = form.getFirstValue("status");
         String tags = form.getFirstValue("tags");
+        
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to update shop");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to update shop");
 
         //validate the values (in the general case)
         if(name == null || address == null || lng_string == null || lat_string== null) throw new ResourceException(400);
@@ -109,6 +117,12 @@ public class ShopResource extends ServerResource {
         String lat_string = form.getFirstValue("lat");
         String withdrawn = form.getFirstValue("status");
         String tags = form.getFirstValue("tags");
+        
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to patch shop");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to patch shop");
 
         //validate the values (in the general case)
         //We check to see wich parameter was given (while ensuring that it is the only one)
@@ -186,7 +200,13 @@ public class ShopResource extends ServerResource {
     	
         if(!dataAccess.getShop(id).isPresent()) throw new ResourceException(Status.CLIENT_ERROR_NOT_FOUND, "Shop not found - id: " + id_string);
 
-    	Boolean admin = false;	//TODO: Implement authority detection based on user login
+        //authorization of user
+        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
+        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to delete shop");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to delete shop");
+        
+        Boolean admin = dataAccess.isAdmin(user_token);
     	if(!admin) {     
     		dataAccess.patchShop(id, "withdrawn","1");
     		//Check if withdrawal was successful

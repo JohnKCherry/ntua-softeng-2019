@@ -3,6 +3,7 @@ package gr.ntua.ece.softeng18b.data;
 
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.PriceResult;
+import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDateXprimal;
 import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.ProductWithImage;
 import gr.ntua.ece.softeng18b.data.model.Shop;
@@ -79,6 +80,12 @@ public class DataAccess {
     	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductWithImageRowMapper()); 
     }
     
+    public List<ProductWithImage> getFavouriteProductsWithImage(String user_token){
+    	String username = user_token.substring(64);
+    	String[] params = new String[]{username};
+    	return jdbcTemplate.query("select products.id as id, products.name as name, products.description as description, products.category as category, products.withdrawn as withdrawn, products.tags as tags, products.image as image from users join favourites on users.id = favourites.user_id join products on favourites.product_id = products.id where users.username = ? ", params, new ProductWithImageRowMapper());
+    }
+    
     public List<Shop> getShops(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[]{status,limits.getStart(),(long)limits.getCount() };
@@ -86,12 +93,30 @@ public class DataAccess {
     	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ShopRowMapper());      
     }
     
-    public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause) {
+    public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
     	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
     	//System.out.println("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?");
     	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause + " "+ have_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
-    	return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());      
+        return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
     }
+    
+    public List<PriceResultSingleDateXprimal> getPricesXprimal(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
+    	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
+    	String daterangegen = "(select a.Date \n" + 
+    			"from (\n" + 
+    			"    select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a) + (1000 * d.a) ) DAY as Date\n" + 
+    			"    from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a\n" + 
+    			"    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b\n" + 
+    			"    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c\n" + 
+    			"    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as d\n" + 
+    			") a\n" + 
+    			"where a.Date between '"+ dateFrom.toString() +"' and '"+ dateTo.toString() +"' ) ";
+    	//System.out.println("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?");
+    	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, dd.Date, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id cross join "+ daterangegen +" as dd where dd.Date >= '"+ dateFrom.toString() +"' AND dd.Date <= '"+ dateTo.toString() +"' "+ have_clause +"  order by "+sort+" limit ?,?", params, new PriceResultSingleDateRowMapper());
+    	return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo , dd.Date from prices join shops on shop_id = shops.id join products on product_id = products.id cross join "+ daterangegen +" as dd where dd.Date >= '"+ dateFrom.toString() +"' AND dd.Date <= '"+ dateTo.toString() +"' "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultSingleDateRowMapper());      
+    }
+    
+    
 
     public Product addProduct(String name, String description, String category, boolean withdrawn, String tags ) {
         //Create the new product record using a prepared statement
@@ -204,6 +229,24 @@ public class DataAccess {
         else {
             throw new RuntimeException("Creation of Price failed");
         }
+    }
+    
+    public void addFavourite(String user_token, long product_id ) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into favourites(user_id, product_id) values(?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setLong(1, getUserProfile(user_token).getId());
+                ps.setLong(2, product_id);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
     }
     
     // Update Product: similar to addProduct
@@ -422,6 +465,25 @@ public class DataAccess {
         int cnt = jdbcTemplate.update(psc, keyHolder);
 
         //if(cnt !=1 ) throw new RuntimeException("Deletion of Price failed");
+        return;
+    }
+    
+    public void deleteFavourite(String user_token, int product_id) {
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "DELETE FROM favourites WHERE product_id=? and user_id=? ",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                
+                ps.setInt(1, product_id);
+                ps.setLong(2, getUserProfile(user_token).getId());
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
         return;
     }
 
