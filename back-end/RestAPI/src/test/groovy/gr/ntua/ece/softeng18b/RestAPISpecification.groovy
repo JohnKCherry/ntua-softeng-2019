@@ -9,11 +9,15 @@ import spock.lang.Specification
 import spock.lang.Stepwise
 
 @Stepwise class RestAPISpecification extends Specification {
+	
+	private static final String IGNORED = System.setProperty("IGNORE_SSL_ERRORS", "true")
     
     private static final String HOST = System.getProperty("gretty.host")
-    private static final String PORT = System.getProperty("gretty.port")
+    private static final String PORT = System.getProperty("gretty.httpsPort")
 	
-    @Shared RestAPI api = new RestAPI(HOST, PORT as Integer, false)
+	private static String id;
+	
+   @Shared RestAPI api = new RestAPI(HOST, PORT as Integer, true)
     
     def "User logins"() {
         when:
@@ -24,7 +28,7 @@ import spock.lang.Stepwise
 		
     }
     
-    def "User adds product" () {
+    def "User adds product" (){
         when:
         Product sent = new Product(
             name       : "Product",
@@ -34,7 +38,9 @@ import spock.lang.Stepwise
             withdrawn  : false
         )
         Product returned = api.postProduct(sent, RestCallFormat.JSON)
-        
+		id = returned.id;
+		//System.out.println(id);
+		
         then:
         returned.name == sent.name &&
         returned.description == sent.description &&
@@ -42,5 +48,16 @@ import spock.lang.Stepwise
         returned.tags == sent.tags &&
         returned.withdrawn == sent.withdrawn
     }
+	
+	def "User deletes product" (){
+		when:
+		System.out.println("Deleting product with ID: "+this.id);
+		api.deleteProduct(id, RestCallFormat.JSON)
+		Product returned = api.getProduct(id, RestCallFormat.JSON)
+		
+		then:
+		returned.withdrawn == true
+	}
+
 }
 

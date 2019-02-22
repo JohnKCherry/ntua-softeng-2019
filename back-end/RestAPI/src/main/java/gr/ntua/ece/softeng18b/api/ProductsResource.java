@@ -81,7 +81,8 @@ public class ProductsResource extends ServerResource {
         return new JsonMapRepresentation(map);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation post(Representation entity) throws ResourceException {
 
         //Create a new restlet form
