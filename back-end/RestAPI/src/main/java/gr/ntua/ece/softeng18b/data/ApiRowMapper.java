@@ -1,6 +1,5 @@
 package gr.ntua.ece.softeng18b.data;
 
-import gr.ntua.ece.softeng18b.data.model.Product;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
