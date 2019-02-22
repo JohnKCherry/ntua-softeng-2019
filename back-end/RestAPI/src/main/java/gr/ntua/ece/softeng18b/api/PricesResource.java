@@ -10,7 +10,6 @@ import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDateXprimal;
 
 import org.restlet.data.Form;
 import org.restlet.data.Header;
-import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
@@ -33,7 +32,8 @@ public class PricesResource extends ServerResource {
 
 
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation post(Representation entity) throws ResourceException {
 
         //Create a new restlet form
@@ -272,7 +272,8 @@ public class PricesResource extends ServerResource {
 		return result;
     }
     
-    protected Representation delete() throws ResourceException {
+    @SuppressWarnings("unchecked")
+	protected Representation delete() throws ResourceException {
         //Read the parameters
         String shop_id_string = getAttribute("shop_id");
         String product_id_string = getAttribute("product_id");
@@ -294,7 +295,10 @@ public class PricesResource extends ServerResource {
         }
         dataAccess.deletePrice(product_id, shop_id);
         
-        return new JsonMessageRepresentation("OK");
+        HashMap<String,String> msg = new HashMap<String,String>();
+        msg.put("message", "OK");
+        
+        return new JsonMapRepresentation(msg);
         
     }
     

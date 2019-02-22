@@ -6,6 +6,11 @@ import javax.servlet.http.*;
 
 public class HelloWorldServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8777143940899600444L;
+
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException {
 		try {
 			res.setContentType("text/plain; charset=utf-8");

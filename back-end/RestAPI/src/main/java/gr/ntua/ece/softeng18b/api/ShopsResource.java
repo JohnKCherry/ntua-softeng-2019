@@ -3,7 +3,6 @@ package gr.ntua.ece.softeng18b.api;
 import gr.ntua.ece.softeng18b.conf.Configuration;
 import gr.ntua.ece.softeng18b.data.DataAccess;
 import gr.ntua.ece.softeng18b.data.Limits;
-import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 import org.restlet.data.Form;
 import org.restlet.data.Header;
@@ -83,7 +82,8 @@ public class ShopsResource extends ServerResource {
         return new JsonMapRepresentation(map);
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation post(Representation entity) throws ResourceException {
 
         //Create a new restlet form

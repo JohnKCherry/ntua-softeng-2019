@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class JsonMapRepresentation extends WriterRepresentation {
 
-    private final Map map;
+    private final Map<?, ?> map;
 
-    public JsonMapRepresentation(Map map) {
+    public JsonMapRepresentation(Map<?, ?> map) {
         super(MediaType.APPLICATION_JSON);
         this.map = map;
     }

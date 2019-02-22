@@ -2,7 +2,6 @@ package gr.ntua.ece.softeng18b.api;
 
 import gr.ntua.ece.softeng18b.conf.Configuration;
 import gr.ntua.ece.softeng18b.data.DataAccess;
-import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 
 import org.restlet.data.Form;
@@ -13,6 +12,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public class ShopResource extends ServerResource {
@@ -45,7 +45,8 @@ public class ShopResource extends ServerResource {
         return new JsonShopRepresentation(shop);
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation put(Representation entity) throws ResourceException {
 
         //Create a new restlet form
@@ -104,7 +105,8 @@ public class ShopResource extends ServerResource {
         }    
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation patch(Representation entity) throws ResourceException {
 
         //Create a new restlet form
@@ -187,7 +189,8 @@ public class ShopResource extends ServerResource {
         }    
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation delete() throws ResourceException {
     	int id;
     	String id_string = getAttribute("id");
@@ -207,15 +210,18 @@ public class ShopResource extends ServerResource {
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to delete shop");
         
         Boolean admin = dataAccess.isAdmin(user_token);
+        HashMap<String,String> msg = new HashMap<String,String>();
+        msg.put("message", "OK");
+        
     	if(!admin) {     
     		dataAccess.patchShop(id, "withdrawn","1");
     		//Check if withdrawal was successful
-    		if(dataAccess.getShop(id).get().isWithdrawn()) return new JsonMessageRepresentation("OK");
+    		if(dataAccess.getShop(id).get().isWithdrawn()) return new JsonMapRepresentation(msg);
     		return new JsonMessageRepresentation("Could not complete shop withdrawal");
     	}
     	else{
     		dataAccess.deleteShop(id);
-    		if(!dataAccess.getShop(id).isPresent()) return new JsonMessageRepresentation("OK");
+    		if(!dataAccess.getShop(id).isPresent()) return new JsonMapRepresentation(msg);
     		return new JsonMessageRepresentation("Could not complete shop deletion");
     	}
     }

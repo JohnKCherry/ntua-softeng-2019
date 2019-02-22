@@ -3,7 +3,6 @@ package gr.ntua.ece.softeng18b.api;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.restlet.data.Form;
 import org.restlet.data.Header;
@@ -15,16 +14,14 @@ import org.restlet.util.Series;
 
 import gr.ntua.ece.softeng18b.conf.Configuration;
 import gr.ntua.ece.softeng18b.data.DataAccess;
-import gr.ntua.ece.softeng18b.data.Limits;
-import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.ProductWithImage;
-import gr.ntua.ece.softeng18b.data.model.User;
 
 public class FavouritesResource extends ServerResource {
 	
 	private final DataAccess dataAccess = Configuration.getInstance().getDataAccess();
 	
 	
+	@SuppressWarnings("unchecked")
 	@Override
     protected Representation get() throws ResourceException {
 		//authorization of user
@@ -43,7 +40,8 @@ public class FavouritesResource extends ServerResource {
     }
 
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation post(Representation entity) throws ResourceException {
     	//Create a new restlet form
         Form form = new Form(entity);
@@ -75,7 +73,8 @@ public class FavouritesResource extends ServerResource {
         return new JsonMessageRepresentation("OK");
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation delete() throws ResourceException {
     	int product_id;
     	String product_id_string = getAttribute("productId");
