@@ -58,7 +58,7 @@ public class ShopResource extends ServerResource {
         String lng_string = form.getFirstValue("lng");
         String lat_string = form.getFirstValue("lat");
         String withdrawn = form.getFirstValue("status");
-        String tags = form.getFirstValue("tags");
+        String tags = form.getValues("tags");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
@@ -118,7 +118,7 @@ public class ShopResource extends ServerResource {
         String lng_string = form.getFirstValue("lng");
         String lat_string = form.getFirstValue("lat");
         String withdrawn = form.getFirstValue("status");
-        String tags = form.getFirstValue("tags");
+        String tags = form.getValues("tags");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");

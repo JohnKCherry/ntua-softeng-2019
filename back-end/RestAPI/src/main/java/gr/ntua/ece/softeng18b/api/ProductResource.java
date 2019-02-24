@@ -94,7 +94,7 @@ public class ProductResource extends ServerResource {
         String description = form.getFirstValue("description");
         String category = form.getFirstValue("category");
         String withdrawn = form.getFirstValue("status");
-        String tags = form.getFirstValue("tags");
+        String tags = form.getValues("tags");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
@@ -148,7 +148,7 @@ public class ProductResource extends ServerResource {
         String description = form.getFirstValue("description");
         String category = form.getFirstValue("category");
         String withdrawn = form.getFirstValue("status");
-        String tags = form.getFirstValue("tags");
+        String tags = form.getValues("tags");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");

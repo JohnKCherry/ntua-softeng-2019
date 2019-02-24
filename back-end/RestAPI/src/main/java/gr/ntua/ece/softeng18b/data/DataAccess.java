@@ -164,7 +164,7 @@ public class DataAccess {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
-                        "insert into shops(name, address, location, tags, withdrawn) values(?, ?, ST_GeomFromText('POINT("+ lat.toString() +" "+ lng.toString() +")',4326), ?, ?)",
+                        "insert into shops(name, address, location, tags, withdrawn) values(?, ?, ST_GeomFromText('POINT("+ lng.toString() +" "+ lat.toString() +")',4326), ?, ?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 ps.setString(1, name);
