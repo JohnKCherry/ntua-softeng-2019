@@ -40,7 +40,7 @@ $(document).ready(function(){
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "http://localhost:8765/observatory/api/productswithimage/"+productID,
+        url: "https://localhost:8765/observatory/api/productswithimage/"+productID,
         success: function(data){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
@@ -99,7 +99,7 @@ $(document).ready(function(){
             geoLat = "";
             geoLng = "";
         }
-        var url = "http://localhost:8765/observatory/api/prices?verbose=false&geoDist="+geoDist
+        var url = "https://localhost:8765/observatory/api/prices?verbose=false&geoDist="+geoDist
         +"&geoLng="+geoLng
         +"&geoLat="+geoLat
         +"&dateFrom="+dateFrom
@@ -132,7 +132,7 @@ $(document).ready(function(){
                     shopsID.push(shop_id);
                     var price = value.price;
                     var shopName = value.shop_name;
-                    $("#shops").append("<li class=\"list-group-item\"><a href=\"http://localhost:8765/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
+                    $("#shops").append("<li class=\"list-group-item\"><a href=\"https://localhost:8765/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
                                        +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
                 });
                 if (reload == 1) setMap(shopsID);
@@ -170,7 +170,7 @@ $(document).ready(function(){
             type: "GET",
             async: false,
             dataType: "json",
-            url: "http://localhost:8765/observatory/api/shops/"+id,
+            url: "https://localhost:8765/observatory/api/shops/"+id,
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 shopsArray = [obj.name,obj.lat,obj.lng];
@@ -214,9 +214,9 @@ $(document).ready(function(){
         else map = L.map('map').setView([gps[0],gps[1]], 12);
 
         mapLink = 
-            '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+            '<a href="https://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; ' + mapLink + ' Contributors',
             maxZoom: 18,
         }).addTo(map);
