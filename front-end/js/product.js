@@ -29,7 +29,7 @@ $(document).ready(function(){
         $("#loginBtn").show();
     }
     var productID = getUrlParameter('id');
-    if (productID == null) productID = 12;
+    if (productID == null) productID = 27;
     var lowestPrice;
     var map = null;
 
