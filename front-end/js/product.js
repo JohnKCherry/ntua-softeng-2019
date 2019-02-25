@@ -88,11 +88,13 @@ $(document).ready(function(){
         if ( sort == 1 ) sortStr = "price";
         else if ( sort == 2 ) sortStr = "date";
         else sortStr = "dist";
+        if(sortStr == "dist") findLocation();
         var orderStr = (order==1) ? "ASC" : "DESC";
-        if(gps==null && gps[0]!="" && gps[1]!="") {
+        if(sortStr=="dist" && gps!=null && gps[0]!="" && gps[1]!="") {
             geoLng = gps[0];
             geoLat = gps[1];
             geoDist = $("#distance").val();
+            console.log("shopsUpdate: allow location einai ta eksis lng = " +geoLng + " lat = " + geoLat + " dist = " +geoDist);
         }
         else {
             geoDist = "";
@@ -119,26 +121,29 @@ $(document).ready(function(){
                 console.log(data);
                 var obj = JSON.parse(JSON.stringify(data));
                 var shops = obj.prices;
-
+                console.log("shopsUpdate: Success me obj " + obj.total);
                 if(obj.total == 0) {
                     console.log("Shops not found total = 0");
                     shopsNotFound();
                 }
-                // Update lowest Price
-                lowestPrice = (order==1 ? shops[0].price : shops[shops.length-1].price);
-                $("#lowestPrice").append(lowestPrice + " &euro;");
-                $.each(shops, function(key,value){
-                    var shop_id = value.shop_id;
-                    shopsID.push(shop_id);
-                    var price = value.price;
-                    var shopName = value.shop_name;
-                    $("#shops").append("<li class=\"list-group-item\"><a href=\"https://localhost:8765/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
-                                       +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
-                });
-                if (reload == 1) setMap(shopsID);
+                else {
+                    // Update lowest Price
+                    lowestPrice = (order==1 ? shops[0].price : shops[shops.length-1].price);
+                    $("#lowestPrice").append(lowestPrice + " &euro;");
+                    $.each(shops, function(key,value){
+                        console.log("Each " + value.shop_id);
+                        var shop_id = value.shop_id;
+                        shopsID.push(shop_id);
+                        var price = value.price;
+                        var shopName = value.shop_name;
+                        $("#shops").append("<li class=\"list-group-item\"><a href=\"https://localhost:8765/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
+                                           +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
+                    });
+                    if (reload == 1) setMap(shopsID);
+                }
             },
             error: function(){
-                console.log("Product.js :Prices GET Error product with id " + products + " not found !");
+                console.log("Product.js :Prices GET Error product with id " + productID + " not found !");
                 $("#shopsDiv").text("Shops Not Found");
                 $("#map").text("Error Map");
                 //$("#shopsDiv").load("404.html");
@@ -151,8 +156,8 @@ $(document).ready(function(){
 
 
     function shopsNotFound() {
-                console.log("Product.js :Prices GET Error product with id " + products + " not found !");
-                $("#shopsDiv").text("Shops Not Found");
+                console.log("Product.js :Prices GET Error product with id " + productID+ " not found !");
+            //    $("#shopsDiv").text("Shops Not Found");
                 $("#map").text("Error Map");
                 //$("#shopsDiv").load("404.html");
                 //$("html").load("404.html");
@@ -272,6 +277,7 @@ $(document).ready(function(){
     $("#geoDist").html($("#distance").val() + " Khm");
 
     var findLocation = function() {
+        if(gps!=null && gps[0]!="" && gps[1]!="") return ;
         if ("geolocation" in navigator){  
             navigator.geolocation.getCurrentPosition(function(position){
                 gps[0] = position.coords.latitude;
