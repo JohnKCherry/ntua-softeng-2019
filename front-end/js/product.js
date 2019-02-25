@@ -261,6 +261,8 @@ $(document).ready(function(){
     $("#filters").submit(function() {
         console.log("Form submitted");
         // update shops and reload map
+        //
+        patch();
         shopsUpdate(1);
 
         return false;   //prevent default
@@ -297,5 +299,28 @@ $(document).ready(function(){
         }
 
     };
+//Laptop HP Omen 17.3 AN120NV
+object = new Object();
+object.name = "TestName";
+string = JSON.stringify(object);
+function patch() {
+    $.ajax({
+        type: "PATCH",
+        dataType: "json",
+        headers: {'X-OBSERVATORY-AUTH' : token},
+        url: "https://localhost:8765/observatory/api/products/27",
+        data:{'name': 'TestName'},
+        success: function(data){
+            console.log("Success");
+            var obj = JSON.parse(JSON.stringify(data));
+            console.log(obj);
+        },
+        error: function(err){
+            console.log(err);
+            console.log(object);
+            console.log("editProduct.js: Error patch");
+        }
+    });
+}
 });
 
