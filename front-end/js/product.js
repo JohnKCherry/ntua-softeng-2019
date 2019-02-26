@@ -295,6 +295,7 @@ $(document).ready(function(){
 
 
     $("#editButton").click(function(){
+        $("#newTag").val("");
 
         $("#editButton").css("visibility","hidden");
         $("#applyButton").css("visibility","visible");
@@ -314,6 +315,11 @@ $(document).ready(function(){
     $("#addButton").click(function() {
         var tmp = $("#newTag").val();
         if(tmp!="") {
+            if(jQuery.inArray(tmp, tags) !== -1) {
+                alert("Tag " + tmp + " exists");
+                preventDefault;
+            }
+            $("#newTag").val("");
             tags.push(tmp);
             console.log(tags);
             $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+tmp+"</span> <span id=\""+(tags.length-1)+"\" class=\"close\" style=\"visibility: hidden\">&times;</span></li>");
