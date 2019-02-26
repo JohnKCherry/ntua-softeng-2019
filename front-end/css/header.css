@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Share+Tech+Mono');
+
+.navbar{
+    background-color: darkgray;
+    color: black;
+    border-radius: 0%;
+    margin-bottom: 0%;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+img{
+    width: 30px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link{
+    background-color: slategrey;
+}
+
+.nav-pills .nav-link{
+   
+    color: black;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+
+.form-inline .form-control {
+    border-radius: 0%;
+    width: 350px;
+}
