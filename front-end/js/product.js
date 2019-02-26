@@ -24,6 +24,7 @@ $(document).ready(function(){
     if (token != null) {
         $("#loginBtn").text(window.sessionStorage.getItem("username"));
         $("#loginBtn").attr("href","");
+        $("#editButton").css("visibility","visible");
     }
     else {
         $("#loginBtn").show();
@@ -103,8 +104,8 @@ $(document).ready(function(){
         // compare dates
         //
         if (dateFrom > dateTo) {
-           $("#errorFilters").text("Date From must be earlier than Date To"); 
-           shopsNotFound();
+            $("#errorFilters").text("Date From must be earlier than Date To"); 
+            shopsNotFound();
         }
         var url = "https://localhost:8765/observatory/api/prices?verbose=false&geoDist="+geoDist
         +"&geoLng="+geoLng
@@ -149,7 +150,7 @@ $(document).ready(function(){
             },
             error: function(){
                 console.log("Product.js :Prices GET Error product with id " + productID + " not found !");
-               // $("#shopsDiv").text("Shops Not Found");
+                // $("#shopsDiv").text("Shops Not Found");
                 $("#map").text("Error Map");
                 //$("#shopsDiv").load("404.html");
                 //$("html").load("404.html");
@@ -284,6 +285,13 @@ $(document).ready(function(){
     $("#distance").val("5");
     $("#geoDist").html($("#distance").val() + " Khm");
 
+    
+    $("#editButton").click(function(){
+        $("#editButton").css("visibility","hidden");
+        $("#applyButton").css("visibility","visible");
+        $("#cancelButton").css("visibility","visible");
+    });
+
     var findLocation = function() {
         if(gps!=null && gps[0]!="" && gps[1]!="") return ;
         if ("geolocation" in navigator){  
@@ -299,28 +307,28 @@ $(document).ready(function(){
         }
 
     };
-//Laptop HP Omen 17.3 AN120NV
-object = new Object();
-object.name = "TestName";
-string = JSON.stringify(object);
-function patch() {
-    $.ajax({
-        type: "PATCH",
-        dataType: "json",
-        headers: {'X-OBSERVATORY-AUTH' : token},
-        url: "https://localhost:8765/observatory/api/products/27",
-        data:{'name': 'TestName'},
-        success: function(data){
-            console.log("Success");
-            var obj = JSON.parse(JSON.stringify(data));
-            console.log(obj);
-        },
-        error: function(err){
-            console.log(err);
-            console.log(object);
-            console.log("editProduct.js: Error patch");
-        }
-    });
-}
+    //Laptop HP Omen 17.3 AN120NV
+    object = new Object();
+    object.name = "TestName";
+    string = JSON.stringify(object);
+    function patch() {
+        $.ajax({
+            type: "PATCH",
+            dataType: "json",
+            headers: {'X-OBSERVATORY-AUTH' : token},
+            url: "https://localhost:8765/observatory/api/products/27",
+            data:{'name': 'TestName'},
+            success: function(data){
+                console.log("Success");
+                var obj = JSON.parse(JSON.stringify(data));
+                console.log(obj);
+            },
+            error: function(err){
+                console.log(err);
+                console.log(object);
+                console.log("editProduct.js: Error patch");
+            }
+        });
+    }
 });
 
