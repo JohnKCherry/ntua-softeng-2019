@@ -20,6 +20,12 @@ $(document).ready(function(){
     if (shopID == null) shopID = 4;
     var map = null;
     var shopArray = new Array();
+	var name;
+	var website;
+	var telephone;
+	var tags;
+	var type;
+	var Location;
 
 
     //GET info
@@ -32,14 +38,20 @@ $(document).ready(function(){
             var obj = JSON.parse(JSON.stringify(data));
             shopArray = [obj.name,obj.lat,obj.lng];           
             $("#shopName").text(obj.name);
-            $("#shopAddress").append("<span class=\"h6\">"+obj.address+"</span>");
+            $("#shopLocation").append("<span class=\"h6\">"+obj.address+"</span>");
             $("#shopType").append("<span class=\"h6\">"+obj.category+"</span>");
             $("#shopWebsite").append("<span class=\"h6\">"+obj.website+"</span>");
             $("#shopTel").append("<span class=\"h6\">"+obj.phone+"</span>");
-            var tags = obj.tags;
+            tags = obj.tags;
             $.each(tags, function(key,value){
                 $("#tags").append("<li class=\"list-inline-item\"><span class=\"h6\">"+value+"</span></li>");
             });
+			name=obj.name;
+			website=obj.website;
+			telephone=obj.phone;
+			type=obj.category;
+			Location=obj.address;
+			
 
 
         },
@@ -106,41 +118,26 @@ $(document).ready(function(){
         .addTo(map);
     }
 	
-	$("#buttonWebsite").click(function(){
-		$("#shopWebsite").replaceWith($('<textarea id=\"shopWebsite\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopWebsite").text() +
-		'</textarea>'));
+	$("#editButton").click(function(){
+		$("#shopWebsite").replaceWith($('<p id=\"shopWebsite\" class="h3">Website: <input type=\"text\" id=\"shopWebsite2\" name=\"shopWebsite2\" class="h4" value="' + website + '"><br></input></p>'));
+		$("#shopTel").replaceWith($('<p id=\"shopTel\" class="h4">Telephone: <input type=\"text\" id=\"shopTel2\" name=\"shopTel2\" class="h4" value="' + telephone + '"><br></input></p>'));
+		$("#shopLocation").replaceWith($('<p id=\"shopLocation\" class="h4">Physical Location: <input type=\"text\" id=\"shopLocation2\" name=\"shopLocation2\" class="h4" value="' + Location + '"><br></input></p>'));
+		$("#shopName").replaceWith($('<p id=\"shopName\" class="h2">Name: <input type=\"text\" id=\"shopName2\" name=\"shopName2\" class="h4" value="' + name + '"><br></input></p>'));
+		$("#shopType").replaceWith($('<p id=\"shopType\" class="h4">Categories: <input type=\"text\" id=\"shopType2\" name=\"shopType2\" class="h4" value="' + type + '"><br></input></p>'));
+		$("#tagsHeader").replaceWith($('<p id=\"tags\" class="h4">Tags: <input type=\"text\" id=\"tags2\" name=\"tags2\" class="h4" value="' + tags + '"><br></input></p>'));
+		$("#editButton").replaceWith($('<button id=\"applyButton\" type=\"button\" class=\"btn btn-outline-success\">Apply</button>'));
+		$("#cancelButton").replaceWith($('<button id=\"cancelButton\" type=\"button\" class=\"btn btn-outline-danger\">Cancel</button>'));
+		
+		
 	});
-	$("#buttonTel").click(function(){
-		$("#shopTel").replaceWith($('<textarea id=\"shopTel\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopTel").text() +
-		'</textarea>'));
+	$("#cancelButton").click(function(){
+		alert("wtf");
+	
+		
+		
+		
 	});
 	
-	$("#buttonLocation").click(function(){
-		$("#shopLocation").replaceWith($('<textarea id=\"shopLocation\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopLocation").text() +
-		'</textarea>'));
-	});
-	
-	$("#buttonName").click(function(){
-		$("#shopName").replaceWith($('<textarea id=\"shopName\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopName").text() +
-		'</textarea>'));
-	});
-	
-	
-	$("#buttonType").click(function(){
-		$("#shopType").replaceWith($('<textarea id=\"shopType\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopType").text() +
-		'</textarea>'));
-	});
-	
-	$("#buttonTags").click(function(){
-		$("#shopWebsite").replaceWith($('<textarea id=\"shopTags\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopTags").text() +
-		'</textarea>'));
-	});
 	
 
     setMap(shopID);
