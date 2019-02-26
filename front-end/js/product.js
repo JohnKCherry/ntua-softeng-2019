@@ -311,20 +311,30 @@ $(document).ready(function(){
     });
 
 
+    // Hide error tag if exists
+    $("#newTag").click(function() {
+        $("#errorTag").hide();
+    });
     // Add to tags array
     $("#addButton").click(function() {
         var tmp = $("#newTag").val();
         if(tmp!="") {
-            if(jQuery.inArray(tmp, tags) !== -1) {
-                alert("Tag " + tmp + " exists");
-                preventDefault;
-            }
             $("#newTag").val("");
-            tags.push(tmp);
+            var ret = tmp.split(" ");
+            var c = tags.length;
+            $.each(ret,function(index,value) {
+                if(jQuery.inArray(value, tags) !== -1) {
+                    $("#errorTag").text("Tag " + value + "already exists");
+                    $("#errorTag").show();
+                    $("#newTag").val("");
+                    return false;
+                }
+                tags.push(value);
+                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+value+"</span> <span id=\""+(c+index)+"\" class=\"close\" style=\"visibility: hidden\">&times;</span></li>");
+                $(".close").css("visibility","visible");
+            }
+                  );
             console.log(tags);
-            $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+tmp+"</span> <span id=\""+(tags.length-1)+"\" class=\"close\" style=\"visibility: hidden\">&times;</span></li>");
-
-            $(".close").css("visibility","visible");
         }
     });
 
