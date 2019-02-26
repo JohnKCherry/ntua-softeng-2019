@@ -305,7 +305,7 @@ $(document).ready(function(){
 
 
         $("#productName").replaceWith("<div><u class=\"h4\">Name</u>: <input id=\"productName\" class=\"h4\" type=\"text\" value= \""+name+"\"></div> ");
-        $("#productDescription").replaceWith("<div><u class=\"h4\">Description</u>: <textarea id=\"productDescription\" class=\"text-sm-left\" rows=\"10\">"+description+"</textarea></div>");
+        $("#productDescription").replaceWith("<div><u class=\"h4\">Description</u>: <textarea id=\"productDescription\" class=\"text-sm-left\" rows=\"1\">"+description+"</textarea></div>");
         $("#productCategory").replaceWith("<div><u class=\"h4\">Category</u>: <input id=\"productCategory\" class=\"h4\" type=\"text\" value= \""+category+"\"></div> ");
     });
 
