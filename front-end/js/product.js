@@ -43,11 +43,11 @@ $(document).ready(function(){
             var obj = JSON.parse(JSON.stringify(data));
             $("#productName").text(obj.name);
             document.title = obj.name;
-            $("#productDescription").append("<span class=\"h6\">"+obj.description+"</span>");
-            $("#productCategory").append("<span class=\"h6\">"+obj.category+"</span>");
+            $("#productDescription").append("<span class=\"text-sm-left\">"+obj.description+"</span>");
+            $("#productCategory").append("<span class=\"text-sm-left\">"+obj.category+"</span>");
             var tags = obj.tags;
             $.each(tags, function(key,value){
-                $("#tags").append("<li class=\"list-inline-item\"><span class=\"h6\">"+value+"</span></li>");
+                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+value+"</span></li>");
             });
 
             if(obj.image != null) {
