@@ -37,7 +37,7 @@ $(document).ready(function(){
     var name;
     var description;
     var category;
-    
+    var tags;
     // get product general info
     $.ajax({
         type: "GET",
@@ -53,10 +53,11 @@ $(document).ready(function(){
             document.title = obj.name;
             $("#productDescription").append("<span class=\"text-sm-left\">"+obj.description+"</span>");
             $("#productCategory").append("<span class=\"text-sm-left\">"+obj.category+"</span>");
-            var tags = obj.tags;
+            tags = obj.tags;
             $.each(tags, function(key,value){
-                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+value+"</span></li>");
+                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+value+"</span> <span id=\""+key+"\" class=\"close\" style=\"visibility: hidden\">&times;</span></li>");
             });
+
 
             if(obj.image != null) {
                 // Convert binaryData to image
@@ -292,12 +293,16 @@ $(document).ready(function(){
     $("#distance").val("5");
     $("#geoDist").html($("#distance").val() + " Khm");
 
-    
+
     $("#editButton").click(function(){
-        
+
         $("#editButton").css("visibility","hidden");
         $("#applyButton").css("visibility","visible");
         $("#cancelButton").css("visibility","visible");
+        $(".close").css("visibility","visible");
+        $("#addButton").css("visibility", "visible");
+        $("#newTag").css("visibility","visible");
+
 
         $("#productName").replaceWith("<div><u class=\"h4\">Name</u>: <input id=\"productName\" class=\"h4\" type=\"text\" value= \""+name+"\"></div> ");
         $("#productDescription").replaceWith("<div><u class=\"h4\">Description</u>: <textarea id=\"productDescription\" class=\"text-sm-left\" rows=\"10\">"+description+"</textarea></div>");
@@ -305,9 +310,43 @@ $(document).ready(function(){
     });
 
 
-    $('#applyButton').click(function() {
-        console.log($("#productName").val());
+    // Add to tags array
+    $("#addButton").click(function() {
+        var tmp = $("#newTag").val();
+        if(tmp!="") {
+            tags.push(tmp);
+            console.log(tags);
+            $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+tmp+"</span> <span id=\""+(tags.length-1)+"\" class=\"close\" style=\"visibility: hidden\">&times;</span></li>");
+
+            $(".close").css("visibility","visible");
+        }
     });
+
+
+
+
+    // Delete from tags array
+    $("#tags").on('click','.close',function() {
+        var index = $(this).attr('id');
+        console.log(index);
+        tags.splice(index,1);
+        $(this).parent().closest('li').remove();
+        console.log(tags);
+    });
+    
+    
+    $('#applyButton').click(function() {
+        var obj = new Object();
+        obj.name = $("#productName").val();
+        obj.description = $("#productDescription").val();
+        obj.category = $("#productCategory").val();
+        obj.tags = tags.join(", ");
+
+        console.log(obj);
+        sendUpdate(obj);
+    });
+
+    // Cancel reload page 
     $('#cancelButton').click(function() {
         location.reload();
     });
@@ -327,26 +366,25 @@ $(document).ready(function(){
         }
 
     };
-    //Laptop HP Omen 17.3 AN120NV
-    object = new Object();
-    object.name = "TestName";
-    string = JSON.stringify(object);
-    function patch() {
+    
+    
+    function sendUpdate(obj) {
         $.ajax({
-            type: "PATCH",
+            type: "PUT",
             dataType: "json",
             headers: {'X-OBSERVATORY-AUTH' : token},
-            url: "https://localhost:8765/observatory/api/products/27",
-            data:{'name': 'TestName'},
+            url: "https://localhost:8765/observatory/api/products/"+productID,
+            data: obj,
             success: function(data){
                 console.log("Success");
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log(obj);
+                location.reload();
             },
             error: function(err){
                 console.log(err);
-                console.log(object);
-                console.log("editProduct.js: Error patch");
+                console.log("product.js: Error sendUpdate");
+                alert("Error update");
             }
         });
     }

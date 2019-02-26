@@ -95,6 +95,8 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                         <ul id="tags" class="list-inline">
                         </ul>
                     </span>
+                    <input type="text" id="newTag" name="newTag" style="visibility: hidden">
+                    <button id="addButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-plus"></span> Add Tag</button>
                     <p class="h5"><u>Lowest Price</u>: <span id="lowestPrice" class="font-weight-bold"></span></p>
                 </div>
             </div>
@@ -103,8 +105,10 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
                     <div class="col-sm-1">
                         <button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-pencil-alt"></span> Edit</button>
-                        <button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
-                        <button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
+                        <div class="btn-group" role="group">
+                                <button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
+                                <button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
+                        </div>
                     </div>
 
             <!-- Filters -->
