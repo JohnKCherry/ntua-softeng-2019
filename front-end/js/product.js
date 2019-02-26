@@ -34,6 +34,10 @@ $(document).ready(function(){
     var lowestPrice;
     var map = null;
 
+    var name;
+    var description;
+    var category;
+    
     // get product general info
     $.ajax({
         type: "GET",
@@ -42,6 +46,9 @@ $(document).ready(function(){
         success: function(data){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
+            name = obj.name;
+            description = obj.description;
+            category = obj.category;
             $("#productName").text(obj.name);
             document.title = obj.name;
             $("#productDescription").append("<span class=\"text-sm-left\">"+obj.description+"</span>");
@@ -287,9 +294,22 @@ $(document).ready(function(){
 
     
     $("#editButton").click(function(){
+        
         $("#editButton").css("visibility","hidden");
         $("#applyButton").css("visibility","visible");
         $("#cancelButton").css("visibility","visible");
+
+        $("#productName").replaceWith("<div><u class=\"h4\">Name</u>: <input id=\"productName\" class=\"h4\" type=\"text\" value= \""+name+"\"></div> ");
+        $("#productDescription").replaceWith("<div><u class=\"h4\">Description</u>: <textarea id=\"productDescription\" class=\"text-sm-left\" rows=\"10\">"+description+"</textarea></div>");
+        $("#productCategory").replaceWith("<div><u class=\"h4\">Category</u>: <input id=\"productCategory\" class=\"h4\" type=\"text\" value= \""+category+"\"></div> ");
+    });
+
+
+    $('#applyButton').click(function() {
+        console.log($("#productName").val());
+    });
+    $('#cancelButton').click(function() {
+        location.reload();
     });
 
     var findLocation = function() {
