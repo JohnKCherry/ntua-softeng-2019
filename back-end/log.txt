@@ -200,4 +200,5 @@ verbose = false.
 ------------------------------------------------------------------------------------------------------------------------
 
 26/02/2019 - kef
-Έφτιαξα (GET) productsByName & shopsByName endpoints στο API. Επίσης, έχω αφήσει σε μη λειτουργική φάση το (POST) productWithImage endpoint, θέλω να πιστεύω ότι θα το ολοκληρώσω σύντομα...
+Έφτιαξα (GET) productsByName & shopsByName endpoints στο API. Επίσης, έχω αφήσει σε μη λειτουργική φάση το (POST) 
+productWithImage endpoint, θέλω να πιστεύω ότι θα το ολοκληρώσω σύντομα...
