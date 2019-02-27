@@ -4,9 +4,9 @@
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Title</title>
+        <title></title>
         <link rel="stylesheet" href="css/product.css" />
-		<link rel="stylesheet" href="css/shop.css" />
+        <link rel="stylesheet" href="css/shop.css" />
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -18,7 +18,7 @@
 
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-      
+
 
         <!-- Latest Leaflet library -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
@@ -28,15 +28,16 @@
 integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
   crossorigin=""></script>
         <script type="text/javascript" src="js/shop.js"></script>
+        <script type="text/javascript" src="js/login.js"></script>
     </head>
-	
-	
-	<body>
-	 
-	    <!-- Header -->
+
+
+    <body>
+
+        <!-- Header -->
         <div id="header"></div>
-		
-		<a id="loginBtn" href="#loginModal" role="button" class="btn btn-primary btn-lg" data-toggle="modal" style="float: right">Login</a>
+
+        <a id="loginBtn" href="#loginModal" role="button" class="btn btn-primary btn-lg" data-toggle="modal" style="float: right">Login</a>
         <!-- Login Form popup -->
         <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
@@ -73,50 +74,40 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                     </div>
                 </div>
             </div>
-</div>
-		
-		<!--Main Body-->
-		
-		<div id="container" class="container-fluid p-3 mb-2 bg-light text-dark">
-		
-		    <!-- Shop, Description, Tags -->
-			
-			<div class="row justify-content-start ">
+        </div>
+
+        <!--Main Body-->
+
+        <div id="container" class="container-fluid p-3 mb-2 bg-light text-dark">
+
+            <!-- Shop, Description, Tags -->
+
+            <div class="row justify-content-start ">
                 <div class="col">
-                    <p id="shopName" class="h2">Shop' s name </p>					
-					<p id="shopType" class="h4">Categories: </p>
+                    <p id="shopName" class="h2">Shop' s name </p>
                     <hr class="col-xs-12">
-                    <span id="tagsHeader"><u class="h5">Tags</u>:
+                    <p id="shopType" class="h4"><u>Categories</u> : </p>
+                    <span id="tagsHeader"><u class="h4">Tags</u> :
                         <ul id="tags" class="list-inline">
                         </ul>
                     </span>
+                    <p id="shopLocation" class="h4"><u class="h4">Physical Location</u> :  </p>
                     <input type="text" id="newTag" name="newTag" style="visibility:hidden" placeholder="One word or more with spaces" size="24">
                     <button id="addButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-plus"></span> Add Tag</button>
                     <div id="errorTag" class="h7" style="color:red; display: none"></div>
                 </div>
-			
-				<div class="col-md-5 ">
-				<p id="shopWebsite" class="h3">Website: </p>
-				<p id="shopLocation" class="h4">Physical Location:  </p>
-				<p id="shopTel" class="h4">Telephone: </p>	
-				<p>
-				
-				
-				</p>
-                <p>
-				<button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-pencil-alt"></span> Edit</button>
-				<button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
-				<button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
-                </p>
-                
-				
-				
-                    
+
+                <div class="col-sm-1">
+                    <button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-pencil-alt"></span> Edit</button>
+                        <div class="btn-group" role="group">
+                    <button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
+                    <button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
+                </div>
                 </div>
             </div>
-			
-			
-			<!-- Map Row -->
+
+
+            <!-- Map Row -->
 
             <div class="row">
                 <div class="col">
@@ -125,23 +116,23 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                     </div>
                 </div>
             </div>
-        
-		
-		</div>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	</body>
-	
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    </body>
+
 
 
 

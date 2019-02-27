@@ -36,12 +36,11 @@ $(document).ready(function(){
     var map = null;
     var shopArray = new Array();
 	var name;
-	var website;
-	var telephone;
 	var tags;
-	var type;
 	var Location;
 
+    var lat;
+    var lng;
 
     //GET info
     $.ajax({
@@ -52,19 +51,15 @@ $(document).ready(function(){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
             shopArray = [obj.name,obj.lat,obj.lng];           
+            document.title = obj.name;
             $("#shopName").text(obj.name);
             $("#shopLocation").append("<span class=\"h6\">"+obj.address+"</span>");
             $("#shopType").append("<span class=\"h6\">"+obj.category+"</span>");
-            $("#shopWebsite").append("<span class=\"h6\">"+obj.website+"</span>");
-            $("#shopTel").append("<span class=\"h6\">"+obj.phone+"</span>");
             tags = obj.tags;
             $.each(tags, function(key,value){
                 $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">" + value + "</span><span id=\"" + key + "\" class=\"close\" style = \"visibility: hidden\">&times;</span></li>");
             });
 			name=obj.name;
-			website=obj.website;
-			telephone=obj.phone;
-			type=obj.category;
 			Location=obj.address;
 			lat=obj.lat;
 			lng=obj.lng
@@ -184,8 +179,6 @@ $(document).ready(function(){
 		$(".close").css("visibility","visible");
 		$("#addButton").css("visibility", "visible");
 		$("#newTag").css("visibility","visible");
-		$("#shopWebsite").replaceWith($('<div class=\"h3\>"Website: <input id=\"shopWebsite\" type=\"text\"  class="h4" value=\"' + website + '"></input></div>'));
-		$("#shopTel").replaceWith($('<div class=\"h4\">Telephone: <input type=\"text\" id=\"shopTel\" class="h4" value="' + telephone + '"></input></div>'));
 		$("#shopLocation").replaceWith($('<div class=\"h4\">Physical Location: <input type=\"text\" id=\"shopLocation\" class="h4" value="' + Location + '"></input></div>'));
 		$("#shopName").replaceWith($('<div class=\"h2\">Name: <input type=\"text\" id=\"shopName\"  class="h4" value="' + name + '"></input></div>'));
 		$("#shopType").replaceWith($('<div class=\"h4\">Categories: <input type=\"text\" id=\"shopType\" class="h4" value="' + type + '"></input></div>'));
@@ -201,12 +194,10 @@ $(document).ready(function(){
 		var obj = new Object();
 		obj.name = $("#shopName").val();
 		console.log($("#shopName").val());
-		obj.lat=38;
-		obj.lng=23;
-		//obj.tel = $("#shopTel").val();
-		//obj.website = $("#shopWebsite").val();
-		obj.address = $("#shopLocation").val();
-		//obj.type = $("#shopType").val();
+        console.log(obj.name);
+		obj.lat=lat;
+		obj.lng=lng;
+		obj.address = Location;
 		obj.tags = tags.join(", ");
 		console.log(obj);
 		sendUpdate(obj);
