@@ -83,6 +83,9 @@ $(document).ready(function(){
 
                 $("#productImage").attr("src",URL.createObjectURL(blob));
             }
+            else {
+                $("#productImage").attr("src","imgs/product.jpg");
+            }
         },
         error: function(){
             console.log("Product.js : Error product with id " + productID + " not found !");
