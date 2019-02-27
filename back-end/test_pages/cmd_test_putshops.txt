@@ -1,1 +1,1 @@
-curl -X PUT -d "name=Just+a+Shop&address=Sth+av+32&lng=28.03421&lat=24.54465&status=ACTIVE&tags=Great+shops" http://localhost:8765/observatory/api/shops/9
+curl -X PUT -d "name=Just+a+Shop&address=Sth+av+32&lng=28.03421&lat=24.54465&status=ACTIVE&tags=Great+shops" https://localhost:8765/observatory/api/shops/9
