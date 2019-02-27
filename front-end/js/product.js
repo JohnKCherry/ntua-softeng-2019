@@ -443,6 +443,7 @@ $(document).ready(function(){
                 console.log(err);
                 console.log("product.js: Error sendUpdate");
                 alert("Error update");
+                location.reload();
             }
         });
     }
