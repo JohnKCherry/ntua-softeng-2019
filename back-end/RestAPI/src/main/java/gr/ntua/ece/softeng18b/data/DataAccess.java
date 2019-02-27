@@ -108,12 +108,18 @@ public class DataAccess {
     }
     
     @SuppressWarnings("unchecked")
-	public List<Shop> getShopsByName(Limits limits, int status, String name) {
+	public List<Shop> getShopsByName(Limits limits, int status, String name, String sort, Boolean user_sort) {
     	String[] params = new String[]{name};
     	String[] params_status = new String[]{name,""+status};
-    	if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
-    	else return jdbcTemplate.query("select id, name, address, location, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
-    } 
+    	if(!user_sort) {
+    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
+    		else return jdbcTemplate.query("select id, name, address, location, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    	}
+    	else {
+    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
+    		else return jdbcTemplate.query("select id, name, address, location, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    	}
+    }
     
     @SuppressWarnings("unchecked")
 	public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
