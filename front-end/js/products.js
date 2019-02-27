@@ -117,10 +117,20 @@ $(document).ready(function(){
     });
 
 
+    // function take height for all browsers
+    function getDocHeight() {
+        var D = document;
+        return Math.max(
+            D.body.scrollHeight, D.documentElement.scrollHeight,
+            D.body.offsetHeight, D.documentElement.offsetHeight,
+            D.body.clientHeight, D.documentElement.clientHeight
+        );
+    }
 
     // when scroll down load more products
+    // trigger getProducts earlier
     $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+        if($(window).scrollTop() + $(window).height() > getDocHeight() - 100) {
             start = start+11;
             getProducts(start,12,sort,order,status,0);
         }
