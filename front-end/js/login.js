@@ -20,7 +20,7 @@ $(document).ready(function(){
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "http://localhost:8765/observatory/api/login",
+            url: "https://localhost:8765/observatory/api/login",
             data:{"username":$("#username").val(),"password":$("#password").val()},
             success: function(data){
                 console.log("Success");

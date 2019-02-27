@@ -3,7 +3,6 @@ package gr.ntua.ece.softeng18b.api;
 import gr.ntua.ece.softeng18b.conf.Configuration;
 import gr.ntua.ece.softeng18b.data.DataAccess;
 import gr.ntua.ece.softeng18b.data.model.Product;
-import gr.ntua.ece.softeng18b.data.model.Shop;
 
 import org.restlet.data.Form;
 import org.restlet.data.Header;
@@ -13,6 +12,7 @@ import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 public class ProductResource extends ServerResource {
@@ -45,7 +45,8 @@ public class ProductResource extends ServerResource {
         return new JsonProductRepresentation(product);
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation delete() throws ResourceException {
     	int id;
     	String id_string = getAttribute("id");
@@ -65,21 +66,24 @@ public class ProductResource extends ServerResource {
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to delete product");
         
         Boolean admin = dataAccess.isAdmin(user_token);
+        HashMap<String,String> msg = new HashMap<String,String>();
+        msg.put("message", "OK");
         
     	if(!admin) {     
     		dataAccess.patchProduct(id, "withdrawn","1");
     		//Check if withdrawal was successful
-    		if(dataAccess.getProduct(id).get().isWithdrawn()) return new JsonMessageRepresentation("OK");
+    		if(dataAccess.getProduct(id).get().isWithdrawn()) return new JsonMapRepresentation(msg);
     		return new JsonMessageRepresentation("Could not complete product withdrawal");
     	}
     	else{
     		dataAccess.deleteProduct(id);
-    		if(!dataAccess.getProduct(id).isPresent()) return new JsonMessageRepresentation("OK");
+    		if(!dataAccess.getProduct(id).isPresent()) return new JsonMapRepresentation(msg);
     		return new JsonMessageRepresentation("Could not complete product deletion");
     	}
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation put(Representation entity) throws ResourceException {
 
         //Create a new restlet form
@@ -90,7 +94,7 @@ public class ProductResource extends ServerResource {
         String description = form.getFirstValue("description");
         String category = form.getFirstValue("category");
         String withdrawn = form.getFirstValue("status");
-        String tags = form.getFirstValue("tags");
+        String tags = form.getValues("tags");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
@@ -132,7 +136,8 @@ public class ProductResource extends ServerResource {
         } 
     }
     
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected Representation patch(Representation entity) throws ResourceException {
 
         //Create a new restlet form
@@ -143,7 +148,7 @@ public class ProductResource extends ServerResource {
         String description = form.getFirstValue("description");
         String category = form.getFirstValue("category");
         String withdrawn = form.getFirstValue("status");
-        String tags = form.getFirstValue("tags");
+        String tags = form.getValues("tags");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");

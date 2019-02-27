@@ -6,8 +6,6 @@ import java.util.HashSet;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
-import org.restlet.service.CorsService;
-import org.restlet.routing.Filter;
 import org.restlet.engine.application.CorsFilter;
 
 public class RestfulApp extends Application {
@@ -38,11 +36,17 @@ public class RestfulApp extends Application {
         // GET 
         router.attach("/productswithimage/{id}", ProductWithImageResource.class);
         
-        //GET
+        //GET, POST
         router.attach("/productswithimage", ProductsWithImageResource.class);
         
         //GET 
         router.attach("/productsbynamewithimage/{name}", ProductsByNameWithImageResource.class);
+        
+        //GET 
+        router.attach("/productsbyname/{name}", ProductsByNameResource.class);
+        
+        //GET 
+        router.attach("/shopsbyname/{name}", ShopsByNameResource.class);
         
         //GET, POST
         router.attach("/shops", ShopsResource.class);
@@ -63,7 +67,7 @@ public class RestfulApp extends Application {
         router.attach("/favourites/{productId}", FavouritesResource.class);
 
         CorsFilter corsFilter = new CorsFilter(getContext(), router);
-    	corsFilter.setAllowedOrigins(new HashSet(Arrays.asList("*")));
+    	corsFilter.setAllowedOrigins(new HashSet<String>(Arrays.asList("*")));
     	corsFilter.setAllowedCredentials(true);
     	corsFilter.setAllowingAllRequestedHeaders(true);
         return corsFilter;

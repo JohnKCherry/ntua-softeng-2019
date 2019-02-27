@@ -1,6 +1,5 @@
 package gr.ntua.ece.softeng18b.data;
 
-
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDateXprimal;
@@ -15,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -30,12 +28,9 @@ import java.security.NoSuchAlgorithmException;
 
 public class DataAccess {
 
-    private static final Object[] EMPTY_ARGS = new Object[0];
-
     private static final int MAX_TOTAL_CONNECTIONS = 16;
     private static final int MAX_IDLE_CONNECTIONS = 8;
 
-    private DataSource dataSource;
     private JdbcTemplate jdbcTemplate;
 
     public void setup(String driverClass, String url, String user, String pass) throws SQLException {
@@ -59,48 +54,71 @@ public class DataAccess {
         jdbcTemplate = new JdbcTemplate(bds);
     }
 
-    public List<Product> getProducts(Limits limits, long status, String sort) {
+    @SuppressWarnings("unchecked")
+	public List<Product> getProducts(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 order by "+sort+" limit ?,?", params_small, new ProductRowMapper());
     	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
     }
     
-    public List<ProductWithImage> getProductsWithImage(Limits limits, long status, String sort) {
+    @SuppressWarnings("unchecked")
+	public List<ProductWithImage> getProductsWithImage(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where 1 order by "+sort+" limit ?,?", params_small, new ProductWithImageRowMapper());
     	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products, image where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductWithImageRowMapper());      
     }
     
-    public List<ProductWithImage> getProductsByNameWithImage(Limits limits, long status, String name) {
+    @SuppressWarnings("unchecked")
+	public List<Product> getProductsByName(Limits limits, int status, String name) {
+    	String[] params = new String[]{name};
+    	String[] params_status = new String[]{name,""+status};
+    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
+    	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
+    } 
+    
+    @SuppressWarnings("unchecked")
+	public List<ProductWithImage> getProductsByNameWithImage(Limits limits, long status, String name) {
     	String[] params = new String[]{name};
     	String[] params_status = new String[]{name,""+status};
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductWithImageRowMapper());      
     	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductWithImageRowMapper()); 
     }
     
-    public List<ProductWithImage> getFavouriteProductsWithImage(String user_token){
+    @SuppressWarnings("unchecked")
+	public List<ProductWithImage> getFavouriteProductsWithImage(String user_token){
     	String username = user_token.substring(64);
     	String[] params = new String[]{username};
     	return jdbcTemplate.query("select products.id as id, products.name as name, products.description as description, products.category as category, products.withdrawn as withdrawn, products.tags as tags, products.image as image from users join favourites on users.id = favourites.user_id join products on favourites.product_id = products.id where users.username = ? ", params, new ProductWithImageRowMapper());
     }
     
-    public List<Shop> getShops(Limits limits, long status, String sort) {
+    @SuppressWarnings("unchecked")
+	public List<Shop> getShops(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[]{status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 order by "+sort+" limit ?,?", params_small, new ShopRowMapper());
     	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ShopRowMapper());      
     }
     
-    public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
+    @SuppressWarnings("unchecked")
+	public List<Shop> getShopsByName(Limits limits, int status, String name) {
+    	String[] params = new String[]{name};
+    	String[] params_status = new String[]{name,""+status};
+    	if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
+    	else return jdbcTemplate.query("select id, name, address, location, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    } 
+    
+    @SuppressWarnings("unchecked")
+	public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
     	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
     	//System.out.println("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?");
     	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause + " "+ have_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
         return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultRowMapper());
     }
     
-    public List<PriceResultSingleDateXprimal> getPricesXprimal(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
+    @SuppressWarnings("unchecked")
+	public List<PriceResultSingleDateXprimal> getPricesXprimal(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
     	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
     	String daterangegen = "(select a.Date \n" + 
     			"from (\n" + 
@@ -156,13 +174,52 @@ public class DataAccess {
         }
     }
     
+    public Product addProductWithImage(String name, String description, String category, boolean withdrawn, String tags, byte[] image ) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into products(name, description, category, withdrawn, tags, image) values(?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setString(1, name);
+                ps.setString(2, description);
+                ps.setString(3, category);
+                ps.setBoolean(4, withdrawn);
+                ps.setString(5, tags);
+                ps.setBytes(6, image);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //New row has been added
+            Product product = new Product(
+                keyHolder.getKey().longValue(), //the newly created project id
+                name,
+                description,
+                category,
+                withdrawn,
+                tags
+            );
+            return product;
+
+        }
+        else {
+            throw new RuntimeException("Creation of Product failed");
+        }
+    }
+    
     public Shop addShop(String name, String address, Double lng, Double lat, boolean withdrawn, String tags ) {
         //Create the new product record using a prepared statement
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
-                        "insert into shops(name, address, location, tags, withdrawn) values(?, ?, ST_GeomFromText('POINT("+ lat.toString() +" "+ lng.toString() +")',4326), ?, ?)",
+                        "insert into shops(name, address, location, tags, withdrawn) values(?, ?, ST_GeomFromText('POINT("+ lng.toString() +" "+ lat.toString() +")',4326), ?, ?)",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 ps.setString(1, name);
@@ -246,7 +303,7 @@ public class DataAccess {
             }
         };
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        int cnt = jdbcTemplate.update(psc, keyHolder);
+        jdbcTemplate.update(psc, keyHolder);
     }
     
     // Update Product: similar to addProduct
@@ -462,7 +519,7 @@ public class DataAccess {
             }
         };
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        int cnt = jdbcTemplate.update(psc, keyHolder);
+        jdbcTemplate.update(psc, keyHolder);
 
         //if(cnt !=1 ) throw new RuntimeException("Deletion of Price failed");
         return;
@@ -483,12 +540,13 @@ public class DataAccess {
             }
         };
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        int cnt = jdbcTemplate.update(psc, keyHolder);
+        jdbcTemplate.update(psc, keyHolder);
         return;
     }
 
 
-    public Optional<Product> getProduct(long id) {
+    @SuppressWarnings("unchecked")
+	public Optional<Product> getProduct(long id) {
         Long[] params = new Long[]{id};
         List<Product> products = jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where id = ?", params, new ProductRowMapper());
         if (products.size() == 1)  {
@@ -499,7 +557,8 @@ public class DataAccess {
         }
     }
     
-    public Optional<ProductWithImage> getProductWithImage(long id) {
+    @SuppressWarnings("unchecked")
+	public Optional<ProductWithImage> getProductWithImage(long id) {
         Long[] params = new Long[]{id};
         List<ProductWithImage> productswithimage = jdbcTemplate.query("select * from products where id = ?", params, new ProductWithImageRowMapper());
         if (productswithimage.size() == 1)  {
@@ -510,7 +569,8 @@ public class DataAccess {
         }
     }
     
-    public Optional<Shop> getShop(long id) {
+    @SuppressWarnings("unchecked")
+	public Optional<Shop> getShop(long id) {
         Long[] params = new Long[]{id};
         List<Shop> shops = jdbcTemplate.query("SELECT ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn from shops where id = ?", params, new ShopRowMapper());
         if (shops.size() == 1)  {
@@ -551,7 +611,8 @@ public class DataAccess {
         }
     }
     
-    public Optional<String> getUserApiToken(String username, String password) {
+    @SuppressWarnings("unchecked")
+	public Optional<String> getUserApiToken(String username, String password) {
     	password = getSHA(password);
     	String[] params = new String[]{username,password};
         List<String> pswd_salt = jdbcTemplate.query("select password, salt from users where username = ? AND password = ? ", params, new ApiRowMapper());
@@ -563,7 +624,8 @@ public class DataAccess {
         }
     }
     
-    public Optional<String> getUserApiToken_username_only(String username) {
+    @SuppressWarnings("unchecked")
+	public Optional<String> getUserApiToken_username_only(String username) {
     	String[] params = new String[]{username};
         List<String> pswd_salt = jdbcTemplate.query("select password, salt from users where username = ? AND authorization > 1", params, new ApiRowMapper());
         if (pswd_salt.size() == 1)  {
@@ -591,7 +653,7 @@ public class DataAccess {
     
     public void logoutUser(String user_token) {
     	String username = user_token.substring(64);
-    	String api_token = user_token.substring(0,64);
+    	user_token.substring(0,64);
     	int tr = 10;
     	while(isLogedIn(user_token)) { // in case the same salt is generated again...
     		// Try to logout
@@ -616,7 +678,8 @@ public class DataAccess {
     	}
     }
     
-    public Boolean isAdmin(String user_token) {
+    @SuppressWarnings("unchecked")
+	public Boolean isAdmin(String user_token) {
     	String username = user_token.substring(64);
     	
     	String[] params = new String[]{username};
@@ -626,7 +689,8 @@ public class DataAccess {
     	return false;
     }
     
-    public User getUserProfile(String user_token) {
+    @SuppressWarnings("unchecked")
+	public User getUserProfile(String user_token) {
     	String username = user_token.substring(64);
     	
     	String[] params = new String[]{username};
@@ -693,6 +757,6 @@ public class DataAccess {
   
             return null; 
         } 
-    } 
+    }
 
 }
