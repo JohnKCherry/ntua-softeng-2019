@@ -25,11 +25,11 @@ $(document).ready(function(){
         $("#editButton").css("visibility","visible");
     }
     else {
-        $("#loginBtn").show();
+        console.log("Not connected");
+        // $("#loginBtn").show();
+        $("#loginBtn").trigger('click');
+        // $("#loginBtn").show();
     }
-
-
-
 
     var id;
     var name;
@@ -39,41 +39,29 @@ $(document).ready(function(){
     var image;
     var imgSrc;
 
-    var start = 0;
-    var count = 12;
-    var sort = "id";
-    var order = 1;
-    $("#order").val("1");
-    var orderStr = "ASC";
-    var status = 1;
-    $("#status").val("1");
-    var statusStr = "ALL";
 
-
-    function getProducts(start,count,sort,order,status,clear) {
+    function getFavourites() {
         // get product general info
 
-        if(clear) $(".card-deck").empty();
-        orderStr = (order==1) ? "ASC" : "DESC";
-        if (status == 1) statusStr = "ALL";
-        else if (status == 2) statusStr = "ACTIVE";
-        else if (status == 3) statusStr = "WITHDRAWN";
-        var url = "https://localhost:8765/observatory/api/productswithimage?start="+start
-        +"&count="+count
-        +"&sort="+sort
-        +"|"+orderStr
-        +"&status="+statusStr;
+        $(".card-deck").empty();
 
-        console.log(url);
+        if (token == null) return false;
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: url,
+            headers: {'X-OBSERVATORY-AUTH' : token},
+            url: "https://localhost:8765/observatory/api/favourites",
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log(obj);
                 var products = obj.products;
 
+                if (products.length == 0) {
+                    console.log("Not have favourites");
+                    $("#heading").text("Empty favourites");
+                    return false;
+                }
+                $("#heading").text("Your feavourites");
                 $.each(products, function(key,value){
                     id = value.id;
                     name = value.name;
@@ -95,47 +83,14 @@ $(document).ready(function(){
                 });
             },
             error: function(){
-                console.log("Products.js : Error get products !!");
+                console.log("Products.js : Error get favourites !!");
+                $("#heading").text("Error get favourites");
                 $("body").load("404.html");
                 return false;
             }
         });
     }
 
-    getProducts(start,count,sort,order,statusStr,1);
-
-    // event listener order
-    // order change reload products
-    $("#order").change(function() {
-        order = $("#order").val();
-        getProducts(0,12,sort,order,status,1);
-    });
-
-    // status event listener
-    $("#status").change(function() {
-        status = $("#status").val();
-        console.log("Status changed to " + status);
-       // getProducts(0,12,sort,order,status,1);
-    });
-
-
-    // function take height for all browsers
-    function getDocHeight() {
-        var D = document;
-        return Math.max(
-            D.body.scrollHeight, D.documentElement.scrollHeight,
-            D.body.offsetHeight, D.documentElement.offsetHeight,
-            D.body.clientHeight, D.documentElement.clientHeight
-        );
-    }
-
-    // when scroll down load more products
-    // trigger getProducts earlier
-    $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() > getDocHeight() - 100) {
-            start = start+11;
-            getProducts(start,12,sort,order,status,0);
-        }
-    });
+    getFavourites();
 });
 
