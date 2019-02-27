@@ -12,7 +12,6 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-
 var gps = new Array();
 gps[0] = "";
 gps[1] = "";
@@ -186,7 +185,7 @@ $(document).ready(function(){
             error: function(){
                 console.log("Product.js :Prices GET Error product with id " + productID + " not found !");
                 // $("#shopsDiv").text("Shops Not Found");
-              //  $("#map").text("Error Map");
+                $("#map").text("Error Map");
                 //$("#shopsDiv").load("404.html");
                 //$("html").load("404.html");
                 return ;
@@ -200,8 +199,7 @@ $(document).ready(function(){
         console.log("Product.js :Prices GET Error product with id " + productID+ " not found !");
         //    $("#shopsDiv").text("Shops Not Found");
         $("#shops").append("<div class=\"h3\"> Shops Not Found. Use other Filters");
-        markersLayer.clearLayers();
-       // $("#map").text("Error Map");
+        $("#map").text("Error Map");
         //$("#shopsDiv").load("404.html");
         //$("html").load("404.html");
         return ;
@@ -226,7 +224,7 @@ $(document).ready(function(){
             error: function(){
                 console.log("Product.js :Shop with id " + id + " not found !");
                 $("#shopsDiv").text("Shops Not Found");
-        //        $("#map").text("Error Map");
+                $("#map").text("Error Map");
                 return ;
             }
         });
@@ -249,27 +247,17 @@ $(document).ready(function(){
 
     // Create Map
     // input: list of shops ids
-    // return: null
-
+    // return: null 
     function setMap(shopsID) {
-        markersLayer = new L.LayerGroup(); // NOTE: Layer is created here!
-        console.log("Creating map...");
         var locations = [];
         locations = shopsLocation(shopsID);
-        console.log("Get locations..." + locations);
         // Athens View
-        if ( map != null) {
+        if ( map != null ) {
             map.off();
             map.remove();
         }
-//        if( gps[0] == "") map = L.map('map').setView([37.592724,23.441932], 8);
-  //      else map = L.map('map').setView([gps[0],gps[1]], 12);
-
-
-        // to pio panw magazi
-        map = L.map('map').setView([locations[0][1],locations[0][2]], 12);
-
-
+        if( gps[0] == "") map = L.map('map').setView([37.592724,23.441932], 8);
+        else map = L.map('map').setView([gps[0],gps[1]], 12);
 
         mapLink = 
             '<a href="https://openstreetmap.org">OpenStreetMap</a>';
@@ -279,15 +267,11 @@ $(document).ready(function(){
             maxZoom: 18,
         }).addTo(map);
 
-        console.log("loop");
         for (var i = 0; i < locations.length; i++) {
             marker = new L.marker([locations[i][1],locations[i][2]])
-            .bindPopup(locations[i][0]);
-           // .addTo(map);
-            markersLayer.addLayer(marker); 
+            .bindPopup(locations[i][0])
+            .addTo(map);
         }
-
-        markersLayer.addTo(map);
     }
 
     // event listener order
@@ -414,7 +398,7 @@ $(document).ready(function(){
             navigator.geolocation.getCurrentPosition(function(position){
                 gps[0] = position.coords.latitude;
                 gps[1] = position.coords.longitude;
-                shopsUpdate(1);
+                 shopsUpdate(1);
             }, function() {
                 console.log("Don't allow location");
                 $("#errorFilters").text("Allow location please"); 
