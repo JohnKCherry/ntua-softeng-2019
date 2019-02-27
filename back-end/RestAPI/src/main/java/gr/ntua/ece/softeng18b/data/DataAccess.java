@@ -67,15 +67,21 @@ public class DataAccess {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where 1 order by "+sort+" limit ?,?", params_small, new ProductWithImageRowMapper());
-    	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products, image where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductWithImageRowMapper());      
+    	return jdbcTemplate.query("select id, name, description, category, withdrawn, image, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductWithImageRowMapper());      
     }
     
     @SuppressWarnings("unchecked")
-	public List<Product> getProductsByName(Limits limits, int status, String name) {
+	public List<Product> getProductsByName(Limits limits, int status, String name, String sort, Boolean user_sort) {
     	String[] params = new String[]{name};
     	String[] params_status = new String[]{name,""+status};
-    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
-    	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
+    	if(!user_sort) {
+    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
+    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
+    	}
+    	else {
+    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) order by " + sort + " limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
+    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper());
+    	}
     } 
     
     @SuppressWarnings("unchecked")
