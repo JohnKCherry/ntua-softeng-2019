@@ -117,6 +117,8 @@ $(document).ready(function(){
     });
 
 
+
+    // when scroll down load more products
     $(window).scroll(function() {
         if($(window).scrollTop() + $(window).height() == $(document).height()) {
             start = start+11;
