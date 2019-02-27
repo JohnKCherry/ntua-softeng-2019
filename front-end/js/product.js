@@ -237,7 +237,7 @@ $(document).ready(function(){
     function shopsNotFound() {
         console.log("Product.js :Prices GET Error product with id " + productID+ " not found !");
         //    $("#shopsDiv").text("Shops Not Found");
-        $("#shops").append("<div class=\"h3\"> Shops Not Found. Use other Filters");
+        $("#shops").append("<div class=\"h3\"> Shops Not Found. Product is inactive or use other filters");
         markersLayer.clearLayers();
         // $("#map").text("Error Map");
         //$("#shopsDiv").load("404.html");
