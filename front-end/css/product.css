@@ -34,3 +34,15 @@
 #price{
     float: right;
 }
+
+/*
+@media only screen and (max-width: 600px) {
+    #shopsRow {
+        display: flex;
+    }
+
+    #mapRow {
+        display: flex;
+    }
+}
+*/

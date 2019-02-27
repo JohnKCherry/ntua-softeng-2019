@@ -113,7 +113,7 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                     </div>
 
             <!-- Filters -->
-            <div class="float-left ">
+            <div id="filterDiv" class="float-left" style="display:absolute">
                 <p class="h2">Filters</p>
                 <hr class="col-xs-12">
                 <form id="filters">
@@ -145,13 +145,13 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
             </div>
 
             <!-- Shops -->
-            <div class="row justify-content-start" style="display: block">
+            <div class="row justify-content-start" id="shopsRow">
                 <div id="shopsDiv" class="col">
                     <p class="h2">Shops</p>
                     <hr class="col-xs-12">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <select id="order" class="form-control form-control-sm" style="display: block">
+                        <div class="col-md-3">
+                            <select id="order" class="form-control form-control-sm" >
                                 <option value="1">Αύξουσα Ταξινόμηση</option>
                                 <option value="2">Φθίνουσα Ταξινόμηση</option>
                             </select>
@@ -165,7 +165,7 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
             <!-- Map Row -->
 
-            <div class="row" style="display: flex">
+            <div class="row" id="mapRow">
                 <div class="col">
                     <div class="h2">Map</div>
                     <div id="map">

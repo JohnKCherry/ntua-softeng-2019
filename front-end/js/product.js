@@ -19,6 +19,21 @@ var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
     console.log("ready");
 
+    if ($(window).innerWidth()<=660) {
+        $("#filterDiv").removeClass("float-left");
+     //   $("#filterDiv").addClass("float-sm-left");
+        console.log("change class filter div");
+    }
+    $( window ).resize(function() {
+    if ($(window).innerWidth()<=660) {
+        $("#filterDiv").removeClass("float-left");
+     //   $("#filterDiv").addClass("float-sm-left");
+        console.log("change class filter div");
+    }
+    else {
+        $("#filterDiv").addClass("float-sm-left");
+        }
+    });
     console.log("Token ");
     console.log(token);
     if (token != null) {
