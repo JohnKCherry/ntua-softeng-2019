@@ -54,6 +54,9 @@ public class FavouritesResource extends ServerResource {
         if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not loged in");
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not loged in");
         
+        //Adding limit of 100 favourites per user.
+        if(dataAccess.getFavouriteProductsWithImage(user_token).size()>=100) throw new ResourceException(403, "You have reached the maximum number of favourite products.\n Please delete some favourites before adding new ones.");
+        
         int product_id;
         try {
             product_id = Integer.parseInt(product_id_string);

@@ -36,11 +36,17 @@ public class RestfulApp extends Application {
         // GET 
         router.attach("/productswithimage/{id}", ProductWithImageResource.class);
         
-        //GET
+        //GET, POST
         router.attach("/productswithimage", ProductsWithImageResource.class);
         
         //GET 
         router.attach("/productsbynamewithimage/{name}", ProductsByNameWithImageResource.class);
+        
+        //GET 
+        router.attach("/productsbyname/{name}", ProductsByNameResource.class);
+        
+        //GET 
+        router.attach("/shopsbyname/{name}", ShopsByNameResource.class);
         
         //GET, POST
         router.attach("/shops", ShopsResource.class);
