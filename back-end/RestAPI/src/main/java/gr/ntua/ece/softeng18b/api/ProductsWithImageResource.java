@@ -11,9 +11,9 @@ import org.apache.commons.fileupload.FileItemStream;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.util.Streams;
+import org.apache.commons.io.IOUtils;
 import org.restlet.data.Header;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
@@ -22,9 +22,7 @@ import org.restlet.data.MediaType;
 import org.restlet.data.Status;
 import org.restlet.ext.fileupload.RestletFileUpload;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,9 +97,7 @@ public class ProductsWithImageResource extends ServerResource {
 	@Override
 	
     protected Representation post(Representation entity) throws ResourceException {
-    	Representation result = null;
     	HashMap<String, String> map = new HashMap<String, String>();
-    	byte[] fileContent = null;
     	byte[] image = null;
         if (entity != null) {
             if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true)) {
@@ -120,34 +116,22 @@ public class ProductsWithImageResource extends ServerResource {
 				try {
 					fileIterator = upload.getItemIterator(entity);
 				} catch (FileUploadException e) {
-					// TODO Auto-generated catch block
+					//Auto-generated catch block
 					e.printStackTrace();
+					throw new ResourceException(400, "Something went wrong with file upload P1");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					//Auto-generated catch block
 					e.printStackTrace();
+					throw new ResourceException(400, "Something went wrong with file upload P2");
 				}
 
                 try {
 					while (fileIterator.hasNext()) {
 					    FileItemStream fi = fileIterator.next();
 					    if (fi.getFieldName().equals("fileToUpload")) {
-					        // consume the stream immediately, otherwise the stream
-					        // will be closed.
-					        StringBuilder sb = new StringBuilder("");
-					        //sb.append(fi.getContentType()).append("\n");
-					        //sb.append("file name : ");
-					        //sb.append(fi.getName()).append("\n");
-					        BufferedReader br = new BufferedReader(new InputStreamReader(fi.openStream()));
-					        String line = null;
-					        while ((line = br.readLine()) != null) {
-					            sb.append(line);
-					        }
-					        //sb.append("\n");
-					        result = new StringRepresentation(sb.toString(), MediaType.TEXT_PLAIN);
-					        fileContent = sb.toString().trim().getBytes();
-					        image = fileContent;
-					        //map.put("image", sb.toString());
-					        //map.put("image",Streams.asString(fi.openStream()));
+					        new StringBuilder("");
+					        image = IOUtils.toByteArray(fi.openStream());
+					        
 					    }
 					    else{
 					    	String fieldName = fi.getFieldName();
@@ -158,11 +142,11 @@ public class ProductsWithImageResource extends ServerResource {
 					    }
 					}
 				} catch (FileUploadException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					throw new ResourceException(400, "Something went wrong with file upload P3");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					throw new ResourceException(400, "Something went wrong with file upload P4");
 				}
             } else {
                 // POST request with no entity.
@@ -176,17 +160,16 @@ public class ProductsWithImageResource extends ServerResource {
         String description = map.get("description");
         String category = map.get("category");
         String tags = map.get("tags");
-        //String image_string = map.get("image");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
         String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
-        //if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to add product");
-        //if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to add product");
+        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to add product");
+        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to add product");
 
         
         //validate the values (in the general case)
-        if(name == null || description == null || category == null) throw new ResourceException(400,"This operation needs more parameters");
+        if(name == null || description == null || category == null || image == null) throw new ResourceException(400,"This operation needs more parameters");
         if(tags == null) tags = "";
         //String regex = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\).\\..\\+.\\-.\\:.\\@]+$";
         //String regex_s = "^[a-zA-Z0-9\\s.\\-.\\,.\\'.\\[.\\[.\\(.\\)]+$";
