@@ -50,10 +50,10 @@ $(document).ready(function(){
     var statusStr = "ALL";
 
 
-    function getProducts(start,count,sort,order,status) {
+    function getProducts(start,count,sort,order,status,clear) {
         // get product general info
 
-        $(".card-deck").empty();
+        if(clear) $(".card-deck").empty();
         orderStr = (order==1) ? "ASC" : "DESC";
         if (status == 1) statusStr = "ALL";
         else if (status == 2) statusStr = "ACTIVE";
@@ -102,18 +102,26 @@ $(document).ready(function(){
         });
     }
 
-    getProducts(start,count,sort,order,statusStr);
+    getProducts(start,count,sort,order,statusStr,1);
 
     // event listener order
     // order change reload products
     $("#order").change(function() {
         order = $("#order").val();
-        getProducts(0,12,sort,order,status);
+        getProducts(0,12,sort,order,status,1);
     });
-    
+
     $("#order").change(function() {
         order = $("#order").val();
-        getProducts(0,12,sort,order,status);
+        getProducts(0,12,sort,order,status,1);
+    });
+
+
+    $(window).scroll(function() {
+        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            start = start+11;
+            getProducts(start,12,sort,order,status,0);
+        }
     });
 });
 
