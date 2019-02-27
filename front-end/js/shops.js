@@ -37,7 +37,7 @@ $(document).ready(function(){
     var tags;
 
     var start = 0;
-    var count = 12;
+    var count = 20;
     var sort = "id";
     var order = 1;
     $("#order").val("1");
@@ -74,7 +74,7 @@ $(document).ready(function(){
                     name = value.name;
                     address = value.address;
                     // create html
-                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"card-body\"><a href=\"product.html?id="+id+"\" class=\"card-title\">"+name+"</a><p class=\"card-text\">"+address+"</p></div></div></div>");
+                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"card-body\"><a href=\"shop.html?id="+id+"\" class=\"card-title\">"+name+"</a><p class=\"card-text\">"+address+"</p></div></div></div>");
                 });
             },
             error: function(){
