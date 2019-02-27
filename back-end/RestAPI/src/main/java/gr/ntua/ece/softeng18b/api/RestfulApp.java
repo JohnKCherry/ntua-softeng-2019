@@ -48,6 +48,7 @@ public class RestfulApp extends Application {
         
         //GET 
         router.attach("/shopsbyname/{name}", ShopsByNameResource.class);
+        router.attach("/shopsbyname/", ShopsByNameResource.class);
         
         //GET, POST
         router.attach("/shops", ShopsResource.class);
