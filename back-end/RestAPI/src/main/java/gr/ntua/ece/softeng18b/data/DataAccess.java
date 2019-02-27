@@ -71,6 +71,14 @@ public class DataAccess {
     }
     
     @SuppressWarnings("unchecked")
+	public List<Product> getProductsByName(Limits limits, int status, String name) {
+    	String[] params = new String[]{name};
+    	String[] params_status = new String[]{name,""+status};
+    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
+    	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
+    } 
+    
+    @SuppressWarnings("unchecked")
 	public List<ProductWithImage> getProductsByNameWithImage(Limits limits, long status, String name) {
     	String[] params = new String[]{name};
     	String[] params_status = new String[]{name,""+status};
@@ -92,6 +100,14 @@ public class DataAccess {
     	if(status == -1) return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 order by "+sort+" limit ?,?", params_small, new ShopRowMapper());
     	return jdbcTemplate.query("select ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, id, name, address, tags, withdrawn  from shops where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ShopRowMapper());      
     }
+    
+    @SuppressWarnings("unchecked")
+	public List<Shop> getShopsByName(Limits limits, int status, String name) {
+    	String[] params = new String[]{name};
+    	String[] params_status = new String[]{name,""+status};
+    	if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
+    	else return jdbcTemplate.query("select id, name, address, location, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    } 
     
     @SuppressWarnings("unchecked")
 	public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
@@ -134,6 +150,45 @@ public class DataAccess {
                 ps.setString(3, category);
                 ps.setBoolean(4, withdrawn);
                 ps.setString(5, tags);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+            //New row has been added
+            Product product = new Product(
+                keyHolder.getKey().longValue(), //the newly created project id
+                name,
+                description,
+                category,
+                withdrawn,
+                tags
+            );
+            return product;
+
+        }
+        else {
+            throw new RuntimeException("Creation of Product failed");
+        }
+    }
+    
+    public Product addProductWithImage(String name, String description, String category, boolean withdrawn, String tags, byte[] image ) {
+        //Create the new product record using a prepared statement
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into products(name, description, category, withdrawn, tags, image) values(?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setString(1, name);
+                ps.setString(2, description);
+                ps.setString(3, category);
+                ps.setBoolean(4, withdrawn);
+                ps.setString(5, tags);
+                ps.setBytes(6, image);
                 return ps;
             }
         };
@@ -702,6 +757,6 @@ public class DataAccess {
   
             return null; 
         } 
-    } 
+    }
 
 }

@@ -44,7 +44,6 @@ import spock.lang.Stepwise
         Product returned = api.postProduct(sent, RestCallFormat.JSON)
 		id = returned.id;
 		post_pr = sent;
-		//System.out.println(id);
 		
         then:
         returned.name == sent.name &&
@@ -57,7 +56,6 @@ import spock.lang.Stepwise
 	def "User gets product" (){
 		when:
 		Product returned = api.getProduct(id, RestCallFormat.JSON)
-		//System.out.println(id);
 		
 		then:
 		returned.name == post_pr.name &&
@@ -97,28 +95,24 @@ import spock.lang.Stepwise
 		
 		when:
 		Product returned = api.patchProduct(id, "description", "Patched dscr", RestCallFormat.JSON)
-		//System.out.println(id);
 		
 		then:
 		returned.description.equals("Patched dscr");
 		
 		when:
 		Product returned2 = api.patchProduct(id, "status", "WITHDRAWN", RestCallFormat.JSON)
-		//System.out.println(id);
 		
 		then:
 		returned2.withdrawn
 		
 		when:
 		Product returned3 = api.patchProduct(id, "status", "ACTIVE", RestCallFormat.JSON)
-		//System.out.println(id);
 		
 		then:
 		!returned3.withdrawn
 		
 		when:
 		Product returned4 = api.patchProduct(id, "tags", "pt1,pt2,pt3,pt4", RestCallFormat.JSON)
-		//System.out.println(id);
 		
 		then:
 		returned4.tags == ["pt1", "pt2", "pt3", "pt4"]
@@ -137,7 +131,6 @@ import spock.lang.Stepwise
 	def "User gets list of products" (){
 		when:
 		List<Product> returned = api.getProducts(5, 5, "ACTIVE", "id|ASC", RestCallFormat.JSON).products
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned.size(); i++) {
@@ -149,7 +142,6 @@ import spock.lang.Stepwise
 		
 		when:
 		List<Product> returned2 = api.getProducts(10, 2, "ACTIVE", "id|ASC", RestCallFormat.JSON).products
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned2.size(); i++) {
@@ -161,7 +153,6 @@ import spock.lang.Stepwise
 		
 		when:
 		List<Product> returned3 = api.getProducts(0, 5, "WITHDRAWN", "id|DESC", RestCallFormat.JSON).products
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned3.size(); i++) {
@@ -173,7 +164,6 @@ import spock.lang.Stepwise
 		
 		when:
 		List<Product> returned4 = api.getProducts(0, 50, "ACTIVE", "name|DESC", RestCallFormat.JSON).products
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned4.size(); i++) {
@@ -297,7 +287,6 @@ import spock.lang.Stepwise
 	def "User gets list of shops" (){
 		when:
 		List<Shop> returned = api.getShops(5, 5, "ACTIVE", "id|ASC", RestCallFormat.JSON).shops
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned.size(); i++) {
@@ -309,7 +298,6 @@ import spock.lang.Stepwise
 		
 		when:
 		List<Shop> returned2 = api.getShops(10, 2, "ACTIVE", "id|ASC", RestCallFormat.JSON).shops
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned2.size(); i++) {
@@ -321,7 +309,6 @@ import spock.lang.Stepwise
 		
 		when:
 		List<Shop> returned3 = api.getShops(0, 5, "WITHDRAWN", "id|DESC", RestCallFormat.JSON).shops
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned3.size(); i++) {
@@ -333,7 +320,6 @@ import spock.lang.Stepwise
 		
 		when:
 		List<Shop> returned4 = api.getShops(0, 50, "ACTIVE", "name|DESC", RestCallFormat.JSON).shops
-		//System.out.println(id);
 		
 		then:
 		for(int i=0; i<returned4.size(); i++) {
@@ -365,7 +351,6 @@ import spock.lang.Stepwise
 		}
 		catch(RuntimeException e) {
 			if(e.message.equals("Error 404: Not Found")) flag = true;
-			//System.out.println(e.message);
 		}
 		then:
 		flag
@@ -381,7 +366,6 @@ import spock.lang.Stepwise
 		}
 		catch(RuntimeException e) {
 			if(e.message.equals("Error 404: Not Found")) flag = true;
-			//System.out.println(e.message);
 		}
 		then:
 		flag

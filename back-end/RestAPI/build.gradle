@@ -33,6 +33,10 @@ dependencies {
     compile "org.apache.commons:commons-pool2:2.4.3"             //object pool
     compile "org.apache.commons:commons-dbcp2:2.1.1"             //db connection pool
     compile "org.springframework:spring-jdbc:5.0.2.RELEASE"      //spring JDBC classes
+	
+	// https://mvnrepository.com/artifact/org.restlet.jee/org.restlet.ext.fileupload
+	compile group: 'org.restlet.jee', name: 'org.restlet.ext.fileupload', version: '2.3.1'
+	
 
     testCompile "org.codehaus.groovy:groovy-all:2.5.4"
     testCompile "org.spockframework:spock-core:1.2-groovy-2.5"
