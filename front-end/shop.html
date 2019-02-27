@@ -36,6 +36,45 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 	    <!-- Header -->
         <div id="header"></div>
 		
+		<a id="loginBtn" href="#loginModal" role="button" class="btn btn-primary btn-lg" data-toggle="modal" style="float: right">Login</a>
+        <!-- Login Form popup -->
+        <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Login</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                            <div class="form-group">
+                                <a href="signup.html" class="float-right">New user?</a>
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control form-control-lg" name="username" id="username" required="">
+                                <div class="invalid-feedback">Oops, you missed this one.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control form-control-lg" id="password" required="" autocomplete="new-password">
+                                <div class="invalid-feedback">Enter your password too!</div>
+                            </div>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="rememberMe">
+                                <!--  <label class="custom-control-label" for="rememberMe">Remember me on this computer</label>-->
+                            </div>
+                            <div class="form-group py-4">
+                                <button class="btn btn-outline-secondary btn-lg" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                <button type="submit" class="btn btn-success btn-lg float-right" id="btnLogin">Login</button>
+                            </div>
+                            <div class="modal-header">
+                                <h3 id="error" style="color:red"></h3>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+</div>
+		
 		<!--Main Body-->
 		
 		<div id="container" class="container-fluid p-3 mb-2 bg-light text-dark">
@@ -51,10 +90,11 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                         <ul id="tags" class="list-inline">
                         </ul>
                     </span>
-                    <input type="text" id="newTag" name="newTag" style="visibility: hidden" placeholder="One word or more with spaces" size="24">
+                    <input type="text" id="newTag" name="newTag" style="visibility:hidden" placeholder="One word or more with spaces" size="24">
                     <button id="addButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-plus"></span> Add Tag</button>
                     <div id="errorTag" class="h7" style="color:red; display: none"></div>
                 </div>
+			
 				<div class="col-md-5 ">
 				<p id="shopWebsite" class="h3">Website: </p>
 				<p id="shopLocation" class="h4">Physical Location:  </p>
@@ -64,7 +104,7 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 				
 				</p>
                 <p>
-				<button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:visible"><span class="fas fa-pencil-alt"></span> Edit</button>
+				<button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-pencil-alt"></span> Edit</button>
 				<button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
 				<button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
                 </p>

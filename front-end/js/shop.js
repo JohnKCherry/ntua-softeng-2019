@@ -13,11 +13,26 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+
+var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
     console.log("ready");
+	
+	console.log("Token ");
+    console.log(token);
+	
+	
+	if (token != null) {
+        $("#loginBtn").text(window.sessionStorage.getItem("username"));
+        $("#loginBtn").attr("href","");
+        $("#editButton").css("visibility","visible");
+    }
+    else {
+        $("#loginBtn").show();
+}
 
     var shopID = getUrlParameter('id');
-    if (shopID == null) shopID = 4;
+    if (shopID == null) shopID = 38;
     var map = null;
     var shopArray = new Array();
 	var name;
@@ -32,7 +47,7 @@ $(document).ready(function(){
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "http://localhost:8765/observatory/api/shops/"+shopID,
+        url: "https://localhost:8765/observatory/api/shops/"+shopID,
         success: function(data){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
@@ -44,13 +59,15 @@ $(document).ready(function(){
             $("#shopTel").append("<span class=\"h6\">"+obj.phone+"</span>");
             tags = obj.tags;
             $.each(tags, function(key,value){
-                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+value+"</span><span id=\"' + key + '\" style = \"visibility: hidden\">&times;<\span></li>");
+                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">" + value + "</span><span id=\"" + key + "\" class=\"close\" style = \"visibility: hidden\">&times;</span></li>");
             });
 			name=obj.name;
 			website=obj.website;
 			telephone=obj.phone;
 			type=obj.category;
 			Location=obj.address;
+			lat=obj.lat;
+			lng=obj.lng
 			
 
 
@@ -70,7 +87,7 @@ $(document).ready(function(){
             type: "GET",
             async: false,
             dataType: "json",
-            url: "http://localhost:8765/observatory/api/shops/"+id,
+            url: "https://localhost:8765/observatory/api/shops/"+id,
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 shopArray = [obj.name,obj.lat,obj.lng];
@@ -132,7 +149,7 @@ $(document).ready(function(){
             var c = tags.length;
             $.each(ret,function(index,value) {
                 if(jQuery.inArray(value, tags) !== -1) {
-                    $("#errorTag").text("Tag " + value + "already exists");
+                    $("#errorTag").text("Tag " + value + " already exists");
                     $("#errorTag").show();
                     $("#newTag").val("");
                     return false;
@@ -167,46 +184,47 @@ $(document).ready(function(){
 		$(".close").css("visibility","visible");
 		$("#addButton").css("visibility", "visible");
 		$("#newTag").css("visibility","visible");
-		$("#shopWebsite").replaceWith($('<p id=\"shopWebsite\" class="h3">Website: <input type=\"text\" id=\"shopWebsite2\" name=\"shopWebsite2\" class="h4" value="' + website + '"><br></input></p>'));
-		$("#shopTel").replaceWith($('<p id=\"shopTel\" class="h4">Telephone: <input type=\"text\" id=\"shopTel2\" name=\"shopTel2\" class="h4" value="' + telephone + '"><br></input></p>'));
-		$("#shopLocation").replaceWith($('<p id=\"shopLocation\" class="h4">Physical Location: <input type=\"text\" id=\"shopLocation2\" name=\"shopLocation2\" class="h4" value="' + Location + '"><br></input></p>'));
-		$("#shopName").replaceWith($('<p id=\"shopName\" class="h2">Name: <input type=\"text\" id=\"shopName2\" name=\"shopName2\" class="h4" value="' + name + '"><br></input></p>'));
-		$("#shopType").replaceWith($('<p id=\"shopType\" class="h4">Categories: <input type=\"text\" id=\"shopType2\" name=\"shopType2\" class="h4" value="' + type + '"><br></input></p>'));
-		$("#tagsHeader").replaceWith($('<p id=\"tags\" class="h4">Tags: <input type=\"text\" id=\"tags2\" name=\"tags2\" class="h4" value="' + tags + '"><br></input></p>'));
+		$("#shopWebsite").replaceWith($('<div class=\"h3\>"Website: <input id=\"shopWebsite\" type=\"text\"  class="h4" value=\"' + website + '"></input></div>'));
+		$("#shopTel").replaceWith($('<div class=\"h4\">Telephone: <input type=\"text\" id=\"shopTel\" class="h4" value="' + telephone + '"></input></div>'));
+		$("#shopLocation").replaceWith($('<div class=\"h4\">Physical Location: <input type=\"text\" id=\"shopLocation\" class="h4" value="' + Location + '"></input></div>'));
+		$("#shopName").replaceWith($('<div class=\"h2\">Name: <input type=\"text\" id=\"shopName\"  class="h4" value="' + name + '"></input></div>'));
+		$("#shopType").replaceWith($('<div class=\"h4\">Categories: <input type=\"text\" id=\"shopType\" class="h4" value="' + type + '"></input></div>'));
 		
 		
 		
-	});
-	$("#cancelButton").click(function(){
-		$("#shopWebsite").replaceWith($('<p id="shopWebsite" class="h3">Website: <span class=\"h6\">' + website + '</span></p>'));
-		$("#shopTel").replaceWith($('<p id="shopTel" class="h4">Telephone: <span class=\"h6\">' + telephone + '</span></p>'));
-		$("#shopLocation").replaceWith($('<p id="shopLocation" class="h4">Physical Location: <span class=\"h6\">' + Location + '</span></p>'));
-		$("#shopName").replaceWith($('<p id="shopName" class="h2">' + name + '</p>'));
-		$("#shopType").replaceWith($('<p id="shopType" class="h4">Categories: <span class=\"h6\">' + type + '</span></p>'));
-		$("#tags").replaceWith($('<span id="tagsHeader" class="h5" >Tags: <ul id="tags" class="list-inline">'+ tags + '</ul></span>'));
-		$("#editButton").css("visibility","visible");
-		$("#applyButton").css("visibility","hidden");
-		$("#cancelButton").css("visibility","hidden");
 		
 	});
 	
-	$("applyButton").click(function(){
+	
+	
+	$('#applyButton').click(function() {
 		var obj = new Object();
-		obj.name = $("shopName2").val();
-		obj.tel = $("shopTel2").val();
-		obj.website = $("shopWebsite2").val();
-		obj.address = $("shopLocation2").val();
-		obj.type = $("shopType2").val();
+		obj.name = $("#shopName").val();
+		console.log($("#shopName").val());
+		obj.lat=38;
+		obj.lng=23;
+		//obj.tel = $("#shopTel").val();
+		//obj.website = $("#shopWebsite").val();
+		obj.address = $("#shopLocation").val();
+		//obj.type = $("#shopType").val();
 		obj.tags = tags.join(", ");
 		console.log(obj);
 		sendUpdate(obj);
 	});
+	
+	
+	$("#cancelButton").click(function(){
+		location.reload();
+		
+	});
+	
+	
 	function sendUpdate(obj) {
         $.ajax({
             type: "PUT",
             dataType: "json",
             headers: {'X-OBSERVATORY-AUTH' : token},
-            url: "https://localhost:8765/observatory/api/products/"+productID,
+            url: "https://localhost:8765/observatory/api/shops/"+shopID,
             data: obj,
             success: function(data){
                 console.log("Success");
