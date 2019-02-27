@@ -1,1 +1,1 @@
-curl -X DELETE http://localhost:8765/observatory/api/prices/12/5
+curl -X DELETE https://localhost:8765/observatory/api/prices/12/5
