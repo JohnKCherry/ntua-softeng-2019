@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="css/login.css" />
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
         <!-- jQuery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -34,9 +35,8 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
         <!-- Header -->
         <div id="header"></div>
+
         <a id="loginBtn" href="#loginModal" role="button" class="btn btn-primary btn-lg" data-toggle="modal" style="float: right">Login</a>
-
-
         <!-- Login Form popup -->
         <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
@@ -86,24 +86,34 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                     <img id="productImage" alt="Product Image" class="rounded border">
                 </div>
                 <div class="col">
-                    <div id="productName" class="h2">Name of Product</div>
+                    <div id="productName" class="h2"><u>Name of Product</u></div>
                     <hr class="col-xs-12">
-                    <p id="productDescription" class="h4">Description: </p>
+                    <p id="productDescription"><u class="h5">Description</u>: </p>
                     <hr class="col-xs-12">
-                    <p id="productCategory" class="h5">Category: </p>
-                    <span id="tagsHeader" class="h5" >Tags:
+                    <p id="productCategory"><u class="h5">Category</u>: </p>
+                    <span id="tagsHeader"><u class="h5">Tags</u>:
                         <ul id="tags" class="list-inline">
                         </ul>
                     </span>
-                    <p class="h5">Lowest Price: <span id="lowestPrice"></span></p>
+                    <input type="text" id="newTag" name="newTag" style="visibility: hidden" placeholder="One word or more with spaces" size="24">
+                    <button id="addButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-plus"></span> Add Tag</button>
+                    <div id="errorTag" class="h7" style="color:red; display: none"></div>
+                    <p class="h5"><u>Lowest Price</u>: <span id="lowestPrice" class="font-weight-bold"></span></p>
                 </div>
             </div>
 
             <hr class="col-xs-12">
 
+                    <div class="col-sm-1">
+                        <button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-pencil-alt"></span> Edit</button>
+                        <div class="btn-group" role="group">
+                                <button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
+                                <button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
+                        </div>
+                    </div>
 
             <!-- Filters -->
-            <div class="float-left ">
+            <div id="filterDiv" class="float-left" style="display:absolute">
                 <p class="h2">Filters</p>
                 <hr class="col-xs-12">
                 <form id="filters">
@@ -130,17 +140,18 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                         </li>
                     </ul>
                     <input type="submit" value="Refresh Filters">
+                    <div id="errorFilters" class="h7" style="color:red"></div>
                 </form>
             </div>
 
             <!-- Shops -->
-            <div class="row justify-content-start">
+            <div class="row justify-content-start" id="shopsRow">
                 <div id="shopsDiv" class="col">
                     <p class="h2">Shops</p>
                     <hr class="col-xs-12">
                     <div class="row">
-                        <div class="col-sm-3">
-                            <select id="order" class="form-control form-control-sm">
+                        <div class="col-md-3">
+                            <select id="order" class="form-control form-control-sm" >
                                 <option value="1">Αύξουσα Ταξινόμηση</option>
                                 <option value="2">Φθίνουσα Ταξινόμηση</option>
                             </select>
@@ -154,7 +165,7 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
             <!-- Map Row -->
 
-            <div class="row">
+            <div class="row" id="mapRow">
                 <div class="col">
                     <div class="h2">Map</div>
                     <div id="map">

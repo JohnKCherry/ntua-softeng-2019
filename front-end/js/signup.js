@@ -25,7 +25,7 @@ $(document).ready(function(){
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: "http://localhost:8765/observatory/api/signup",
+            url: "https://localhost:8765/observatory/api/signup",
             data:{"fullname":$("#fullname").val(),"username":$("#username").val(),"email":$("#email").val(),"password":$("#password").val()},
             success: function(data){
                 console.log("Success");
