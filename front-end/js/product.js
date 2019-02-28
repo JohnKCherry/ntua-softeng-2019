@@ -12,12 +12,6 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-$(window).bind("pageshow", function() {
-    var $input = $('#refresh');
-
-    $input.val() == 'yes' ? location.reload(true) : $input.val('yes');
-    // update hidden input field
-});
 var gps = new Array();
 gps[0] = "";
 gps[1] = "";
@@ -220,7 +214,7 @@ $(document).ready(function(){
                         shopsID.push(shop_id);
                         var price = value.price;
                         var shopName = value.shop_name;
-                        $("#shops").append("<li class=\"list-group-item\"><a href=\"https://localhost:8765/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
+                        $("#shops").append("<li class=\"list-group-item\"><a href=\"shop.html?id="+shop_id+"\"><div><span id=\"shopName\">"
                                            +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
                     });
                     if (reload == 1) setMap(shopsID);

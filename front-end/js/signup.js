@@ -1,10 +1,4 @@
 
-$(window).bind("pageshow", function() {
-    var $input = $('#refresh');
-
-    $input.val() == 'yes' ? location.reload(true) : $input.val('yes');
-    // update hidden input field
-});
 $(document).ready(function(){
 
 
