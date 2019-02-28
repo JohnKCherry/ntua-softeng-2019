@@ -12,7 +12,6 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-
 $(document).ready(function(){
     console.log("ready");
 
