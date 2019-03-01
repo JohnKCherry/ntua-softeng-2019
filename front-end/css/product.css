@@ -35,6 +35,9 @@
     float: right;
 }
 
+.fa_custom {
+color: #FF0000
+}
 /*
 @media only screen and (max-width: 600px) {
     #shopsRow {
