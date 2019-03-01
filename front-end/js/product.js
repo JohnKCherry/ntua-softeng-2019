@@ -113,7 +113,7 @@ $(document).ready(function(){
 
                 $.each(products, function(key,value) {
                     if(value.id == productID) {
-                        $("#fav").attr('class','fas fa-heart');
+                        $("#fav").attr('class','fas fa-heart fa_custom');
                         $("#fav").attr('data-val','1');
                         $("#fav").attr('title','Remove from favourites');
                         return false;
@@ -485,7 +485,7 @@ $(document).ready(function(){
                 console.log("Success add to favourites");
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log(obj);
-                $("#fav").attr('class','fas fa-heart');
+                $("#fav").attr('class','fas fa-heart fa_custom');
                 $("#fav").attr('data-val','1');
                 $("#fav").attr('title','Remove from favourites');
             },
@@ -516,7 +516,7 @@ $(document).ready(function(){
             error: function(err){
                 console.log("product.js: Error remove from favourites");
                 console.log(err);
-                $("#fav").attr('class','fas fa-heart');
+                $("#fav").attr('class','fas fa-heart fa_custom');
                 $("#fav").attr('data-val','1');
                 $("#fav").attr('title','Remove from favourites');
             }
