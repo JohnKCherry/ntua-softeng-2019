@@ -130,6 +130,7 @@ $(document).ready(function(){
         getProducts(0,12,sort,order,status,1,byName);
            
     });
+
     // event listener order
     // order change reload products
     $("#order").change(function() {
