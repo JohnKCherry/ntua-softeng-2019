@@ -27,16 +27,17 @@
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
 integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
   crossorigin=""></script>
-        <script type="text/javascript" src="js/search.js"></script>
+        <script type="text/javascript" src="js/addprice.js"></script>
         <script type="text/javascript" src="js/login.js"></script>
     </head>
     <body>
 
 
         <!-- Header -->
-        <div id="header"></div>
+        <div id="header" class="row justify-content-center">
+            <a id="loginBtn" href="#loginModal" role="button" class="btn btn-primary btn-lg" data-toggle="modal" style="float: right">Login</a>
+        </div>
 
-        <a id="loginBtn" href="#loginModal" role="button" class="btn btn-primary btn-lg" data-toggle="modal" style="float: right">Login</a>
         <!-- Login Form popup -->
         <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
@@ -76,20 +77,48 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
         </div>
 
 
-        <div class="row justify-content-center h1">Αναζήτηση</div>
+        <div class="row justify-content-center h1">Προσθήκη νέας τιμής</div>
         <!-- Main Body Container -->
         <div id="container" class="container-fluid p-3 mb-2 bg-light text-dark">
 
 
-
             <div class="container">
-                <ul id=list" class="list-group">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Morbi leo risus</li>
-                    <li class="list-group-item">Porta ac consectetur ac</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                </ul>
+                <form id="form">
+                    <div class="input-group mb-3">
+                        <label for="example-search-input" class="col-2 col-form-label">Προιόν </label>
+                        <div class="col-10">
+                            <input id="productBar" type="search" class="form-control" placeholder="Αναζήτηση προιόντος" aria-label="Αναζήτηση προιόντος" aria-describedby="basic-addon1">
+                            <div class="dropdown">
+                                <div id="productMenu" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="display:none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <label for="example-search-input" class="col-2 col-form-label">Κατάστημα </label>
+                        <div class="col-10">
+                            <input id="shopBar" type="search" class="form-control" placeholder="Αναζήτηση καταστήματος" aria-label="Αναζήτηση καταστήματος" aria-describedby="basic-addon1">
+                            <div class="dropdown">
+                                <div id="shopMenu" class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="display:none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="col-10">
+                            <label class="col-form-label">Date From</label>
+                            <input class="form-control" type="date" value="" id="dateFrom">
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="col-10">
+                            <label class="col-form-label">Date To</label>
+                            <input class="form-control" type="date" value="" id="dateTo">
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Add Price">
+                    <div id="errorForm" class="h7" style="color:red"></div>
+                </form>
             </div>
             <!-- Footer -->
             <div id="footer"></div>
