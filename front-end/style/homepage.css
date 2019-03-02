@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=ZCOOL+QingKe+HuangYou');
+
+#moto {
+    font-family: 'ZCOOL QingKe HuangYou', cursive;
+    font-size: 25px;
+}
+
+.block{
+    background-color: black;
+    vertical-align: middle;
+    top: -50%;
+    transform: translateY(50%);
+    align-items: center;
+    text-align: center;        
+}
+
+svg{
+    stroke: aqua;
+}
+
+g{
+    fill: yellow;
+}

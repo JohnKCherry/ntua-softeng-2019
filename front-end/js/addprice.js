@@ -14,7 +14,8 @@ $(document).ready(function(){
     }
     else {
         console.log("Not connected");
-        $("#loginBtn").trigger('click');
+        //$("#loginBtn").trigger('click');
+        $("#loginModal").modal('show');
         $("#submitButton").prop('disabled',true);
         $("#errorForm").text("You need to login to add new price"); 
     }

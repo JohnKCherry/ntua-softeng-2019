@@ -39,10 +39,10 @@ $(document).ready(function(){
                 console.log(b);
                 $(".modal-dialog").hide();
                 $("#signup").html("<div class=\"h2\">Welcome "+$("#username").val()+"</div>");
-                //redirect after 2 seconds
+                //redirect after 1 seconds
                 $("body").load("success.html");
                 window.setTimeout(function() {
-                    window.location.href = 'product.html';}, 2000);
+                    window.location.href = 'product.html';}, 1000);
                     //window.location.href="product.html";
             },
             error: function(){
