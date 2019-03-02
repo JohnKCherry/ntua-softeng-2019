@@ -1,0 +1,114 @@
+<div class="header">
+
+    <script>
+        
+        $(document).ready(function () {
+    if (document.title == "Crow Tech") {
+        document.getElementById("search-bar").style.display = "none";
+    }
+    var token = window.sessionStorage.getItem("token");
+
+    var username = "";
+    if (token == null) {
+        username = "Guest";
+        document.getElementById("logout").style.display = "none";
+        document.getElementById("fav-button").style.display = "none";
+        document.getElementById("add-button").style.display = "none";
+    }
+    else {
+        username = window.sessionStorage.getItem("username");
+        document.getElementById("login").style.display = "none";
+    }
+    document.getElementById("username").textContent = username;
+    document.getElementById("username-l").textContent = username;
+
+})
+        
+
+    </script>
+
+    <nav class="navbar">
+        <div class="container-fluid">
+
+            <ul class="nav nav-pills">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="true" aria-expanded="false">
+                        <img src="imgs/menu.svg" alt="menu">
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Show Products</a>
+                        <a class="dropdown-item" href="#">Show Shops</a>
+                        <a class="dropdown-item" href="#">Show Prices</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">About Us</a>
+                        <a class="dropdown-item" href="#">Contact Us</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="navbar-brand nav-link" href="#/home">
+                        <img src="imgs/crow.svg" alt="logo, crow"> Crow Tech
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <form class="form-inline" id="search-bar">
+                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-default" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </li>
+            </ul>
+            <ul class="nav nav-pills">
+                <li class="nav-item dropdown" id="add-button">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="true" aria-expanded="false" style="margin-top: -3px">
+
+                        <button class="btn btn-default" type="submit">
+                            <i class="fas fa-plus"></i>
+                            <p style="font-size:20px;display:inline-block; margin-left: 10px"> Add</p>
+
+                        </button>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Product</a>
+                        <a class="dropdown-item" href="#">Shop</a>
+                        <a class="dropdown-item" href="#">Price</a>
+                    </div>
+
+                </li>
+                <li class="nav nav-link" id='fav-button'>
+                    <a href="#">
+                        <button class="btn btn-default" type="submit">
+                            <i style="color:red" class="fas fa-heart">Favourite</i>
+                        </button>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="true" aria-expanded="false">
+                        <button class="btn btn-default" type="submit">
+                            <i class="fas fa-user-tie">
+                                <p id="username-l" style="display:inline-block; margin-left: 10px"></p>
+                            </i>
+                        </button>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item">
+                            <p id="username"></p>
+                        </a>
+                        <div class="dropdown-divider"></div>
+
+                        <div id="login">
+                            <a class="dropdown-item" href="#">Sign In</a>
+                            <a class="dropdown-item" href="#">Sign-Up</a>
+                        </div>
+                        <a class="dropdown-item" href="#" id="logout">Log - Out</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</div>
