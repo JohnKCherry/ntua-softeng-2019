@@ -15,6 +15,7 @@ public class RestfulApp extends Application {
 
     	Router router = new Router(getContext());
     	
+    	//Administration endpoints 
     	router.attach("/numberofusers", NumberOfUsersResource.class);
     	router.attach("/numberofshops", NumberOfShopsResource.class);
     	router.attach("/numberofadmins", NumberOfAdminsResource.class);
@@ -83,6 +84,9 @@ public class RestfulApp extends Application {
         
         //DELETE
         router.attach("/favourites/{productId}", FavouritesResource.class);
+        
+        //TODO: endpoint for accepting contact form
+        
 
         CorsFilter corsFilter = new CorsFilter(getContext(), router);
     	corsFilter.setAllowedOrigins(new HashSet<String>(Arrays.asList("*")));

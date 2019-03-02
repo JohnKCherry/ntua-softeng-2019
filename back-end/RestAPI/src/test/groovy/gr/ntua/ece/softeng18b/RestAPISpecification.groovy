@@ -6,10 +6,12 @@ import gr.ntua.ece.softeng18b.client.model.PriceInfoList
 import gr.ntua.ece.softeng18b.client.model.Product
 import gr.ntua.ece.softeng18b.client.model.Shop
 import gr.ntua.ece.softeng18b.client.rest.RestCallFormat
-
+import java.lang.reflect.Array
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
+
+import groovy.json.JsonSlurper
 
 @Stepwise class RestAPISpecification extends Specification {
 	
@@ -22,6 +24,10 @@ import spock.lang.Stepwise
 	private static String id_shop;
 	private static Product post_pr;
 	private static Shop post_sh;
+	
+	private static String[] test_products_id = new Array[3];
+	private static String[] test_shops_id = new Array[3];
+	
 	
    @Shared RestAPI api = new RestAPI(HOST, PORT as Integer, true)
     
@@ -52,8 +58,62 @@ import spock.lang.Stepwise
         returned.description == sent.description &&
         returned.category == sent.category &&
         returned.tags == sent.tags &&
-        returned.withdrawn == sent.withdrawn
+		returned.withdrawn == sent.withdrawn
     }
+	
+	def "User adds product_test_1" (){
+		when:
+		Product sent = new Product(
+			name: "Product 1",
+			description: "Product Description 1",
+			category: "First Product Category",
+			tags: ["Computers"]
+		)
+		Product returned = api.postProduct(sent, RestCallFormat.JSON)
+		test_products_id[0] = returned.id;
+		
+		then:
+		returned.name == sent.name &&
+		returned.description == sent.description &&
+		returned.category == sent.category &&
+		returned.tags == sent.tags 
+	}
+	
+	def "User adds product_test_2" (){
+		when:
+		Product sent = new Product(
+			name: "Product 2",
+			description: "Product Description 2",
+			category: "Second Product Category",
+			tags: ["Music"]
+		)
+		Product returned = api.postProduct(sent, RestCallFormat.JSON)
+		test_products_id[1] = returned.id;
+		
+		then:
+		returned.name == sent.name &&
+		returned.description == sent.description &&
+		returned.category == sent.category &&
+		returned.tags == sent.tags 
+	}
+	
+	def "User adds product_test_3" (){
+		when:
+		Product sent = new Product(
+			name: "Product 3",
+			description: "Product Description 3",
+			category: "First Product Category",
+			tags: ["Music", "Entertainment"]
+		)
+		Product returned = api.postProduct(sent, RestCallFormat.JSON)
+		test_products_id[2] = returned.id;
+		
+		then:
+		returned.name == sent.name &&
+		returned.description == sent.description &&
+		returned.category == sent.category &&
+		returned.tags == sent.tags
+	}
 	
 	def "User gets product" (){
 		when:
@@ -201,6 +261,67 @@ import spock.lang.Stepwise
 		returned.withdrawn == sent.withdrawn
 	}
 	
+	def "User adds shop__test_1" (){
+		when:
+		Shop sent = new Shop(
+			name 	:  "Shop 1",
+			address :  "Address 1", 
+			lat	 	: 38.46361,
+			lng 	: 23.59944,
+			tags	: ["Music", "Computers"]
+		)
+		Shop returned = api.postShop(sent, RestCallFormat.JSON)
+		test_shops_id[0] = returned.id;
+		
+		then:
+		returned.name == sent.name &&
+		returned.address == sent.address &&
+		returned.lat == sent.lat &&
+		returned.lng == sent.lng &&
+		returned.tags == sent.tags
+	}
+	
+	def "User adds shop_test_2" (){
+		when:
+		Shop sent = new Shop(
+			name 	:  "Shop 2",
+			address :  "Address 2",
+			lat		: 38.01324, 
+			lng		: 23.77223,
+			tags	: ["Music", "Computers", "Books"]
+		)
+		Shop returned = api.postShop(sent, RestCallFormat.JSON)
+		test_shops_id[1] = returned.id;
+		
+		then:
+		returned.name == sent.name &&
+		returned.address == sent.address &&
+		returned.lat == sent.lat &&
+		returned.lng == sent.lng &&
+		returned.tags == sent.tags 
+	}
+	
+	def "User adds shop_test_3" (){
+		when:
+		Shop sent = new Shop(
+			name 	:  "Shop 3",
+			address :  "Address 3",
+			lat		: 38.01667,
+			lng		: 23.83333,
+			tags	: ["Phones", "Computers", "Books"]
+		)
+		Shop returned = api.postShop(sent, RestCallFormat.JSON)
+		test_shops_id[2] = returned.id;
+		
+		then:
+		returned.name == sent.name &&
+		returned.address == sent.address &&
+		returned.lat == sent.lat &&
+		returned.lng == sent.lng &&
+		returned.tags == sent.tags
+	}
+	
+	
 	def "User gets shop" (){
 		when:
 		Shop returned = api.getShop(id_shop, RestCallFormat.JSON)
@@ -294,14 +415,7 @@ import spock.lang.Stepwise
 		String shopId = id_shop
 		String productId = id
 		PriceInfoList list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
-		/*println(list.getPrices().toString());
-		println(p.productId);
-		println(p.shopId);
-		println(p.price);
-		println(p.productId);
-		println(p.shopId);
-		println(p.price);*/
-
+		
 		then:
 		list.total == 2 &&
 		list.prices.every { PriceInfo p ->
@@ -312,6 +426,114 @@ import spock.lang.Stepwise
 		} &&
 		list.prices[0].date == dateFrom &&
 		list.prices[1].date == dateTo
+		
+	}
+	
+	def "User adds  and gets prices"() {
+		when:
+		def jsonSlurper = new JsonSlurper()
+		Object it = jsonSlurper.parseText('{"price": 10.00, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 0, "productIndex": 0}') 
+		//println it
+		double price = it.price
+		String dateFrom = it.dateFrom
+		String dateTo = it.dateTo
+		String shopId = test_shops_id[it.shopIndex]
+		String productId = test_products_id[it.productIndex]
+		PriceInfoList list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 11.20, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 1, "productIndex": 0}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 10.54, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 2, "productIndex": 0}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 32.99, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 0, "productIndex": 1}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 36.99, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 1, "productIndex": 1}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 37.99, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 2, "productIndex": 1}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 97.30, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 0, "productIndex": 2}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 92.90, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 1, "productIndex": 2}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+		
+		it = jsonSlurper.parseText('{"price": 90.00, "dateFrom":  "2019-02-23", "dateTo":  "2019-02-24", "shopIndex": 2, "productIndex": 2}')
+		//println it
+		price = it.price
+		dateFrom = it.dateFrom
+		dateTo = it.dateTo
+		shopId = test_shops_id[it.shopIndex]
+		productId = test_products_id[it.productIndex]
+		list = api.postPrice(price, dateFrom, dateTo, productId, shopId, RestCallFormat.JSON)
+
+		
+		list = api.getPrices(0,10,null,null,null,"2019-02-23","2019-02-23",[test_shops_id[0], test_shops_id[1], test_shops_id[2]],[test_products_id[0]],null,["price|ASC"],RestCallFormat.JSON)
+		//lst = jsonSlurper.parseText('{ "List":[{"price": 10.00, "date":  "2019-02-23", "shopIndex": 0, "productIndex":  0},{"price": 10.54, "date":  "2019-02-23", "shopIndex": 2, "productIndex":  0},{"price": 11.20, "date":  "2019-02-23", "shopIndex": 1, "productIndex":  0}] }')
+		List<PriceInfo> pil = list.prices;
+		
+		then:
+		
+		list.getTotal()  == 3 //&& 
+		for(PriceInfo pi : pil) {
+		pi.date == "2019-02-23"
+		pi.productId == test_products_id[0]
+		(pi.shopId == test_shops_id[0] || pi.shopId == test_shops_id[1] || pi.shopId == test_shops_id[2])
+		}
+		/*list.prices.every { PriceInfo p ->
+			p.price == price &&
+			p.productId == productId
+			p.shopId == shopId
+			
+		} &&
+		list.prices[0].date == dateFrom &&
+		list.prices[1].date == dateTo*/
 		
 	}
 	
@@ -387,6 +609,52 @@ import spock.lang.Stepwise
 		flag
 	}
 	
+	def "Admin deletes product_test_1" (){
+		when:
+		boolean flag = false;
+		System.out.println("Deleting product with ID: "+test_products_id[0]);
+		api.deleteProduct(test_products_id[0], RestCallFormat.JSON)
+		try {
+			Product returned = api.getProduct(test_products_id[0], RestCallFormat.JSON)
+		}
+		catch(RuntimeException e) {
+			if(e.message.equals("Error 404: Not Found")) flag = true;
+		}
+		then:
+		flag
+	}
+	
+	def "Admin deletes product_test_2" (){
+		when:
+		boolean flag = false;
+		System.out.println("Deleting product with ID: "+test_products_id[1]);
+		api.deleteProduct(test_products_id[1], RestCallFormat.JSON)
+		try {
+			Product returned = api.getProduct(test_products_id[1], RestCallFormat.JSON)
+		}
+		catch(RuntimeException e) {
+			if(e.message.equals("Error 404: Not Found")) flag = true;
+		}
+		then:
+		flag
+	}
+	
+	def "Admin deletes product_test_3" (){
+		when:
+		boolean flag = false;
+		System.out.println("Deleting product with ID: "+test_products_id[2]);
+		api.deleteProduct(test_products_id[2], RestCallFormat.JSON)
+		try {
+			Product returned = api.getProduct(test_products_id[2], RestCallFormat.JSON)
+		}
+		catch(RuntimeException e) {
+			if(e.message.equals("Error 404: Not Found")) flag = true;
+		}
+		then:
+		flag
+	}
+	
+	
 	def "Admin deletes shop" (){
 		when:
 		boolean flag = false;
@@ -394,6 +662,51 @@ import spock.lang.Stepwise
 		api.deleteShop(id_shop, RestCallFormat.JSON)
 		try {
 			Shop returned = api.getShop(id_shop, RestCallFormat.JSON)
+		}
+		catch(RuntimeException e) {
+			if(e.message.equals("Error 404: Not Found")) flag = true;
+		}
+		then:
+		flag
+	}
+	
+	def "Admin deletes shop_test_1" (){
+		when:
+		boolean flag = false;
+		System.out.println("Deleting shop with ID: "+this.test_shops_id[0]);
+		api.deleteShop(test_shops_id[0], RestCallFormat.JSON)
+		try {
+			Shop returned = api.getShop(test_shops_id[0], RestCallFormat.JSON)
+		}
+		catch(RuntimeException e) {
+			if(e.message.equals("Error 404: Not Found")) flag = true;
+		}
+		then:
+		flag
+	}
+	
+	def "Admin deletes shop_test_2" (){
+		when:
+		boolean flag = false;
+		System.out.println("Deleting shop with ID: "+this.test_shops_id[1]);
+		api.deleteShop(test_shops_id[1], RestCallFormat.JSON)
+		try {
+			Shop returned = api.getShop(test_shops_id[1], RestCallFormat.JSON)
+		}
+		catch(RuntimeException e) {
+			if(e.message.equals("Error 404: Not Found")) flag = true;
+		}
+		then:
+		flag
+	}
+	
+	def "Admin deletes shop_test_3" (){
+		when:
+		boolean flag = false;
+		System.out.println("Deleting shop with ID: "+this.test_shops_id[2]);
+		api.deleteShop(test_shops_id[2], RestCallFormat.JSON)
+		try {
+			Shop returned = api.getShop(test_shops_id[2], RestCallFormat.JSON)
 		}
 		catch(RuntimeException e) {
 			if(e.message.equals("Error 404: Not Found")) flag = true;
