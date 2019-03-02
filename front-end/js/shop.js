@@ -25,7 +25,7 @@ $(document).ready(function(){
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "http://localhost:8765/observatory/api/shops/"+shopID,
+        url: "https://localhost:8765/observatory/api/shops/"+shopID,
         success: function(data){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
@@ -57,7 +57,7 @@ $(document).ready(function(){
             type: "GET",
             async: false,
             dataType: "json",
-            url: "http://localhost:8765/observatory/api/shops/"+id,
+            url: "https://localhost:8765/observatory/api/shops/"+id,
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 shopArray = [obj.name,obj.lat,obj.lng];
