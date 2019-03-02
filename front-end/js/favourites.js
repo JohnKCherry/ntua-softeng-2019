@@ -27,7 +27,7 @@ $(document).ready(function(){
     else {
         console.log("Not connected");
         // $("#loginBtn").show();
-        $("#loginBtn").trigger('click');
+//        $("#loginBtn").trigger('click');
         $("#loginModal").modal('show');
     }
 
