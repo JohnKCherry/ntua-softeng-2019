@@ -29,10 +29,15 @@ $(document).ready(function(){
     }
 
 
+    
     var query = getUrlParameter('query');
-
+    var ret;
     if (query == null) $("#searchBar").val("");
-    else $("#searchBar").val(query);
+    else {
+        $("#searchBar").val(query);
+        ret = query.split(' ').join('+');
+        console.log(ret);
+    }
 
     var id;
     var name;
@@ -44,7 +49,7 @@ $(document).ready(function(){
 
     var start = 0;
     var count = 12;
-    var sort = "id";
+    var sort = "name";
     var order = 1;
     $("#order").val("1");
     var orderStr = "ASC";
@@ -65,7 +70,7 @@ $(document).ready(function(){
 
         // if byName == 1 get request to endpoint productsbynamewithimage
         // else productswithimage
-        if (byName == 1) endpoint = "productsbynamewithimage/"+query;
+        if (byName == 1) endpoint = "productsbynamewithimage/"+ret;
         else endpoint = "productswithimage";
 
         var url = "https://localhost:8765/observatory/api/"+endpoint+"?start="+start
@@ -123,8 +128,11 @@ $(document).ready(function(){
     $("#searchBar").on("keyup", function() {
         console.log("Products.js: Pliktrologw");
         query = $("#searchBar").val();
-        console.log(query);
-        if (query != "") byName = 1;
+        if (query != "") {
+            byName = 1;
+            ret = query.split(' ').join('+');
+            console.log(ret);
+        }
         else byName = 0;
             
         getProducts(0,12,sort,order,status,1,byName);
