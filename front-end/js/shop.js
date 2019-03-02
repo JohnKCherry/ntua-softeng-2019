@@ -12,33 +12,60 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+
+
+var token = window.sessionStorage.getItem("token");
+
 $(document).ready(function(){
     console.log("ready");
+	
+	console.log("Token ");
+    console.log(token);
+	
+	
+	if (token != null) {
+        $("#loginBtn").text(window.sessionStorage.getItem("username"));
+        $("#loginBtn").attr("href","");
+        $("#editButton").css("visibility","visible");
+    }
+    else {
+        $("#loginBtn").show();
+}
 
     var shopID = getUrlParameter('id');
-    if (shopID == null) shopID = 4;
+    if (shopID == null) shopID = 38;
     var map = null;
     var shopArray = new Array();
+	var name;
+	var tags;
+	var Location;
 
+    var lat;
+    var lng;
 
     //GET info
     $.ajax({
         type: "GET",
         dataType: "json",
-        url: "http://localhost:8765/observatory/api/shops/"+shopID,
+        url: "https://localhost:8765/observatory/api/shops/"+shopID,
         success: function(data){
             console.log(data);
             var obj = JSON.parse(JSON.stringify(data));
             shopArray = [obj.name,obj.lat,obj.lng];           
+            document.title = obj.name;
             $("#shopName").text(obj.name);
-            $("#shopAddress").append("<span class=\"h6\">"+obj.address+"</span>");
+            $("#shopLocation").append("<span class=\"h6\">"+obj.address+"</span>");
             $("#shopType").append("<span class=\"h6\">"+obj.category+"</span>");
-            $("#shopWebsite").append("<span class=\"h6\">"+obj.website+"</span>");
-            $("#shopTel").append("<span class=\"h6\">"+obj.phone+"</span>");
-            var tags = obj.tags;
+            tags = obj.tags;
             $.each(tags, function(key,value){
-                $("#tags").append("<li class=\"list-inline-item\"><span class=\"h6\">"+value+"</span></li>");
+                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">" + value + "</span><span id=\"" + key + "\" class=\"close\" style = \"visibility: hidden\">&times;</span></li>");
             });
+			name=obj.name;
+			Location=obj.address;
+			lat=obj.lat;
+			lng=obj.lng
+			
 
 
         },
@@ -57,7 +84,7 @@ $(document).ready(function(){
             type: "GET",
             async: false,
             dataType: "json",
-            url: "http://localhost:8765/observatory/api/shops/"+id,
+            url: "https://localhost:8765/observatory/api/shops/"+id,
             success: function(data){
                 var obj = JSON.parse(JSON.stringify(data));
                 shopArray = [obj.name,obj.lat,obj.lng];
@@ -105,41 +132,109 @@ $(document).ready(function(){
         .addTo(map);
     }
 	
-	$("#buttonWebsite").click(function(){
-		$("#shopWebsite").replaceWith($('<textarea id=\"shopWebsite\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopWebsite").text() +
-		'</textarea>'));
-	});
-	$("#buttonTel").click(function(){
-		$("#shopTel").replaceWith($('<textarea id=\"shopTel\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopTel").text() +
-		'</textarea>'));
+	// Hide error tag if exists
+    $("#newTag").click(function() {
+        $("#errorTag").hide();
+});
+
+// Add to tags array
+    $("#addButton").click(function() {
+        var tmp = $("#newTag").val();
+        if(tmp!="") {
+            $("#newTag").val("");
+            var ret = tmp.split(" ");
+            var c = tags.length;
+            $.each(ret,function(index,value) {
+                if(jQuery.inArray(value, tags) !== -1) {
+                    $("#errorTag").text("Tag " + value + " already exists");
+                    $("#errorTag").show();
+                    $("#newTag").val("");
+                    return false;
+                }
+                tags.push(value);
+                $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">"+value+"</span> <span id=\""+(c+index)+"\" class=\"close\" style=\"visibility: hidden\">&times;</span></li>");
+                $(".close").css("visibility","visible");
+            }
+                  );
+                  console.log(tags);
+        }
+    });
+
+
+
+
+    // Delete from tags array
+    $("#tags").on('click','.close',function() {
+        var index = $(this).attr('id');
+        console.log(index);
+        tags.splice(index,1);
+        $(this).parent().closest('li').remove();
+        console.log(tags);
+    });
+	
+	$("#editButton").click(function(){
+		$("#newTag").val("");
+		
+		$("#editButton").css("visibility","hidden");
+		$("#applyButton").css("visibility","visible");
+		$("#cancelButton").css("visibility","visible");
+		$(".close").css("visibility","visible");
+		$("#addButton").css("visibility", "visible");
+		$("#newTag").css("visibility","visible");
+		$("#shopLocation").replaceWith($('<div class=\"h4\">Physical Location: <input type=\"text\" id=\"shopLocation\" class="h4" value="' + Location + '"></input></div>'));
+		$("#shopName").replaceWith($('<div class=\"h2\">Name: <input type=\"text\" id=\"shopName\"  class="h4" value="' + name + '"></input></div>'));
+		$("#shopType").replaceWith($('<div class=\"h4\">Categories: <input type=\"text\" id=\"shopType\" class="h4" value="' + type + '"></input></div>'));
+		
+		
+		
+		
 	});
 	
-	$("#buttonLocation").click(function(){
-		$("#shopLocation").replaceWith($('<textarea id=\"shopLocation\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopLocation").text() +
-		'</textarea>'));
-	});
-	
-	$("#buttonName").click(function(){
-		$("#shopName").replaceWith($('<textarea id=\"shopName\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopName").text() +
-		'</textarea>'));
-	});
 	
 	
-	$("#buttonType").click(function(){
-		$("#shopType").replaceWith($('<textarea id=\"shopType\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopType").text() +
-		'</textarea>'));
+	$('#applyButton').click(function() {
+		var obj = new Object();
+		obj.name = $("#shopName").val();
+		console.log($("#shopName").val());
+        console.log(obj.name);
+		obj.lat=lat;
+		obj.lng=lng;
+		obj.address = Location;
+		obj.tags = tags.join(", ");
+		console.log(obj);
+		sendUpdate(obj);
 	});
 	
-	$("#buttonTags").click(function(){
-		$("#shopWebsite").replaceWith($('<textarea id=\"shopTags\" class=\'edit\' rows=\"1\" cols=\"30\">'+
-		$("#shopTags").text() +
-		'</textarea>'));
+	
+	$("#cancelButton").click(function(){
+		location.reload();
+		
 	});
+	
+	
+	function sendUpdate(obj) {
+        $.ajax({
+            type: "PUT",
+            dataType: "json",
+            headers: {'X-OBSERVATORY-AUTH' : token},
+            url: "https://localhost:8765/observatory/api/shops/"+shopID,
+            data: obj,
+            success: function(data){
+                console.log("Success");
+                var obj = JSON.parse(JSON.stringify(data));
+                console.log(obj);
+                location.reload();
+            },
+            error: function(err){
+                console.log(err);
+                console.log("product.js: Error sendUpdate");
+                alert("Error update");
+                location.reload();
+            }
+        });
+    }
+		
+	
 	
 
     setMap(shopID);
