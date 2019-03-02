@@ -7,6 +7,7 @@ import gr.ntua.ece.softeng18b.data.model.Product;
 import gr.ntua.ece.softeng18b.data.model.ProductWithImage;
 import gr.ntua.ece.softeng18b.data.model.Shop;
 import gr.ntua.ece.softeng18b.data.model.User;
+import gr.ntua.ece.softeng18b.data.model.Value;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.restlet.resource.ResourceException;
@@ -61,7 +62,15 @@ public class DataAccess {
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 order by "+sort+" limit ?,?", params_small, new ProductRowMapper());
     	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
     }
-    
+    @SuppressWarnings("unchecked")
+	public List<User> getUsers(Limits limits, long status, String sort) {
+    	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
+    	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
+    	if(status == -1) return jdbcTemplate.query("select id, fullname, username, email, authorization from users where 1 order by "+sort+" limit ?,?", params_small, new UserRowMapper());
+    	//if(status == 1)  return jdbcTemplate.query("select id, fullname, username, email, authorization from users where 1 and authorization =? order by "+sort+" limit ?,?", params, new UserRowMapper());
+    	return jdbcTemplate.query("select id, fullname, username, email, authorization from users where 1 and authorization =? order by "+sort+" limit ?,?", params, new UserRowMapper());      
+    	
+    }
     @SuppressWarnings("unchecked")
 	public List<ProductWithImage> getProductsWithImage(Limits limits, long status, String sort) {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
@@ -567,6 +576,144 @@ public class DataAccess {
             return Optional.empty();
         }
     }
+    
+    @SuppressWarnings("unchecked")
+ 	public Optional<User> getUser(long id) {
+         Long[] params = new Long[]{id};
+         List<User> users = jdbcTemplate.query("select id, fullname, username, email, authorization from users where id = ?", params, new ProductRowMapper());
+         if (users.size() == 1)  {
+             return Optional.of(users.get(0));
+         }
+         else {
+             return Optional.empty();
+         }
+     }
+    
+
+    @SuppressWarnings("unchecked")
+  	public Optional<Value> getNumberOfUsers() {
+          List<Value> numberofusers = jdbcTemplate.query("select COUNT(id) as value from users", new ValueRowMapper());
+          if (numberofusers.size() == 1)  {
+              return Optional.of(numberofusers.get(0));
+          }
+          else {
+              return Optional.empty();
+          }
+      }
+    
+    @SuppressWarnings("unchecked")
+  	public Optional<Value> getNumberOfAdmins() {
+          List<Value> numberofadmins = jdbcTemplate.query("select COUNT(id) as value from users where authorization=3", new ValueRowMapper());
+          if (numberofadmins.size() == 1)  {
+              return Optional.of(numberofadmins.get(0));
+          }
+          else {
+              return Optional.empty();
+          }
+      }
+    @SuppressWarnings("unchecked")
+  	public Optional<Value> getNumberOfProducts() {
+          List<Value> numberofproducts = jdbcTemplate.query("select COUNT(id) as value from products", new ValueRowMapper());
+          if (numberofproducts.size() == 1)  {
+              return Optional.of(numberofproducts.get(0));
+          }
+          else {
+              return Optional.empty();
+          }
+      }
+    @SuppressWarnings("unchecked")
+  	public Optional<Value> getNumberOfShops() {
+          List<Value> numberofshops = jdbcTemplate.query("select COUNT(id) as value from shops", new ValueRowMapper());
+
+          if (numberofshops.size() == 1)  {
+              return Optional.of(numberofshops.get(0));
+          }
+          else {
+              return Optional.empty();
+          }
+      }
+    
+    @SuppressWarnings("unchecked")
+  	public Optional<Value> getNumberOfActiveCrowdsourcer() {
+          List<Value> numberofactive = jdbcTemplate.query("select COUNT(id) as value from users where authorization=2", new ValueRowMapper());
+
+          if (numberofactive.size() == 1)  {
+              return Optional.of(numberofactive.get(0));
+          }
+          else {
+              return Optional.empty();
+          }
+      }
+    
+    @SuppressWarnings("unchecked")
+  	public Optional<Value> getNumberOfBanUsers() {
+          List<Value> numberofbanusers = jdbcTemplate.query("select COUNT(id) as value from users where authorization=1", new ValueRowMapper());
+
+          if (numberofbanusers.size() == 1)  {
+              return Optional.of(numberofbanusers.get(0));
+          }
+          else {
+              return Optional.empty();
+          }
+      }
+    @SuppressWarnings("unchecked")
+  	public Optional<Value> getNumberOfActiveShops() {
+          List<Value> numberofactiveshops = jdbcTemplate.query("select COUNT(id) as value from shops where withdrawn=0", new ValueRowMapper());
+
+          if (numberofactiveshops.size() == 1)  {
+              return Optional.of(numberofactiveshops.get(0));
+          }
+          else {
+              return Optional.empty();
+          }
+      }
+    @SuppressWarnings("unchecked")
+   	public Optional<Value> getNumberOfWithdrawnShops() {
+           List<Value> numberofwithdrawnshops = jdbcTemplate.query("select COUNT(id) as value from shops where withdrawn=1", new ValueRowMapper());
+
+           if (numberofwithdrawnshops.size() == 1)  {
+               return Optional.of(numberofwithdrawnshops.get(0));
+           }
+           else {
+               return Optional.empty();
+           }
+       }
+    @SuppressWarnings("unchecked")
+   	public Optional<Value> getNumberOfActiveProducts() {
+           List<Value> numberofactiveproducts = jdbcTemplate.query("select COUNT(id) as value from products where withdrawn=0", new ValueRowMapper());
+
+           if (numberofactiveproducts.size() == 1)  {
+               return Optional.of(numberofactiveproducts.get(0));
+           }
+           else {
+               return Optional.empty();
+           }
+       }
+    @SuppressWarnings("unchecked")
+   	public Optional<Value> getNumberOfActivePrices() {
+           List<Value> numberofactiveprices = jdbcTemplate.query("SELECT COUNT(product_id) as value from prices where dateTo > CURRENT_DATE", new ValueRowMapper());
+
+           if (numberofactiveprices.size() == 1)  {
+               return Optional.of(numberofactiveprices.get(0));
+           }
+           else {
+               return Optional.empty();
+           }
+       }
+    
+    @SuppressWarnings("unchecked")
+   	public Optional<Value> getNumberOfPastPrices() {
+
+           List<Value> numberofpastprices = jdbcTemplate.query("SELECT COUNT(product_id) as value from prices where dateTo < CURRENT_DATE", new ValueRowMapper());
+
+           if (numberofpastprices.size() == 1)  {
+               return Optional.of(numberofpastprices.get(0));
+           }
+           else {
+               return Optional.empty();
+           }
+       }
+    
     
     @SuppressWarnings("unchecked")
 	public Optional<ProductWithImage> getProductWithImage(long id) {
