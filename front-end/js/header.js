@@ -19,4 +19,6 @@ $(document).ready(function () {
     document.getElementById("username").textContent = username;
     document.getElementById("username-l").textContent = username;
 
+    $(".nav-item a").attr("href","Homepage.html");
+
 });
