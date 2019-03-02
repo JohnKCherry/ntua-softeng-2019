@@ -60,18 +60,16 @@ $(document).ready(function(){
                 var list;
                 var selector;
                 if (type == 0) list = obj.products;
-                else list = obj.products;   //must change to shops
+                else list = obj.shops;   //must change to shops
 
                 if (list.length != 0 && type==0) {
-                    $("#productMenu").css('display','block');
                     selector = "#productMenu";
                 }
                 if (list.length != 0 && type==1) {
-                    $("#shopMenu").css('display','block');
                     selector = "#shopMenu";
                 }
                 $.each(list, function(key,value){
-                    $(selector).append("<span id=\""+value.id+"\"class=\"dropdown-item\">"+value.name+"</span>");
+                    $(selector).append("<option id=\""+value.id+"\"value=\""+value.name+"\">"+value.name+"</option>");
                 }
                       )
             },
@@ -85,39 +83,82 @@ $(document).ready(function(){
 
     var query;
     //listener search bar product send request
-    $("#productBar").on("keyup", function() {
+    $("#productBar").on("keyup", function(e) {
+        var code = (e.keyCode || e.which);
+
+        // do nothing if it's an arrow key
+        if(code == 37 || code == 38 || code == 39 || code == 40) {
+            return;
+        }
+
         $("#successForm").empty();
         console.log("Addprice.js: Pliktrologw product");
         query = $("#productBar").val();
         var ret = query.split(' ').join('+');
         console.log(ret);
         if (query != "" ) getData(ret,0);
-        else $("#productMenu").css('display','none');
+       // else $("#productMenu").css('display','none');
 
     });
 
+    $(function() {
+        $('#productBar').on('input',function() {
+            var opt = $('option[value="'+$(this).val()+'"]');
+            if (opt.length) {
+                productID = opt.attr('id');
+                productName = $("#productBar").val();
+            }
+        });
+    });
 
-    $("#productMenu").on('click', '.dropdown-item',function() {
-        console.log("Clickara to span product");
-        $("#productMenu").css('display','none');
+    /*
+    $("#productMenu").on('change',function() {
+        console.log("Clickara to option product");
         productID = $(this).attr('id');
-        productName = $(this).text();
+        productName = $(this).val();
         console.log(productName + " " + productID);
-        $("#productBar").val(productName);
+        // $("#productBar").val(productName);
     });
-
+*/
+    /*
+       $("#productMenu").on('click', '.dropdown-item',function() {
+       console.log("Clickara to span product");
+       $("#productMenu").css('display','none');
+       productID = $(this).attr('id');
+       productName = $(this).text();
+       console.log(productName + " " + productID);
+       $("#productBar").val(productName);
+       });
+       */
     //listener search bar shop send request
-    $("#shopBar").on("keyup", function() {
+    $("#shopBar").on("keyup", function(e) {
+        var code = (e.keyCode || e.which);
+
+        // do nothing if it's an arrow key
+        if(code == 37 || code == 38 || code == 39 || code == 40) {
+            return;
+        }
+
         $("#successForm").empty();
         console.log("Addprice.js: Pliktrologw shop");
         query = $("#shopBar").val();
         var ret = query.split(' ').join('+');
         console.log(ret);
         if (query != "" ) getData(ret,1);
-        else $("#shopMenu").css('display','none');
+        //else $("#shopMenu").css('display','none');
 
     });
 
+    $(function() {
+        $('#shopBar').on('input',function() {
+            var opt = $('option[value="'+$(this).val()+'"]');
+            if (opt.length) {
+                shopID = opt.attr('id');
+                shopName = $("#shopBar").val();
+            }
+        });
+    });
+    /*
 
     $("#shopMenu").on('click', '.dropdown-item',function() {
         console.log("Clickara to span shop");
@@ -127,7 +168,7 @@ $(document).ready(function(){
         console.log(shopName + " " + shopID);
         $("#shopBar").val(shopName);
     });
-
+*/
     // submit form
     $("#form").submit(function() {
         console.log("Form submit");
@@ -136,7 +177,7 @@ $(document).ready(function(){
         dateFrom = $("#dateFrom").val();
         dateTo = $("#dateTo").val();
 
-       
+
         console.log("productID = " + productID);
         console.log("productName = " + productName);
         console.log("shopID = " + shopID);
