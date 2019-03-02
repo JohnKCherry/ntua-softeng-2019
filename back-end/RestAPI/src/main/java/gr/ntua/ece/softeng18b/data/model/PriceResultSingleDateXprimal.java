@@ -7,71 +7,71 @@ import java.util.Objects;
 
 public class PriceResultSingleDateXprimal {
 
-    private final long product_id;
-    private final long shop_id;
+    private final long productId;
+    private final long shopId;
     private final Double price;
-    private final Date date;
-    private final String product_name;
-    private final List<String> product_tags;
-    private final String shop_name;
-    private final List<String> shop_tags;
-    private final String shop_address;
-    private final int shop_dist;
+    private final String date;
+    private final String productName;
+    private final List<String> productTags;
+    private final String shopName;
+    private final List<String> shopTags;
+    private final String shopAddress;
+    private final int shopDist;
     
     
 
     public PriceResultSingleDateXprimal(long product_id, long shop_id, Double price, Date date, String product_name, String product_tags, String shop_name, String shop_tags, String shop_address, Double shop_dist) {
-        this.product_id          = product_id;
-        this.shop_id        	 = shop_id;
-        this.price			   	 = price;
-        this.date    		 = date;
-        this.product_name		 = product_name;
-        this.product_tags 		 = Arrays.asList(product_tags.split("\\s*(=>|,|\\s)\\s*"));
-        this.shop_name			 = shop_name;
-        this.shop_tags 			 = Arrays.asList(shop_tags.split("\\s*(=>|,|\\s)\\s*"));
-        this.shop_address	 	 = shop_address;
-        this.shop_dist			 = Integer.valueOf((int) Math.round(shop_dist));
+        this.productId          = product_id;
+        this.shopId        	 	= shop_id;
+        this.price			   	= price;
+        this.date    		 	= date.toString();
+        this.productName		= product_name;
+        this.productTags 		= Arrays.asList(product_tags.split("\\s*(=>|,|\\s)\\s*"));
+        this.shopName			= shop_name;
+        this.shopTags 			= Arrays.asList(shop_tags.split("\\s*(=>|,|\\s)\\s*"));
+        this.shopAddress	 	= shop_address;
+        this.shopDist			= Integer.valueOf((int) Math.round(shop_dist));
         
     }
 
     public long getProductId() {
-        return product_id;
+        return productId;
     }
     
     public long getShoptId() {
-        return shop_id;
+        return shopId;
     }
 
     public Double getPrice() {
         return price;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
     
     public String getProductName() {
-    	return product_name;
+    	return productName;
     }
     
     public String getShopName() {
-    	return shop_name;
+    	return shopName;
     }
     
     public String getShopAddress() {
-    	return shop_address;
+    	return shopAddress;
     }
     
     public int getShopDist() {
-    	return shop_dist;
+    	return shopDist;
     }
     
     public List<String> getProductTags() {
-        return product_tags;
+        return productTags;
     }
     
     public List<String> getShopTags() {
-        return shop_tags;
+        return shopTags;
     }
 
     @Override
@@ -79,11 +79,11 @@ public class PriceResultSingleDateXprimal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PriceResultSingleDateXprimal price = (PriceResultSingleDateXprimal) o;
-        return (this.product_id == price.getProductId() && this.shop_id == price.getShoptId() && this.getPrice() == price.getPrice() && this.date.equals(price.getDate()));
+        return (this.productId == price.getProductId() && this.shopId == price.getShoptId() && this.getPrice() == price.getPrice() && this.date.equals(price.getDate()));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product_id,shop_id,date);
+        return Objects.hash(productId,shopId,date);
     }
 }
