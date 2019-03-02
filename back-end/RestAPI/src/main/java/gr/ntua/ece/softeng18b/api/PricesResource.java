@@ -55,7 +55,7 @@ public class PricesResource extends ServerResource {
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
         String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
-        user_token = dataAccess.getUserApiToken_username_only("user").get()+"user";
+        //user_token = dataAccess.getUserApiToken_username_only("user").get()+"user";
         if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not authorized to post price");
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not authorized to post price");
         
@@ -83,7 +83,19 @@ public class PricesResource extends ServerResource {
         }
         try{
         	Price price_r = dataAccess.addPrice(product_id, shop_id, price, dateFrom, dateTo);
-        	return new JsonPriceRepresentation(price_r);
+        	//return new JsonPriceRepresentation(price_r);
+        	
+        	//Weird format (like get prices) to pass testing...
+        	Map<String, Object> map = new HashMap<>();
+            List<PriceResultSingleDateXprimal> prices = dataAccess.getPricesXprimal(new Limits(0,20)," AND product_id = " + price_r.getProductId() + " AND shop_id = "+ price_r.getShoptId() +" ", "dd.Date ASC",false,"","",dateFrom,dateTo);
+            map.put("total", prices.size());
+        	System.out.print(">>>>>>>>>>"+prices.size());
+            map.put("start", 0);
+            map.put("count", 20);
+            map.put("prices", prices);
+            System.out.println(new JsonMapRepresentation(map).toString());
+            return new JsonMapRepresentation(map);
+        	
         }
         catch(org.springframework.dao.DuplicateKeyException e){
         	throw new ResourceException(400,"A price for this product in this shop already exists in the database");
@@ -111,11 +123,22 @@ public class PricesResource extends ServerResource {
     	String shop_tags_string		= getQuery().getValues("shopTags");
     	String verbose				= getQuery().getValues("verbose");
     	String tagsAttr				= getQuery().getValues("tags");
+    	String statusAttr			= getQuery().getValues("status");
     	
     	if(formatAttr!=null && !formatAttr.equals("json")) throw new ResourceException(400,"Only json format is supported at the moment");
     	
-    	int start, count;
+    	int start, count, status;
     	String sort = sortAttr;
+    	
+    	 try {
+         	if(statusAttr == null) throw  new NumberFormatException("The status attribute entered, " + statusAttr + " is invalid."); 
+         	if(statusAttr.equals("ACTIVE")) status = 0;
+             else if (statusAttr.equals("WITHDRAWN")) status = 1;
+             else if (statusAttr.equals("ALL")) status = -1; // -1 for all products
+             else throw  new NumberFormatException("The status attribute entered, " + statusAttr+ " is invalid."); 
+         } catch(NumberFormatException e) {
+         	status = 0; //default
+         }
     	
         try {
             start = Integer.parseInt(startAttr);
@@ -232,7 +255,7 @@ public class PricesResource extends ServerResource {
         }
         
         //Set product status == 0 for valid results!!!
-        where_clause += " AND products.withdrawn = 0 ";
+        if(status!= -1) where_clause += " AND products.withdrawn = "+status+" ";
         
         Map<String, Object> map = new HashMap<>();
         if(verbose != null && verbose.equals("false")) {

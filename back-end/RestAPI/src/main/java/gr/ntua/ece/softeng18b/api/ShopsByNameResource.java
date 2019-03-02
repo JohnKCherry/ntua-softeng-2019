@@ -133,7 +133,7 @@ public class ShopsByNameResource extends ServerResource {
 
         Map<String, Object> map = new HashMap<>();
         map.put("total", shops.size());
-        map.put("products", shops);
+        map.put("shops", shops);
 
         return new JsonMapRepresentation(map);
     }
