@@ -12,9 +12,12 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+<<<<<<< HEAD
 
 
 var token = window.sessionStorage.getItem("token");
+=======
+>>>>>>> 4c9b3229d3be298fd695e54bc95b6cf5f30d0755
 $(document).ready(function(){
     console.log("ready");
 	

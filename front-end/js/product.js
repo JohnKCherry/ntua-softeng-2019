@@ -12,7 +12,6 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
-
 var gps = new Array();
 gps[0] = "";
 gps[1] = "";
@@ -41,10 +40,13 @@ $(document).ready(function(){
         $("#loginBtn").text(window.sessionStorage.getItem("username"));
         $("#loginBtn").attr("href","");
         $("#editButton").css("visibility","visible");
+        $("#fav").css("visibility","visible");
     }
     else {
         $("#loginBtn").show();
     }
+
+
     var productID = getUrlParameter('id');
     if (productID == null) productID = 27;
     var lowestPrice;
@@ -83,6 +85,10 @@ $(document).ready(function(){
 
                 $("#productImage").attr("src",URL.createObjectURL(blob));
             }
+            else {
+                $("#productImage").attr("src","imgs/product.jpg");
+            }
+            getFav();
         },
         error: function(){
             console.log("Product.js : Error product with id " + productID + " not found !");
@@ -91,6 +97,37 @@ $(document).ready(function(){
             // window.location.href = "404.html?error=1";
         }
     });
+
+
+    // get favourites req
+    function getFav() {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            headers: {'X-OBSERVATORY-AUTH' : token},
+            url: "https://localhost:8765/observatory/api/favourites",
+            success: function(data){
+                console.log(data);
+                var obj = JSON.parse(JSON.stringify(data));
+                var products = obj.products;
+
+                $.each(products, function(key,value) {
+                    if(value.id == productID) {
+                        $("#fav").attr('class','fas fa-heart fa_custom');
+                        $("#fav").attr('data-val','1');
+                        $("#fav").attr('title','Remove from favourites');
+                        return false;
+                    }
+                });
+            },
+            error: function(){
+                console.log("Product.js : Error get favourites !");
+                return false;
+                // window.location.href = "404.html?error=1";
+            }
+
+        });
+    }
 
     // get prices and shops
     function shopsUpdate(reload){
@@ -111,7 +148,7 @@ $(document).ready(function(){
         if ( sort == 1 ) sortStr = "price";
         else if ( sort == 2 ) sortStr = "date";
         else sortStr = "dist";
-        
+
         // an epelekses apostasi findlocation
         if(sortStr == "dist") {
             findLocation();
@@ -177,7 +214,7 @@ $(document).ready(function(){
                         shopsID.push(shop_id);
                         var price = value.price;
                         var shopName = value.shop_name;
-                        $("#shops").append("<li class=\"list-group-item\"><a href=\"https://localhost:8765/observatory/api/shops/"+shop_id+"\"><div><span id=\"shopName\">"
+                        $("#shops").append("<li class=\"list-group-item\"><a href=\"shop.html?id="+shop_id+"\"><div><span id=\"shopName\">"
                                            +shopName+"</span></a><span id=\"price\">"+price+" &euro; </span></div></li>");
                     });
                     if (reload == 1) setMap(shopsID);
@@ -186,7 +223,7 @@ $(document).ready(function(){
             error: function(){
                 console.log("Product.js :Prices GET Error product with id " + productID + " not found !");
                 // $("#shopsDiv").text("Shops Not Found");
-              //  $("#map").text("Error Map");
+                //  $("#map").text("Error Map");
                 //$("#shopsDiv").load("404.html");
                 //$("html").load("404.html");
                 return ;
@@ -199,9 +236,9 @@ $(document).ready(function(){
     function shopsNotFound() {
         console.log("Product.js :Prices GET Error product with id " + productID+ " not found !");
         //    $("#shopsDiv").text("Shops Not Found");
-        $("#shops").append("<div class=\"h3\"> Shops Not Found. Use other Filters");
+        $("#shops").append("<div class=\"h3\"> Shops Not Found. Product is inactive or use other filters");
         markersLayer.clearLayers();
-       // $("#map").text("Error Map");
+        // $("#map").text("Error Map");
         //$("#shopsDiv").load("404.html");
         //$("html").load("404.html");
         return ;
@@ -226,7 +263,7 @@ $(document).ready(function(){
             error: function(){
                 console.log("Product.js :Shop with id " + id + " not found !");
                 $("#shopsDiv").text("Shops Not Found");
-        //        $("#map").text("Error Map");
+                //        $("#map").text("Error Map");
                 return ;
             }
         });
@@ -262,8 +299,8 @@ $(document).ready(function(){
             map.off();
             map.remove();
         }
-//        if( gps[0] == "") map = L.map('map').setView([37.592724,23.441932], 8);
-  //      else map = L.map('map').setView([gps[0],gps[1]], 12);
+        //        if( gps[0] == "") map = L.map('map').setView([37.592724,23.441932], 8);
+        //      else map = L.map('map').setView([gps[0],gps[1]], 12);
 
 
         // to pio panw magazi
@@ -283,7 +320,7 @@ $(document).ready(function(){
         for (var i = 0; i < locations.length; i++) {
             marker = new L.marker([locations[i][1],locations[i][2]])
             .bindPopup(locations[i][0]);
-           // .addTo(map);
+            // .addTo(map);
             markersLayer.addLayer(marker); 
         }
 
@@ -424,6 +461,67 @@ $(document).ready(function(){
         }
 
     };
+
+    $("#fav").on('click',function(){
+        console.log("Heart clicked");
+        var val = $("#fav").attr('data-val');
+        if (val == 0) {
+            console.log("To agapaw");
+            addToFav();
+        }
+        else {
+            console.log("To misw");
+            removeFromFav();
+        }
+    });
+    function addToFav() {
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            headers: {'X-OBSERVATORY-AUTH' : token},
+            url: "https://localhost:8765/observatory/api/favourites",
+            data:{"productId":productID},
+            success: function(data){
+                console.log("Success add to favourites");
+                var obj = JSON.parse(JSON.stringify(data));
+                console.log(obj);
+                $("#fav").attr('class','fas fa-heart fa_custom');
+                $("#fav").attr('data-val','1');
+                $("#fav").attr('title','Remove from favourites');
+            },
+            error: function(err){
+                console.log("product.js: Error add to favourites");
+                console.log(err);
+                $("#fav").attr('class','far fa-heart');
+                $("#fav").attr('data-val','0');
+                $("#fav").attr('title','Add to favourites');
+            }
+        });
+    }
+
+    function removeFromFav() {
+        $.ajax({
+            type: "DELETE",
+            dataType: "json",
+            headers: {'X-OBSERVATORY-AUTH' : token},
+            url: "https://localhost:8765/observatory/api/favourites/"+productID,
+            success: function(data){
+                console.log("Success remove from favourites");
+                var obj = JSON.parse(JSON.stringify(data));
+                console.log(obj);
+                $("#fav").attr('class','far fa-heart');
+                $("#fav").attr('data-val','0');
+                $("#fav").attr('title','Add to favourites');
+            },
+            error: function(err){
+                console.log("product.js: Error remove from favourites");
+                console.log(err);
+                $("#fav").attr('class','fas fa-heart fa_custom');
+                $("#fav").attr('data-val','1');
+                $("#fav").attr('title','Remove from favourites');
+            }
+        });
+    }
 
 
     function sendUpdate(obj) {

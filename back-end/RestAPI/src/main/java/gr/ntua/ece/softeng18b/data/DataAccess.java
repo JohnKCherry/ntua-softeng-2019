@@ -67,15 +67,21 @@ public class DataAccess {
     	Long[] params_small = new Long[]{limits.getStart(),(long)limits.getCount()};
     	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where 1 order by "+sort+" limit ?,?", params_small, new ProductWithImageRowMapper());
-    	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products, image where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductWithImageRowMapper());      
+    	return jdbcTemplate.query("select id, name, description, category, withdrawn, image, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductWithImageRowMapper());      
     }
     
     @SuppressWarnings("unchecked")
-	public List<Product> getProductsByName(Limits limits, int status, String name) {
+	public List<Product> getProductsByName(Limits limits, int status, String name, String sort, Boolean user_sort) {
     	String[] params = new String[]{name};
     	String[] params_status = new String[]{name,""+status};
-    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
-    	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
+    	if(!user_sort) {
+    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
+    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
+    	}
+    	else {
+    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) order by " + sort + " limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
+    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper());
+    	}
     } 
     
     @SuppressWarnings("unchecked")
@@ -102,12 +108,18 @@ public class DataAccess {
     }
     
     @SuppressWarnings("unchecked")
-	public List<Shop> getShopsByName(Limits limits, int status, String name) {
+	public List<Shop> getShopsByName(Limits limits, int status, String name, String sort, Boolean user_sort) {
     	String[] params = new String[]{name};
     	String[] params_status = new String[]{name,""+status};
-    	if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
-    	else return jdbcTemplate.query("select id, name, address, location, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
-    } 
+    	if(!user_sort) {
+    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
+    		else return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    	}
+    	else {
+    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
+    		else return jdbcTemplate.query("select id, name, address, lST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    	}
+    }
     
     @SuppressWarnings("unchecked")
 	public List<PriceResult> getPrices(Limits limits, String where_clause, String sort, Boolean geo, String shopDist, String have_clause, Date dateFrom, Date dateTo) {
@@ -122,7 +134,7 @@ public class DataAccess {
     	Long[] params = new Long[]{limits.getStart(),(long)limits.getCount()};
     	String daterangegen = "(select a.Date \n" + 
     			"from (\n" + 
-    			"    select curdate() - INTERVAL (a.a + (10 * b.a) + (100 * c.a) + (1000 * d.a) ) DAY as Date\n" + 
+    			"    select '"+ dateTo +"' - INTERVAL (a.a + (10 * b.a) + (100 * c.a) + (1000 * d.a) ) DAY as Date\n" + 
     			"    from (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as a\n" + 
     			"    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as b\n" + 
     			"    cross join (select 0 as a union all select 1 union all select 2 union all select 3 union all select 4 union all select 5 union all select 6 union all select 7 union all select 8 union all select 9) as c\n" + 
@@ -130,8 +142,8 @@ public class DataAccess {
     			") a\n" + 
     			"where a.Date between '"+ dateFrom.toString() +"' and '"+ dateTo.toString() +"' ) ";
     	//System.out.println("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo from prices join shops on shop_id = shops.id join products on product_id = products.id where 1 "+ where_clause +"  order by "+sort+" limit ?,?");
-    	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, dd.Date, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id cross join "+ daterangegen +" as dd where dd.Date >= '"+ dateFrom.toString() +"' AND dd.Date <= '"+ dateTo.toString() +"' "+ have_clause +"  order by "+sort+" limit ?,?", params, new PriceResultSingleDateRowMapper());
-    	return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo , dd.Date from prices join shops on shop_id = shops.id join products on product_id = products.id cross join "+ daterangegen +" as dd where dd.Date >= '"+ dateFrom.toString() +"' AND dd.Date <= '"+ dateTo.toString() +"' "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultSingleDateRowMapper());      
+    	if(geo)return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo, dd.Date, "+shopDist+"  from prices join shops on shop_id = shops.id join products on product_id = products.id cross join "+ daterangegen +" as dd where dd.Date >= '"+ dateFrom.toString() +"' AND dd.Date <= '"+ dateTo.toString() +"' "+ have_clause +" AND date >= prices.dateFrom AND date <= prices.dateTo " + where_clause + " order by "+sort+" limit ?,?", params, new PriceResultSingleDateRowMapper());
+    	return jdbcTemplate.query("SELECT price, products.name as product_name, product_id, products.tags as product_tags, shop_id, shops.name as shop_name, shops.tags as shop_tags, shops.address as shop_address, dateFrom, dateTo , dd.Date from prices join shops on shop_id = shops.id join products on product_id = products.id cross join "+ daterangegen +" as dd where dd.Date >= '"+ dateFrom.toString() +"' AND dd.Date <= '"+ dateTo.toString() +"' AND date >= prices.dateFrom AND date <= prices.dateTo "+ where_clause +"  order by "+sort+" limit ?,?", params, new PriceResultSingleDateRowMapper());      
     }
     
     
@@ -167,7 +179,6 @@ public class DataAccess {
                 tags
             );
             return product;
-
         }
         else {
             throw new RuntimeException("Creation of Product failed");
@@ -252,7 +263,7 @@ public class DataAccess {
     }
     
     public Price addPrice(int product_id, int shop_id, Double price, Date dateFrom, Date dateTo) {
-        //Create the new product record using a prepared statement
+        //Create the new product record using a prepared statement    	
         PreparedStatementCreator psc = new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
