@@ -29,7 +29,15 @@ $(document).ready(function(){
     }
 
 
-
+    
+    var query = getUrlParameter('query');
+    var ret;
+    if (query == null) $("#searchBar").val("");
+    else {
+        $("#searchBar").val(query);
+        ret = query.split(' ').join('+');
+        console.log(ret);
+    }
 
     var id;
     var name;
@@ -41,16 +49,17 @@ $(document).ready(function(){
 
     var start = 0;
     var count = 12;
-    var sort = "id";
+    var sort = "name";
     var order = 1;
     $("#order").val("1");
     var orderStr = "ASC";
     var status = 1;
     $("#status").val("1");
     var statusStr = "ALL";
+    var byName = 0;
 
 
-    function getProducts(start,count,sort,order,status,clear) {
+    function getProducts(start,count,sort,order,status,clear,byName) {
         // get product general info
 
         if(clear) $(".card-deck").empty();
@@ -58,7 +67,13 @@ $(document).ready(function(){
         if (status == 1) statusStr = "ALL";
         else if (status == 2) statusStr = "ACTIVE";
         else if (status == 3) statusStr = "WITHDRAWN";
-        var url = "https://localhost:8765/observatory/api/productswithimage?start="+start
+
+        // if byName == 1 get request to endpoint productsbynamewithimage
+        // else productswithimage
+        if (byName == 1) endpoint = "productsbynamewithimage/"+ret;
+        else endpoint = "productswithimage";
+
+        var url = "https://localhost:8765/observatory/api/"+endpoint+"?start="+start
         +"&count="+count
         +"&sort="+sort
         +"|"+orderStr
@@ -102,20 +117,40 @@ $(document).ready(function(){
         });
     }
 
-    getProducts(start,count,sort,order,statusStr,1);
+    if ( query == null) byName = 0;
+    else byName = 1;
+
+    getProducts(start,count,sort,order,statusStr,1,byName);
+
+
+
+    //listener search bar send request
+    $("#searchBar").on("keyup", function() {
+        console.log("Products.js: Pliktrologw");
+        query = $("#searchBar").val();
+        if (query != "") {
+            byName = 1;
+            ret = query.split(' ').join('+');
+            console.log(ret);
+        }
+        else byName = 0;
+            
+        getProducts(0,12,sort,order,status,1,byName);
+           
+    });
 
     // event listener order
     // order change reload products
     $("#order").change(function() {
         order = $("#order").val();
-        getProducts(0,12,sort,order,status,1);
+        getProducts(0,12,sort,order,status,1,byName);
     });
 
     // status event listener
     $("#status").change(function() {
         status = $("#status").val();
         console.log("Status changed to " + status);
-       // getProducts(0,12,sort,order,status,1);
+        // getProducts(0,12,sort,order,status,1);
     });
 
 
@@ -134,7 +169,7 @@ $(document).ready(function(){
     $(window).scroll(function() {
         if($(window).scrollTop() + $(window).height() > getDocHeight() - 100) {
             start = start+11;
-            getProducts(start,12,sort,order,status,0);
+            getProducts(start,12,sort,order,status,0,byName);
         }
     });
 });
