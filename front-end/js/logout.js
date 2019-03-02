@@ -1,8 +1,12 @@
-var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
 
-    console.log(token);
     $("#logout").on('click', function(){
+        console.log("Logout.js: Kanw logout");
+        var token = window.sessionStorage.getItem("token");
+        if ( token == "" ) {
+            console.log("Logout.js: Den eisai kan sindedemenos");
+            return ;
+        }
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -13,7 +17,7 @@ $(document).ready(function(){
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log(obj);
                 window.sessionStorage.removeItem("token", token);
-                //location.reload();
+                location.reload();
             },
             error: function(err){
                 console.log("Logout.js : Error to logout");
