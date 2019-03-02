@@ -18,26 +18,28 @@ $(document).ready(function(){
         //  event.preventDefault()
         form.addClass('was-validated');
 
+        console.log("username: " + $("#usernameLog").val() + " password " +$("#password").val());
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "https://localhost:8765/observatory/api/login",
-            data:{"username":$("#username").val(),"password":$("#password").val()},
+            data:{"username":$("#usernameLog").val(),"password":$("#password").val()},
             success: function(data){
                 console.log("Success");
                 var obj = JSON.parse(JSON.stringify(data));
                 var token = obj.token;
                 console.log(token);
                 window.sessionStorage.setItem("token", token);
-                window.sessionStorage.setItem("username", $("#username").val());
+                window.sessionStorage.setItem("username", $("#usernameLog").val());
                 var b = window.sessionStorage.getItem("token");
                 console.log(b);
                 location.reload();
             },
-            error: function(){
+            error: function(err){
+                console.log("Login.js : Error to login");
+                console.log(err);
                 $("#error").text("Wrong username or password");
                 $("#formLogin")[0].reset();
-                console.log("Login.js : Error to login");
             }
         });
     };
@@ -49,8 +51,8 @@ $(document).ready(function(){
         }
     }); 
 
-    $("#btnLogin").click(function(event) {
-
+    $("#btnLogin").on('click',function(event) {
+        console.log("Login.js: Patithika");
         login(event);
     });
 
