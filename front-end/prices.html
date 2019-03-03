@@ -173,10 +173,10 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                     <div class="col">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="">Product and tags</span>
+                        <span class="input-group-text" id="">Product Tags | Shop Tags</span>
                     </div>
-                            <input id="productBar" type="search" class="form-control" placeholder="Αναζήτηση προιόντος" aria-label="Αναζήτηση προιόντος" aria-describedby="basic-addon1">
-                            <input id="tagBar" type="search" class="form-control" placeholder="Αναζήτηση tag" aria-label="Αναζήτηση tag" aria-describedby="basic-addon1">
+                            <input id="productBar" type="search" class="form-control" placeholder="Κατηγορίες Προιόντος" aria-label="Κατηγορίες προιόντος" aria-describedby="basic-addon1">
+                            <input id="shopBar" type="search" class="form-control" placeholder="Κατηγορίες καταστήματος" aria-label="Κατηγορίες καταστήματος" aria-describedby="basic-addon1">
                 </div>
             </div>
             </div>
@@ -186,7 +186,7 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Φίλτρα
                         </button>
-                        <div class="dropdown-menu">
+                        <div id="filters-menu" class="dropdown-menu">
                             <form id="filters">
                                 <ul class="list-group">
                                     <li class="list-group-item">
@@ -221,22 +221,16 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                             <option value="2">Φθίνουσα Ταξινόμηση</option>
                         </select>
                     </div>
-                    <div class="col">
-                        <select id="status" class="form-control form-control-sm" >
-                            <option value="1">ALL</option>
-                            <option value="2">ACTIVE</option>
-                            <option value="3">WITHDRAWN</option>
-                        </select>
-                    </div>
                 </div>
                 <div id="errorFilters" class="h7" style="color:red"></div>
                 <div class="card-deck text-center">
+                <div id="errorDeck" class="h4"></div>
                 </div>
                 <hr class="col-xs-12">
 
                 <!-- Map Row -->
 
-                <div class="row" id="mapRow" style="visibility: hidden">
+                <div class="row" id="mapRow">
                     <div class="col">
                         <div class="h2">Map</div>
                         <div id="map">

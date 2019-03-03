@@ -22,23 +22,23 @@ $(document).ready(function(){
     console.log("Token ");
     console.log(token);
 
+    var productTags="";
+    var shopTags="";
 
     var query1 = getUrlParameter('query1');
-    var ret1;
     if (query1 == null) $("#productBar").val("");
     else {
         $("#productBar").val(query1);
-        ret1 = query.split(' ').join('+');
-        console.log(ret1);
+        productTags = query.split(' ').join('+');
+        console.log(productTags);
     }
     
     var query2 = getUrlParameter('query2');
-    var ret2;
-    if (query2 == null) $("#productBar").val("");
+    if (query2 == null) $("#shopBar").val("");
     else {
-        $("#productBar").val(query2);
-        ret2 = query.split(' ').join('+');
-        console.log(ret2);
+        $("#shopBar").val(query2);
+        shopTags = query.split(' ').join('+');
+        console.log(shopTags);
     }
     
     var map = null;
@@ -48,13 +48,33 @@ $(document).ready(function(){
     var shopName;
     var shopID;
 
+
+    // Set default order = 1 asceding 
+    var order = 1;
+    var sort = 1;
+    $("#order").val("1");
+    $("#sort").val("1");
+
+    // set default distance
+    $("#distance").val("5");
+    $("#geoDist").html($("#distance").val() + " Khm");
+
+
+    var start = 0;
+    var count = "";
+    
     // get prices and shops
     function getPrices(reload){
-       // if(clear) $(".card-deck").empty();
-        
+
+        if(reload) $(".card-deck").empty();
         $("#errorFilters").empty();
-        
-        var sort = $("#sort").val();
+        $("#errorDeck").empty();
+
+        if ($("#productBar").val() == "") productTags = "";
+        if ($("#shopBar").val() == "") shopTags = "";
+       
+        sort = $("#sort").val();
+        order = $("#order").val();
         var geoDist  = "";
         var geoLat = "";
         var geoLng = "";
@@ -72,6 +92,7 @@ $(document).ready(function(){
         if(sortStr == "dist") {
             findLocation();
         }
+        console.log("Order " + order);
         var orderStr = (order==1) ? "ASC" : "DESC";
         if(sortStr=="dist" && gps!=null && gps[0]!="" && gps[1]!="") {
             geoLng = gps[0];
@@ -99,14 +120,18 @@ $(document).ready(function(){
             shopsNotFound();
         }
         
-        var url = "https://localhost:8765/observatory/api/prices?verbose=false&geoDist="+geoDist
+        var url = "https://localhost:8765/observatory/api/prices?verbose=false&start="+start
+        +"&count="+count
+        +"&geoDist="+geoDist
         +"&geoLng="+geoLng
         +"&geoLat="+geoLat
         +"&dateFrom="+dateFrom
         +"&dateTo="+dateTo
         +"&shops="+shops
-        +"&products="+$("#productBar").val()
-        +"&tags="+$("#tagBar").val();
+        +"&products="
+        +"&tags="
+        +"&productTags="+productTags
+        +"&shopTags="+shopTags
         +"&sort="+sortStr
         +"|"+orderStr;
         console.log(url); 
@@ -122,7 +147,7 @@ $(document).ready(function(){
                 console.log("shopsUpdate: Success me obj " + obj.total);
                 if(obj.total == 0) {
                     console.log("Shops not found total = 0");
-                    shopsNotFound();
+                    $("#errorDeck").text("Nothing to show");
                 }
                 else {
                     $.each(shops, function(key,value){
@@ -132,9 +157,11 @@ $(document).ready(function(){
                         shopName = value.shop_name;
                         shopID = value.shop_id;
 
-                        getProduct(productID);
-                    
-                        $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\""+productImage+"\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"product.html?id="+productID+"\" class=\"card-title\">"+productName+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#collapse"+productID+"\">Show Price</a><div id=\"collapse"+productID+"\" class=\"collapse\"><p class=\"card-text\">"+productPrice+"&euro;</p></div></div><div class=\"card-footer\"><a hreg=\"shop.html?=id="+shopID+"\"<small class=\"text-muted\">"+shopName+"</small></div></div></div></div>"
+                        // for show price id
+                        var hash = shopName.split(' ').join('');
+                        hash += productID;
+                        getProduct(productID);        
+                        $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\""+productImage+"\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"product.html?id="+productID+"\" class=\"card-title\">"+productName+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#"+hash+"\">Price</a><div id=\""+hash+"\" class=\"\" aria-expanded=\"true\"><p class=\"card-text\">"+productPrice+"&euro;</p></div></div><div class=\"card-footer\"><a href=\"shop.html?=id="+shopID+"\"<small class=\"text-muted\">"+shopName+"</small></a></div></div></div></div>"
                                           );
                     });
                    // if (reload == 1) setMap(shopsID);
@@ -177,20 +204,60 @@ $(document).ready(function(){
     });
 
     }
+    //listener search bar send request
+    $("#productBar").on("keyup", function() {
+        console.log("Prices.js: Pliktrologw productTag");
+        var tmp = $("#productBar").val();
+        if (tmp != "") {
+            productTags = tmp.split(' ').join('+');
+            console.log(productTags);
+        }
+        getPrices(1);
+           
+    });
+    //listener search bar send request
+    $("#shopBar").on("keyup", function() {
+        console.log("Prices.js: Pliktrologw shopTag");
+        var tmp = $("#shopBar").val();
+        if (tmp != "") {
+            shopTags = tmp.split(' ').join('+');
+            console.log(shopTags);
+        }
+        getPrices(1);
+           
+    });
+    // event listener order
+    // order change reload products
+    $("#order").change(function() {
+        order = $("#order").val();
+        getPrices(1);
+    });
 
-    function shopsNotFound() {
-        console.log("Product.js :Prices GET Error product with id " + productID+ " not found !");
-        //    $("#shopsDiv").text("Shops Not Found");
-        $("#shops").append("<div class=\"h3\"> Shops Not Found. Product is inactive or use other filters");
-        markersLayer.clearLayers();
-        // $("#map").text("Error Map");
-        //$("#shopsDiv").load("404.html");
-        //$("html").load("404.html");
-        return ;
 
-    }
+    // event listener distance input
+    $("#distance").on("change mousemove", function() {
+        $("#geoDist").html($("#distance").val() + " Khm");
+    });
 
-    getPrices(0);
+    $("#distance").on("change", function() {
+        findLocation();
+    });
+    // event listener submit form
+    $("#filters").submit(function() {
+        console.log("Form submitted");
+        // update shops and reload map
+        
+        getPrices(1);
+
+        return false;   //prevent default
+    });
+
+
+
+    // run...
+
+    getPrices(1);
+    
     // get shop by id
     // input shop id
     // returns obj [name,x,y]
@@ -273,47 +340,6 @@ $(document).ready(function(){
         markersLayer.addTo(map);
     }
 
-    // event listener order
-    // order change reload shops
-    $("#order").change(function() {
-        order = $("#order").val();
-        // doesn't need to reload map so reload = 0
-        shopsUpdate(0);
-    });
-
-
-
-    // event listener distance input
-    $("#distance").on("change mousemove", function() {
-        $("#geoDist").html($("#distance").val() + " Khm");
-    });
-
-    $("#distance").on("change", function() {
-        findLocation();
-    });
-    // event listener submit form
-    $("#filters").submit(function() {
-        console.log("Form submitted");
-        // update shops and reload map
-        //
-        shopsUpdate(1);
-
-        return false;   //prevent default
-    });
-
-
-    // init
-
-
-    // Set default order = 1 asceding 
-    var order = 1;
-    $("#order").val("1");
-    $("#sort").val("1");
-
-
-    // set default distance
-    $("#distance").val("5");
-    $("#geoDist").html($("#distance").val() + " Khm");
 
 
 
@@ -323,7 +349,7 @@ $(document).ready(function(){
             navigator.geolocation.getCurrentPosition(function(position){
                 gps[0] = position.coords.latitude;
                 gps[1] = position.coords.longitude;
-                shopsUpdate(1);
+              //  getPrices(1);
             }, function() {
                 console.log("Don't allow location");
                 $("#errorFilters").text("Allow location please"); 
