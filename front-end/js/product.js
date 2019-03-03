@@ -19,8 +19,6 @@ var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
     console.log("ready");
 
-    $('#header').load("./header.html");
-    $('#footer').load("./footer.html")
     if ($(window).innerWidth()<=660) {
         $("#filterDiv").removeClass("float-left");
         //   $("#filterDiv").addClass("float-sm-left");
@@ -356,12 +354,15 @@ $(document).ready(function(){
 
 
     // event listener distance input
-    $("#distance").on("change mousemove", function() {
+    $("#distance").on("mousemove", function() {
         $("#geoDist").html($("#distance").val() + " Khm");
     });
 
     $("#distance").on("change", function() {
-        findLocation();
+        if($("#sort").val()==3) {
+            findLocation();
+            shopsUpdate(1);
+        }
     });
     // event listener submit form
     $("#filters").submit(function() {
