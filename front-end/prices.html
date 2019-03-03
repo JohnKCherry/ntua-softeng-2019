@@ -5,13 +5,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Pragma" content="no-cache">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title></title>
+        <title>Prices</title>
         <link rel="stylesheet" href="css/product.css" />
-        <link rel="stylesheet" href="css/shop.css" />
+        <link rel="stylesheet" href="css/login.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="style/t_style.css" />
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
         <!-- jQuery library -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -21,23 +22,20 @@
         <!-- Latest compiled JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-
         <!-- Latest Leaflet library -->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
         integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
         crossorigin=""/>
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-"sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-        crossorigin=""></script>
+integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+  crossorigin=""></script>
         <script type="text/javascript" src="js/login.js"></script>
         <script type="text/javascript" src="js/logout.js"></script>
         <script type="text/javascript" src="js/header.js"></script>
-        <script type="text/javascript" src="js/shop.js"></script>
+        <script type="text/javascript" src="js/prices.js"></script>
     </head>
-
-
-
     <body>
+
 
         <header>
             <div id="header" class="header">
@@ -168,103 +166,133 @@
         </header>
         <main>
         <div class="main">
-            <!--Main Body-->
-
-            <div id="container" class="container-fluid p-3 mb-2 bg-light text-dark">
-
-                <!-- Shop, Description, Tags -->
-
-                <div class="row justify-content-start ">
-                    <div class="col">
-                        <p id="shopName" class="h2">Shop' s name </p>
-                        <hr class="col-xs-12">
-                        <p id="shopLocation" class="h4"><u class="h4">Physical Location</u> :  </p>
-                        <p id="shopType" class="h4"><u>Categories</u> : </p>
-                        <span id="tagsHeader"><u class="h4">Tags</u> :
-                            <ul id="tags" class="list-inline">
-                            </ul>
-                        </span>
-                        <input type="text" id="newTag" name="newTag" style="visibility:hidden" placeholder="One word or more with spaces" size="24">
-                        <button id="addButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-plus"></span> Add Tag</button>
-                        <div id="errorTag" class="h7" style="color:red; display: none"></div>
-                        <button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-pencil-alt"></span> Edit</button>
-                        <div class="btn-group" role="group">
-                            <button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
-                            <button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
-                        </div>
-
-
-
-
-
-
-
-                    </div>
-                </div>
-
-                <!-- Map Row -->
-
-                <!-- Map Row -->
-
+            <div class="row justify-content-center h1">Prices</div>
+            <div id = "container" class="content main container-fluid p-3 mb-2 bg-light text-dark">
 
                 <div class="row">
                     <div class="col">
-                        <div class="h2">Map</div>
-                        <div id="map">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Product Tags | Shop Tags</span>
+                            </div>
+                            <input id="productBar" type="search" class="form-control" placeholder="Κατηγορίες Προιόντος" aria-label="Κατηγορίες προιόντος" aria-describedby="basic-addon1">
+                            <input id="shopBar" type="search" class="form-control" placeholder="Κατηγορίες καταστήματος" aria-label="Κατηγορίες καταστήματος" aria-describedby="basic-addon1">
                         </div>
                     </div>
                 </div>
-
-
+                <!-- Filters -->
+                <div class="row">
+                    <div class="col dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Φίλτρα
+                        </button>
+                        <div id="filters-menu" class="dropdown-menu">
+                            <form id="filters">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                    <label class="col-form-label"> Ταξινόμηση με βάση </label>
+                                    <select id="sort" class="form-control form-control-sm">
+                                        <option value="1">Τιμή</option>
+                                        <option value="2">Ημέρα καταχώρησης</option>
+                                        <option value="3">Απόσταση</option>
+                                    </select>
+                                    </li>
+                                    <li class="list-group-item">
+                                    <label class="col-form-label" for="distance">Distance: <span class="h6" id="geoDist"></span></label>
+                                    <input type="range" name="distance" id="distance" value="" min="0" max="100">
+                                    </li>
+                                    <li class="list-group-item">
+                                    <label class="col-form-label">Date From</label>
+                                    <input class="form-control" type="date" value="" id="dateFrom">
+                                    </li>
+                                    <li class="list-group-item">
+                                    <label class="col-form-label">Date To</label>
+                                    <input class="form-control" type="date" value="" id="dateTo">
+                                    </li>
+                                </ul>
+                                <input type="submit" value="Refresh Filters">
+                                <div id="errorFilters" class="h7" style="color:red"></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <select id="order" class="form-control form-control-sm" >
+                            <option value="1">Αύξουσα Ταξινόμηση</option>
+                            <option value="2">Φθίνουσα Ταξινόμηση</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="errorFilters" class="h7" style="color:red"></div>
+                <div class="card-deck text-center">
+                    <div id="errorDeck" class="h4"></div>
+                </div>
+                <hr class="col-xs-12">
 
             </div>
 
-        </div>
-
-
-
-    </div>
-    </main>
-
-    <footer>
-        <div id="footer" class="footer">
-            <div class="about_us_section">
-                <div style="height:auto; font-size: auto">
-                    <a href="#">
-                        <h3>About Us</h3>
-                    </a>
-                    <p>
-                    And those were the days of roses
-                    Poetry and prose and Martha
-                    All I had was you and all you had was me
-                    There was no tomorrows
-                    We'd packed away our sorrows
-                    And we saved them for a rainy day.
-                    </p>
+            <!-- Modal -->
+            <div class="modal fade" id="mapModal" data-product="" data-shop="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mapModalLabel">Map</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="map">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="faq_section">
-                <a href="#" style="color : darkgray;">F.A.Q.</a>
-            </div>
-            <div class="contact_section">
-                <a href="#" style="">Contact</a>
-            </div>
-            <div class="map_section">
-                <div id="mapid"></div>
-                <div class="address">
-                    <p>
-                    National Technical University of Athens
-                    School of Electrical and Computer Engineering<br>
-                    9, Iroon Polytechniou St
-                    Athens, Postal Code 157 80
-                    </p>
-                </div>
-            </div>
-
         </div>
-    </footer>
+        </main>
 
-    <script>
+
+        <footer>
+            <div id="footer" class="footer">
+                <div class="about_us_section">
+                    <div style="height:auto; font-size: auto">
+                        <a href="#">
+                            <h3>About Us</h3>
+                        </a>
+                        <p>
+                        And those were the days of roses
+                        Poetry and prose and Martha
+                        All I had was you and all you had was me
+                        There was no tomorrows
+                        We'd packed away our sorrows
+                        And we saved them for a rainy day.
+                        </p>
+                    </div>
+                </div>
+                <div class="faq_section">
+                    <a href="#" style="color : darkgray;">F.A.Q.</a>
+                </div>
+                <div class="contact_section">
+                    <a href="#" style="">Contact</a>
+                </div>
+                <div class="map_section">
+                    <div id="mapid"></div>
+                    <div class="address">
+                        <p>
+                        National Technical University of Athens
+                        School of Electrical and Computer Engineering<br>
+                        9, Iroon Polytechniou St
+                        Athens, Postal Code 157 80
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </footer>
+
+        <script>
 var mymap = L.map('mapid').setView([37.9778779, 23.7821791], 24);
 console.log(mymap);
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -274,19 +302,6 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox.streets'
 }).addTo(mymap);
-    </script>
-
-
-</body>
-
-
-
-
-
-
-
-
-
-
+        </script>
+    </body>
 </html>
-
