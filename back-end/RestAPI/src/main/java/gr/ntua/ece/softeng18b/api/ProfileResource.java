@@ -70,7 +70,7 @@ public class ProfileResource extends ServerResource {
         }
         else if(password!=null && fullname == null && username == null && email == null) {
         	Optional<String> check_new = dataAccess.getUserApiToken(user_token.substring(64), password);
-        	if(check_new != null && check_new.isPresent()) throw new ResourceException(400,"This is the old password! Please enter a new one");
+        	if(check_new.isPresent()) throw new ResourceException(400,"This is the old password! Please enter a new one");
         	update_parameter = "password";
         	value = password;
         }
