@@ -66,6 +66,11 @@ $(document).ready(function(){
     // get prices and shops
     function getPrices(reload){
 
+        $("#loadMe").modal({
+            backdrop: "static", //remove ability to close modal with click
+            keyboard: false, //remove option to close with keyboard
+            show: true //Display loader!
+        });
         if(reload) $(".card-deck").empty();
         $("#errorFilters").empty();
         $("#errorDeck").empty();
@@ -166,9 +171,13 @@ $(document).ready(function(){
                     });
                     // if (reload == 1) setMap(shopsID);
                 }
+                $("#loadMe").modal("hide");
+
             },
             error: function(){
-                console.log("prices.js :Prices GET Error!");
+                console.log("prices.js :Prices GET Error!");  
+                $("#loadMe").modal("hide");
+
                 return ;
             }
         });
