@@ -716,13 +716,19 @@ public class DataAccess {
 		
     	PreparedStatementCreator psc = new PreparedStatementCreator() {
     		String username = user_token.substring(64);
+    		
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
                         "UPDATE users SET "+update_parameter+"=? where username =?",
                         Statement.RETURN_GENERATED_KEYS
                 );
-                ps.setString(1, value);
+                if(!update_parameter.equals("password")) {
+                	ps.setString(1, value);
+                }
+                else {
+                	ps.setString(1, getSHA(value));
+                }
                 ps.setString(2, username);
                 return ps;
             }
