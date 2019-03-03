@@ -146,7 +146,7 @@ $(document).ready(function(){
     $("#status").change(function() {
         status = $("#status").val();
         console.log("Status changed to " + status);
-        // getShops(0,12,sort,order,status,1);
+        getShops(0,12,sort,order,status,1);
     });
 
     // function take height for all browsers

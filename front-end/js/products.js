@@ -161,7 +161,7 @@ $(document).ready(function(){
     $("#status").change(function() {
         status = $("#status").val();
         console.log("Status changed to " + status);
-        // getProducts(0,12,sort,order,status,1);
+        getProducts(0,12,sort,order,status,1);
     });
 
 
