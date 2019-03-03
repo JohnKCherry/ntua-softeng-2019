@@ -171,15 +171,15 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
                 <div class="row">
                     <div class="col">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="">Product Tags | Shop Tags</span>
-                    </div>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Product Tags | Shop Tags</span>
+                            </div>
                             <input id="productBar" type="search" class="form-control" placeholder="Κατηγορίες Προιόντος" aria-label="Κατηγορίες προιόντος" aria-describedby="basic-addon1">
                             <input id="shopBar" type="search" class="form-control" placeholder="Κατηγορίες καταστήματος" aria-label="Κατηγορίες καταστήματος" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
                 </div>
-            </div>
-            </div>
                 <!-- Filters -->
                 <div class="row">
                     <div class="col dropdown">
@@ -224,16 +224,28 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
                 </div>
                 <div id="errorFilters" class="h7" style="color:red"></div>
                 <div class="card-deck text-center">
-                <div id="errorDeck" class="h4"></div>
+                    <div id="errorDeck" class="h4"></div>
                 </div>
                 <hr class="col-xs-12">
 
-                <!-- Map Row -->
+            </div>
 
-                <div class="row" id="mapRow">
-                    <div class="col">
-                        <div class="h2">Map</div>
-                        <div id="map">
+            <!-- Modal -->
+            <div class="modal fade" id="mapModal" data-product="" data-shop="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mapModalLabel">Map</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="map">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
