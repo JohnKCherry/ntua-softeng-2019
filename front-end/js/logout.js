@@ -1,8 +1,9 @@
+
+var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
 
     $("#logout").on('click', function(){
         console.log("Logout.js: Kanw logout");
-        var token = window.sessionStorage.getItem("token");
         if ( token == "" ) {
             console.log("Logout.js: Den eisai kan sindedemenos");
             return ;
@@ -16,12 +17,14 @@ $(document).ready(function(){
                 console.log("Success");
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log(obj);
-                window.sessionStorage.removeItem("token", token);
+                window.sessionStorage.clear();
                 location.reload();
             },
             error: function(err){
                 console.log("Logout.js : Error to logout");
                 console.log(err);
+                window.sessionStorage.clear();
+                location.reload();
             }
         });
     }
