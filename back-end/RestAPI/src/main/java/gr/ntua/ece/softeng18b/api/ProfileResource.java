@@ -40,7 +40,7 @@ public class ProfileResource extends ServerResource {
         //Create a new restlet form
         Form form = new Form(entity);
         //Read the parameters
-        String fullname = getAttribute("fullname");
+        String fullname = form.getFirstValue("fullname");
         String username = form.getFirstValue("username");
         String email = form.getFirstValue("email");
         String password = form.getFirstValue("password");
