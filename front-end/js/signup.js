@@ -42,7 +42,7 @@ $(document).ready(function(){
                 //redirect after 1 seconds
                 $("body").load("success.html");
                 window.setTimeout(function() {
-                    window.location.href = 'product.html';}, 1000);
+                    window.location.href = 'Homepage.html';}, 1000);
                     //window.location.href="product.html";
             },
             error: function(){

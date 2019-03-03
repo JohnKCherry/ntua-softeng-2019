@@ -52,19 +52,6 @@ public class UsersResource extends ServerResource {
         	count = 10; //default
         }
         //////////////////////////////////////////////
-/*
-        try {
-        	if(statusAttr == null) throw  new NumberFormatException("The status attribute entered, " + statusAttr + " is invalid."); 
-        	if(statusAttr.equals("ADMIN")) status = 3;
-            else if (statusAttr.equals("BAN")) status = 1;
-            else if (statusAttr.equals("ACTIVE")) status = 2; // -1 for all products
-            else if (statusAttr.equals("ALL")) status = -1; // -1 for all products
-            else throw  new NumberFormatException("The status attribute entered, " + statusAttr+ " is invalid."); 
-        } catch(NumberFormatException e) {
-        	status = 0; //default
-        }
-   */     
-        ////
         try {
         	if(statusAttr == null || statusAttr.isEmpty()) throw  new NumberFormatException("The status attribute entered, " + statusAttr + " is invalid."); 
         	if(statusAttr.equals("ADMIN")) status = 3;
@@ -78,19 +65,7 @@ public class UsersResource extends ServerResource {
         }
         
         //////////////////////////////////////////////
-/*για τον ελεγχο !!! ΝΑ ΤΟ ΒΓΑΛΩ !!
-      //authorization of user
-        Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
-        String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
-        if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Administrator authorization is required to access this endpoint");
-        if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Administrator authorization is required to access this endpoint");
-        
-        Boolean admin = dataAccess.isAdmin(user_token);
-        
-    	if(!admin) {     
-    		throw new ResourceException(401, "Administrator authorization is required to access this endpoint");
-    	}
-*/
+
     	if (status==0) throw new ResourceException(400,"Bad value for field status");
         List<User> users = dataAccess.getUsers(new Limits(start,count),status,sort);
 
