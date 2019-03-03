@@ -147,7 +147,10 @@ $(document).ready(function(){
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log("Success");
                 console.log(obj);
-                location.reload();
+
+                // logout and redirect to homepage
+                window.sessionStorage.removeItem("token");
+                window.location.href = 'Homepage.html';
             },
             error: function(err){
                 console.log(err);
