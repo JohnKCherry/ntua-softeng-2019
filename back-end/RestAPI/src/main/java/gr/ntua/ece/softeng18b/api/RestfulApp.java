@@ -15,6 +15,23 @@ public class RestfulApp extends Application {
 
     	Router router = new Router(getContext());
     	
+    	//Administration endpoints 
+    	router.attach("/numberofusers", NumberOfUsersResource.class);
+    	router.attach("/numberofshops", NumberOfShopsResource.class);
+    	router.attach("/numberofadmins", NumberOfAdminsResource.class);
+    	router.attach("/numberofproducts", NumberOfProductsResource.class);
+    	router.attach("/numberofactiveusers", NumberOfActiveCrowdsourcer.class);
+    	router.attach("/numberofbanusers", NumberOfBanUsersResource.class);
+    	router.attach("/numberofactiveshops", NumberOfActiveShopsResource.class);
+    	router.attach("/numberofwithdrawnshops", NumberOfWithdrawnShopsResource.class);
+    	router.attach("/numberofactiveproducts", NumberOfActiveProductsResource.class);
+    	router.attach("/numberofactiveprices", NumberOfActivePricesResource.class);
+    	router.attach("/numberofpastprices", NumberOfPastPricesResource.class);
+    	router.attach("/users", UsersResource.class);
+    	//GET
+    	router.attach("/users/{id}", UserResource.class);
+    	router.attach("/isadmin", IsAdminResource.class);
+    	
     	//POST
         router.attach("/login", LoginResource.class);
         
@@ -67,6 +84,9 @@ public class RestfulApp extends Application {
         
         //DELETE
         router.attach("/favourites/{productId}", FavouritesResource.class);
+        
+        //TODO: endpoint for accepting contact form
+        
 
         CorsFilter corsFilter = new CorsFilter(getContext(), router);
     	corsFilter.setAllowedOrigins(new HashSet<String>(Arrays.asList("*")));
