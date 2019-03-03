@@ -5,7 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Pragma" content="no-cache">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Favourites Products</title>
+        <title>Prices</title>
+        <link rel="stylesheet" href="css/product.css" />
         <link rel="stylesheet" href="css/login.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="style/t_style.css" />
         <!-- Latest compiled and minified CSS -->
@@ -29,11 +30,12 @@
 integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
   crossorigin=""></script>
         <script type="text/javascript" src="js/login.js"></script>
-        <script type="text/javascript" src="js/favourites.js"></script>
         <script type="text/javascript" src="js/logout.js"></script>
         <script type="text/javascript" src="js/header.js"></script>
+        <script type="text/javascript" src="js/prices.js"></script>
     </head>
     <body>
+
 
         <header>
             <div id="header" class="header">
@@ -162,21 +164,95 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
 
             </div>
         </header>
+        <main>
         <div class="main">
+            <div class="row justify-content-center h1">Prices</div>
             <div id = "container" class="content main container-fluid p-3 mb-2 bg-light text-dark">
 
-                <div class="row justify-content-center">
-                    <span id="heading" class="h1"></span>
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="">Product Tags | Shop Tags</span>
+                            </div>
+                            <input id="productBar" type="search" class="form-control" placeholder="Κατηγορίες Προιόντος" aria-label="Κατηγορίες προιόντος" aria-describedby="basic-addon1">
+                            <input id="shopBar" type="search" class="form-control" placeholder="Κατηγορίες καταστήματος" aria-label="Κατηγορίες καταστήματος" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
                 </div>
-
-                <!-- <div class="container">-->
+                <!-- Filters -->
+                <div class="row">
+                    <div class="col dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Φίλτρα
+                        </button>
+                        <div id="filters-menu" class="dropdown-menu">
+                            <form id="filters">
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                    <label class="col-form-label"> Ταξινόμηση με βάση </label>
+                                    <select id="sort" class="form-control form-control-sm">
+                                        <option value="1">Τιμή</option>
+                                        <option value="2">Ημέρα καταχώρησης</option>
+                                        <option value="3">Απόσταση</option>
+                                    </select>
+                                    </li>
+                                    <li class="list-group-item">
+                                    <label class="col-form-label" for="distance">Distance: <span class="h6" id="geoDist"></span></label>
+                                    <input type="range" name="distance" id="distance" value="" min="0" max="100">
+                                    </li>
+                                    <li class="list-group-item">
+                                    <label class="col-form-label">Date From</label>
+                                    <input class="form-control" type="date" value="" id="dateFrom">
+                                    </li>
+                                    <li class="list-group-item">
+                                    <label class="col-form-label">Date To</label>
+                                    <input class="form-control" type="date" value="" id="dateTo">
+                                    </li>
+                                </ul>
+                                <input type="submit" value="Refresh Filters">
+                                <div id="errorFilters" class="h7" style="color:red"></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <select id="order" class="form-control form-control-sm" >
+                            <option value="1">Αύξουσα Ταξινόμηση</option>
+                            <option value="2">Φθίνουσα Ταξινόμηση</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="errorFilters" class="h7" style="color:red"></div>
                 <div class="card-deck text-center">
+                    <div id="errorDeck" class="h4"></div>
                 </div>
-                <!--  </div>-->
-                <!-- Footer -->
-                <div id="footer"></div>
+                <hr class="col-xs-12">
+
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="mapModal" data-product="" data-shop="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="mapModalLabel">Map</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="map">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        </main>
+
 
         <footer>
             <div id="footer" class="footer">

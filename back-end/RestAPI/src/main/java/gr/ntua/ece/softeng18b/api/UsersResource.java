@@ -54,6 +54,7 @@ public class UsersResource extends ServerResource {
         ////////////////////////////////////////////
         try {
         	if(statusAttr == null || statusAttr.isEmpty()) throw  new NumberFormatException("The status attribute entered, " + statusAttr + " is invalid.");
+
         	if(statusAttr.equals("ADMIN")) status = 3;
             else if (statusAttr.equals("BAN")) status = 1;
             else if (statusAttr.equals("ACTIVE")) status = 2; // -1 for all products
@@ -63,6 +64,7 @@ public class UsersResource extends ServerResource {
         {
         	status = 0; //default
         }
+
 
     	if (status==0) throw new ResourceException(400,"Bad value for field status");
         List<User> users = dataAccess.getUsers(new Limits(start,count),status,sort);
