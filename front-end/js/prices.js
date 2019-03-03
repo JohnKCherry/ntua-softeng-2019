@@ -319,10 +319,27 @@ $(document).ready(function(){
         locations = shopsLocation(shopsID);
         console.log("Get locations..." + locations);
 
-        map = L.map('map', {
-            center: [locations[1], locations[2]],
-            zoom: 12
-        });
+        if (gps == null || gps[0] == "" || gps[1] == "") {
+            findLocation(1,shopsID);
+        }else {
+            map = L.map('map', {
+                center: [gps[0], gps[1]],
+                zoom: 12
+            });
+            var greenIcon = new L.Icon({
+                iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            var you = new L.marker([gps[0],gps[1]],{icon: greenIcon})
+            .bindPopup("You");
+
+            markersLayer.addLayer(you); 
+        }
 
 
         // to pio panw magazi
@@ -349,13 +366,13 @@ $(document).ready(function(){
 
 
 
-    var findLocation = function() {
+    var findLocation = function(flag,shopsID) {
         if(gps!=null && gps[0]!="" && gps[1]!="") return ;
         if ("geolocation" in navigator){  
             navigator.geolocation.getCurrentPosition(function(position){
                 gps[0] = position.coords.latitude;
                 gps[1] = position.coords.longitude;
-                //  getPrices(1);
+                setMap(shopsID);
             }, function() {
                 console.log("Don't allow location");
                 $("#errorFilters").text("Allow location please"); 
