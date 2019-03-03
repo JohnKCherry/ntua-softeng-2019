@@ -4,17 +4,12 @@
 	top: 20px;
 	left: 50px;
 }
+
 #pName{
 	
 	display: inline-block;
 }
-
-editButton{
-	float: right;
-}
-	
 #pUsername{
-	
 	display: inline-block;
 }
 
@@ -23,9 +18,10 @@ editButton{
 	display: inline-block;
 }
 
-editButton1{
+editButton{
 	float: right;
 }
+
 
 editButton2{
 	float: right;
