@@ -2,6 +2,8 @@ var id;
 var fullname;
 var username;
 var email;
+var word;
+var word1
 var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
     console.log("ready");
@@ -99,7 +101,6 @@ $(document).ready(function(){
     $("#applyButton2").click(function(){
         console.log("Update Email");
         email = $("#pEmail2").val();
-        id=3;
         console.log(email);
         updateEmail(email);
     });
@@ -110,8 +111,24 @@ $(document).ready(function(){
         $("#editButton").css("visibility","hidden");
         $("#editButton1").css("visibility","hidden");
         $("#applyButton3").css("visibility","visible");
-        $("#pass").replaceWith($('<div> <div id=\"password\" class=\"h2\"><u>Enter new Password:</u> <input type=\"password\" id=\"newPassword\" maxlength=\"20\" ></input></div><div id=\"password1\" class=\"h2\"><u>Re-enter new Password:</u> <input type=\"password\" id=\"newPassword1\" maxlength="20" ></input></div></div>'));
+        $("#pass").replaceWith($('<div id =\"pass\"> <div id=\"password\" class=\"h2\"><u>Enter new Password:</u> <input type=\"password\" id=\"newPassword\" maxlength=\"20\" ></input></div><div id=\"password1\" class=\"h2\"><u>Re-enter new Password:</u> <input type=\"password\" id=\"newPassword1\" maxlength="20" ></input></div></div>'));
 
+    });
+	
+	$("#applyButton3").click(function(){
+        word1 = $("#newPassword1").val();
+        word = $("#newPassword").val();
+		if(word1 == word){
+		console.log("Update Password");
+		console.log(word);
+        console.log(word1);
+		updatePassword(word);
+		}
+		else{
+	    $("#errorMessage").css("visibility","visible");
+		$("#pass").replaceWith($('<div id =\"pass\"> <div id=\"password\" class=\"h2\"><u>Enter new Password:</u> <input type=\"password\" id=\"newPassword\" maxlength=\"20\" ></input></div><div id=\"password1\" class=\"h2\"><u>Re-enter new Password:</u> <input type=\"password\" id=\"newPassword1\" maxlength="20" ></input></div></div>'));	
+        console.log("Error Password Update");
+		}
     });
 
     function updateFullName(input) {
@@ -184,6 +201,31 @@ $(document).ready(function(){
         });
 
 
+    }
+	
+	function updatePassword(input) {
+        $.ajax({
+            type: "PATCH",
+            dataType: "json",
+            headers: {'X-OBSERVATORY-AUTH' : token},
+            url: "https://localhost:8765/observatory/api/profile",
+            data: {"password":input},
+            success: function(data){
+                var obj = JSON.parse(JSON.stringify(data));
+                console.log("Success");
+                console.log(obj);
+
+                // logout and redirect to homepage
+                window.sessionStorage.removeItem("token");
+                window.location.href = 'Homepage.html';
+            },
+            error: function(err){
+                console.log(err);
+                console.log("PATCH Error");
+                alert("Error update");
+                location.reload();
+            }
+        });
     }
 
 

@@ -19,5 +19,7 @@ $(document).ready(function () {
     document.getElementById("username").textContent = username;
     document.getElementById("username-l").textContent = username;
 
+    $("#username").replaceWith("<a href=\"profile.html\" class=\"dropdown-item \" role=\"button\">"+username+"</a>");
+
 
 });
