@@ -354,12 +354,15 @@ $(document).ready(function(){
 
 
     // event listener distance input
-    $("#distance").on("change mousemove", function() {
+    $("#distance").on("mousemove", function() {
         $("#geoDist").html($("#distance").val() + " Khm");
     });
 
     $("#distance").on("change", function() {
-        findLocation();
+        if($("#sort").val()==3) {
+            findLocation();
+            shopsUpdate(1);
+        }
     });
     // event listener submit form
     $("#filters").submit(function() {
