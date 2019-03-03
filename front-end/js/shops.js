@@ -59,6 +59,11 @@ $(document).ready(function(){
     function getShops(start,count,sort,order,status,clear,byName) {
         // get shops general info
 
+        $("#loadMe").modal({
+            backdrop: "static", //remove ability to close modal with click
+            keyboard: false, //remove option to close with keyboard
+            show: true //Display loader!
+        });
         if(clear) $(".card-deck").empty();
         orderStr = (order==1) ? "ASC" : "DESC";
         if (status == 1) statusStr = "ALL";
@@ -92,9 +97,11 @@ $(document).ready(function(){
                     // create html
                     $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\"imgs/shop.png\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"shop.html?id="+id+"\" class=\"card-title\">"+name+"</a><p class=\"card-text\">"+address+"</p></div></div></div>");
                 });
+                $("#loadMe").modal("hide");
             },
             error: function(){
                 console.log("Shops.js : Error get shops !!");
+                $("#loadMe").modal("hide");
                 $("body").load("404.html");
                 return false;
             }
