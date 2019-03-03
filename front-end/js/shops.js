@@ -59,21 +59,27 @@ $(document).ready(function(){
     function getShops(start,count,sort,order,status,clear,byName) {
         // get shops general info
 
+
+
         $("#loadMe").modal({
             backdrop: "static", //remove ability to close modal with click
             keyboard: false, //remove option to close with keyboard
             show: true //Display loader!
         });
+        //set timeout to be sure that will be hide
+        setTimeout(function() {
+            $("#loadMe").modal("hide");
+        }, 2500);
         if(clear) $(".card-deck").empty();
         orderStr = (order==1) ? "ASC" : "DESC";
         if (status == 1) statusStr = "ALL";
         else if (status == 2) statusStr = "ACTIVE";
-        
+
         // if byName == 1 get request to endpoint productsbynamewithimage
         // else productswithimage
         if (byName == 1) endpoint = "shopsbyname/"+ret;
         else endpoint = "shops";
-        
+
         var url = "https://localhost:8765/observatory/api/"+endpoint+"?start="+start
         +"&count="+count
         +"&sort="+sort
@@ -110,9 +116,9 @@ $(document).ready(function(){
 
     if ( query == null) byName = 0;
     else byName = 1;
-    
+
     getShops(start,count,sort,order,statusStr,1,byName);
-    
+
     //listener search bar send request
     $("#searchBar").on("keyup", function() {
         console.log("Products.js: Pliktrologw");
@@ -124,9 +130,9 @@ $(document).ready(function(){
             console.log(ret);
         }
         else byName = 0;
-            
+
         getShops(0,12,sort,order,status,1,byName);
-           
+
     });
 
     // event listener order
@@ -140,7 +146,7 @@ $(document).ready(function(){
     $("#status").change(function() {
         status = $("#status").val();
         console.log("Status changed to " + status);
-       // getShops(0,12,sort,order,status,1);
+        // getShops(0,12,sort,order,status,1);
     });
 
     // function take height for all browsers

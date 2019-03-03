@@ -71,6 +71,10 @@ $(document).ready(function(){
             keyboard: false, //remove option to close with keyboard
             show: true //Display loader!
         });
+        //set timeout to be sure that will be hide
+        setTimeout(function() {
+            $("#loadMe").modal("hide");
+        }, 2500);
         if(reload) $(".card-deck").empty();
         $("#errorFilters").empty();
         $("#errorDeck").empty();
