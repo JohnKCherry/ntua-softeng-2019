@@ -33,12 +33,12 @@ $(document).ready(function(){
                 var obj = JSON.parse(JSON.stringify(data));
                 var token = obj.token;
                 console.log(token);
-                window.sessionStorage.setItem("token", token);
-                window.sessionStorage.setItem("username", $("#username").val());
-                var b = window.sessionStorage.getItem("token");
-                console.log(b);
+         //       window.sessionStorage.setItem("token", token);
+         //       window.sessionStorage.setItem("username", $("#username").val());
+          //      var b = window.sessionStorage.getItem("token");
+          //      console.log(b);
                 $(".modal-dialog").hide();
-                $("#signup").html("<div class=\"h2\">Welcome "+$("#username").val()+"</div>");
+            //    $("#signup").html("<div class=\"h2\">Welcome "+$("#username").val()+"</div>");
                 //redirect after 1 seconds
                 $("body").load("success.html");
                 window.setTimeout(function() {
