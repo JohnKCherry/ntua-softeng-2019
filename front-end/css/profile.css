@@ -26,4 +26,12 @@ editButton{
 editButton2{
 	float: right;
 }
+
+#password {
+    width: 500px;
+}
+
+#password1 {
+    width: 500px;
+}
 	

@@ -86,9 +86,12 @@ $(document).ready(function(){
 		});
 			
 	    $("#applyButton1").click(function(){
-	     username= $("#pUsername2").val();
-		 console.log(username);
-		 sendUpdate1(username);
+			var obj = new Object();
+	     obj.username= $("#pUsername2").val();
+		 obj.fullname=null;
+		 obj.email=null;
+		 console.log(obj);
+		 sendUpdate1(obj);
 		
 		});
 		
@@ -100,13 +103,23 @@ $(document).ready(function(){
 		
 		});
 		
-		function sendUpdate(fullname) {
+		$("#passwordButton").click(function(){
+		 $("#passwordButton").css("visibility","hidden");
+		 $("#editButton2").css("visibility","hidden");
+		 $("#editButton").css("visibility","hidden");
+		 $("#editButton1").css("visibility","hidden");
+		 $("#applyButton3").css("visibility","visible");
+		 $("#pass").replaceWith($('<div> <div id=\"password\" class=\"h2\"><u>Enter new Password:</u> <input type=\"password\" id=\"newPassword\" maxlength=\"20\" ></input></div><div id=\"password1\" class=\"h2\"><u>Re-enter new Password:</u> <input type=\"password\" id=\"newPassword1\" maxlength="20" ></input></div></div>'));
+		
+		});
+		
+		function sendUpdate(obj) {
         $.ajax({
             type: "PATCH",
             dataType: "json",
 			headers: {'X-OBSERVATORY-AUTH' : token},
             url: "https://localhost:8765/observatory/api/profile",
-            data: fullname,
+            data: obj,
             success: function(data){
                 console.log("Success");
                 var obj = JSON.parse(JSON.stringify(data));
@@ -122,16 +135,17 @@ $(document).ready(function(){
         });
 		}
 		
-		function sendUpdate1(username) {
+		function sendUpdate1(obj) {
+			
+			
         $.ajax({
             type: "PATCH",
             dataType: "json",
 			headers: {'X-OBSERVATORY-AUTH' : token},
             url: "https://localhost:8765/observatory/api/profile",
-            data: username,
+            data: obj,
             success: function(data){
                 console.log("Success");
-                var username = JSON.parse(JSON.stringify(data));
                 console.log(obj);
                 location.reload();
             },
