@@ -24,5 +24,16 @@ $(document).ready(function () {
     }
 
 
+    //clear header search bar
+    $("#search-bar").children('input').val("");
+    $("#search-bar").on('submit', function() {
+        console.log("header.js: search bar patithike");
+        var query = $(this).children('input').val();
+        query = query.split(' ').join('+');
+        console.log("header.js: query = " + query);
+        window.location.href = 'products.html?query='+query;
+
+        return false;
+    });
 
 });
