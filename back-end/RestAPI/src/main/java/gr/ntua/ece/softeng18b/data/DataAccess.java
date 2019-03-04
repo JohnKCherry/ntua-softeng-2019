@@ -734,7 +734,7 @@ public class DataAccess {
                 else {
                 	ps.setString(1, getSHA(value));
                 }
-                if(!update_parameter.equals("password")) {
+                if(!update_parameter.equals("authorization")) {
                 	ps.setString(2, "username ="+username);
                 }
                 else {
