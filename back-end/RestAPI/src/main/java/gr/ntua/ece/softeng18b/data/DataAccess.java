@@ -1,5 +1,6 @@
 package gr.ntua.ece.softeng18b.data;
 
+import gr.ntua.ece.softeng18b.data.model.FeedEntity;
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDateXprimal;
@@ -61,6 +62,11 @@ public class DataAccess {
     	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 order by "+sort+" limit ?,?", params_small, new ProductRowMapper());
     	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<FeedEntity> getFeed() {
+    	return jdbcTemplate.query("select * from feed where 1 order by id DESC limit 20", new FeedEntityRowMapper());      
     }
     
     
