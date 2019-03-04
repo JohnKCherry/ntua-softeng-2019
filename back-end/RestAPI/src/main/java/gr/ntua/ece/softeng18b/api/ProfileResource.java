@@ -77,6 +77,7 @@ public class ProfileResource extends ServerResource {
         }
         else if(authorization != null && password==null && fullname == null && username == null && email == null) {
             update_parameter = "authorization";
+            if(!dataAccess.isAdmin(user_token)) throw new ResourceException(401,"You are not authorized for this action"); 
             value = authorization;
         }
         
