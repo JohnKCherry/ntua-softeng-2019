@@ -119,6 +119,7 @@ $(document).ready(function(){
 
     getShops(start,count,sort,order,statusStr,1,byName);
 
+    /*
     //listener search bar send request
     $("#searchBar").on("keyup", function() {
         console.log("Products.js: Pliktrologw");
@@ -134,7 +135,31 @@ $(document).ready(function(){
         getShops(0,12,sort,order,status,1,byName);
 
     });
+*/
+    function formSubmit() {
+        query = $("#searchBar").val();
+        if (query != "") {
+            byName = 1;
+            ret = query.split(' ').join('+');
+            console.log(ret);
+        }
+        else byName = 0;
+            
+        getShops(0,12,sort,order,status,1,byName);
+        
+    }
+    
+    $("#bar").submit(function() {
+        console.log("prices.js: Form submit");
+        formSubmit();
 
+        return false;
+    });
+
+    $("#searchBtn").on('click', function() {
+        console.log("prices.js: Search Button clicked");
+        formSubmit();
+    });
     // event listener order
     // order change reload products
     $("#order").change(function() {

@@ -166,94 +166,96 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
         <main>
         <div class="main">
 
-        <div class="row justify-content-center h1">Τα προιόντα μας</div>
-        <!-- Main Body Container -->
-        <div id="container" class="container-fluid p-3 mb-2 bg-light text-dark">
+            <div class="row justify-content-center h1">Τα προιόντα μας</div>
+            <!-- Main Body Container -->
+            <div id="container" class="container-fluid p-3 mb-2 bg-light text-dark">
 
-            <div class="input-group mb-3">
-                <input id="searchBar" type="text" class="form-control" placeholder="Αναζήτηση προιόντος" aria-label="Αναζήτηση προιόντος" aria-describedby="basic-addon2">
-                <!--
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button">Button</button>
-                </div>
-                -->
-            </div>
+                <form id="bar">
+                    <div class="form-group row">
+                        <div class="input-group mb-3">
+                            <input id="searchBar" type="text" class="form-control" placeholder="Αναζήτηση προιόντος" aria-label="Αναζήτηση προιόντος" aria-describedby="basic-addon2">
+                            <div class="input-group-prepend">
+                                <button id="searchBtn" type="submit" class="input-group-text">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-            <div class="row justify-content-start">
-                <div class="col-md-3">
-                    <select id="order" class="form-control form-control-sm" >
-                        <option value="1">Αύξουσα Ταξινόμηση</option>
-                        <option value="2">Φθίνουσα Ταξινόμηση</option>
-                    </select>
+                <div class="row justify-content-start">
+                    <div class="col-md-3">
+                        <select id="order" class="form-control form-control-sm" >
+                            <option value="1">Αύξουσα Ταξινόμηση</option>
+                            <option value="2">Φθίνουσα Ταξινόμηση</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select id="status" class="form-control form-control-sm" >
+                            <option value="1">ALL</option>
+                            <option value="2">ACTIVE</option>
+                            <option value="3">WITHDRAWN</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <select id="status" class="form-control form-control-sm" >
-                        <option value="1">ALL</option>
-                        <option value="2">ACTIVE</option>
-                        <option value="3">WITHDRAWN</option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- <div class="container">-->
-            <div class="card-deck text-center">
+                <!-- <div class="container">-->
+                <div class="card-deck text-center">
+                </div>
             </div>
-        </div>
-        <!-- Loadin Modal -->
-        <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
-            <div class="modal-dialog modal-sm" role="document">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <div class="loader"></div>
-                        <div clas="loader-txt">
-                            <p>Loading...<br><br><small>Please Wait</small></p>
+            <!-- Loadin Modal -->
+            <div class="modal fade" id="loadMe" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <div class="loader"></div>
+                            <div clas="loader-txt">
+                                <p>Loading...<br><br><small>Please Wait</small></p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        </main>
+            </main>
 
 
-        <footer>
-            <div id="footer" class="footer">
-                <div class="about_us_section">
-                    <div style="height:auto; font-size: auto">
-                        <a href="#">
-                            <h3>About Us</h3>
-                        </a>
-                        <p>
-                        And those were the days of roses
-                        Poetry and prose and Martha
-                        All I had was you and all you had was me
-                        There was no tomorrows
-                        We'd packed away our sorrows
-                        And we saved them for a rainy day.
-                        </p>
+            <footer>
+                <div id="footer" class="footer">
+                    <div class="about_us_section">
+                        <div style="height:auto; font-size: auto">
+                            <a href="#">
+                                <h3>About Us</h3>
+                            </a>
+                            <p>
+                            And those were the days of roses
+                            Poetry and prose and Martha
+                            All I had was you and all you had was me
+                            There was no tomorrows
+                            We'd packed away our sorrows
+                            And we saved them for a rainy day.
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="faq_section">
-                    <a href="#" style="color : darkgray;">F.A.Q.</a>
-                </div>
-                <div class="contact_section">
-                    <a href="contact.html" style="">Contact</a>
-                </div>
-                <div class="map_section">
-                    <div id="mapid"></div>
-                    <div class="address">
-                        <p>
-                        National Technical University of Athens
-                        School of Electrical and Computer Engineering<br>
-                        9, Iroon Polytechniou St
-                        Athens, Postal Code 157 80
-                        </p>
+                    <div class="faq_section">
+                        <a href="#" style="color : darkgray;">F.A.Q.</a>
                     </div>
+                    <div class="contact_section">
+                        <a href="contact.html" style="">Contact</a>
+                    </div>
+                    <div class="map_section">
+                        <div id="mapid"></div>
+                        <div class="address">
+                            <p>
+                            National Technical University of Athens
+                            School of Electrical and Computer Engineering<br>
+                            9, Iroon Polytechniou St
+                            Athens, Postal Code 157 80
+                            </p>
+                        </div>
+                    </div>
+
                 </div>
+            </footer>
 
-            </div>
-        </footer>
-
-        <script>
+            <script>
 var mymap = L.map('mapid').setView([37.9778779, 23.7821791], 24);
 console.log(mymap);
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -263,7 +265,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     id: 'mapbox.streets'
 }).addTo(mymap);
-        </script>
+            </script>
 
-    </body>
-</html>
+        </body>
+    </html>

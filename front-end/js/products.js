@@ -135,9 +135,7 @@ $(document).ready(function(){
 
 
 
-    //listener search bar send request
-    $("#searchBar").on("keyup", function() {
-        console.log("Products.js: Pliktrologw");
+    function formSubmit() {
         query = $("#searchBar").val();
         if (query != "") {
             byName = 1;
@@ -147,9 +145,20 @@ $(document).ready(function(){
         else byName = 0;
             
         getProducts(0,12,sort,order,status,1,byName);
-           
+        
+    }
+    
+    $("#bar").submit(function() {
+        console.log("prices.js: Form submit");
+        formSubmit();
+
+        return false;
     });
 
+    $("#searchBtn").on('click', function() {
+        console.log("prices.js: Search Button clicked");
+        formSubmit();
+    });
     // event listener order
     // order change reload products
     $("#order").change(function() {
