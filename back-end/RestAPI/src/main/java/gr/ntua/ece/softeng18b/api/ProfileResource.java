@@ -44,6 +44,7 @@ public class ProfileResource extends ServerResource {
         String username = form.getFirstValue("username");
         String email = form.getFirstValue("email");
         String password = form.getFirstValue("password");
+        String authorization = form.getFirstValue("authorization");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
@@ -73,6 +74,10 @@ public class ProfileResource extends ServerResource {
         	if(check_new != null && check_new.isPresent()) throw new ResourceException(400,"This is the old password! Please enter a new one");
         	update_parameter = "password";
         	value = password;
+        }
+        else if(authorization != null && password==null && fullname == null && username == null && email == null) {
+            update_parameter = "authorization";
+            value = authorization;
         }
         
         else  throw new ResourceException(400,"None or more than one values where found for patch request!");        
