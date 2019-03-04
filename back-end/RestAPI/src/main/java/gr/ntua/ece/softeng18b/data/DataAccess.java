@@ -668,27 +668,32 @@ public class DataAccess {
     	String username = user_token.substring(64);
     	user_token.substring(0,64);
     	int tr = 10;
-    	while(isLogedIn(user_token)) { // in case the same salt is generated again...
-    		// Try to logout
-    		tr--;
-    		if(tr==0) throw new RuntimeException("Logout of Price failed");
-    		PreparedStatementCreator psc = new PreparedStatementCreator() {
-                @Override
-                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                    PreparedStatement ps = con.prepareStatement(
-                            "UPDATE users SET salt = ? WHERE username = ? ",
-                            Statement.RETURN_GENERATED_KEYS
-                    );
-                    ps.setLong(1, Integer.toUnsignedLong(ThreadLocalRandom.current().nextInt(1000, 10000000 + 1)));
-                    ps.setString(2, username);
-                    return ps;
-                }
-            };
-            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-            int cnt = jdbcTemplate.update(psc, keyHolder);
+    	try {
+			while(isLogedIn(user_token)) { // in case the same salt is generated again...
+				// Try to logout
+				tr--;
+				if(tr==0) throw new RuntimeException("Logout of Price failed");
+				PreparedStatementCreator psc = new PreparedStatementCreator() {
+			        @Override
+			        public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+			            PreparedStatement ps = con.prepareStatement(
+			                    "UPDATE users SET salt = ? WHERE username = ? ",
+			                    Statement.RETURN_GENERATED_KEYS
+			            );
+			            ps.setLong(1, Integer.toUnsignedLong(ThreadLocalRandom.current().nextInt(1000, 10000000 + 1)));
+			            ps.setString(2, username);
+			            return ps;
+			        }
+			    };
+			    GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+			    int cnt = jdbcTemplate.update(psc, keyHolder);
 
-            if (cnt != 1) throw new RuntimeException("Logout of Price failed");
-    	}
+			    if (cnt != 1) throw new RuntimeException("Logout of Price failed");
+			}
+		} catch (ResourceException e) {
+			return;
+			//e.printStackTrace();
+		}
     }
     
     @SuppressWarnings("unchecked")
@@ -716,13 +721,19 @@ public class DataAccess {
 		
     	PreparedStatementCreator psc = new PreparedStatementCreator() {
     		String username = user_token.substring(64);
+    		
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
                         "UPDATE users SET "+update_parameter+"=? where username =?",
                         Statement.RETURN_GENERATED_KEYS
                 );
-                ps.setString(1, value);
+                if(!update_parameter.equals("password")) {
+                	ps.setString(1, value);
+                }
+                else {
+                	ps.setString(1, getSHA(value));
+                }
                 ps.setString(2, username);
                 return ps;
             }
@@ -861,6 +872,17 @@ public class DataAccess {
            }
        }
     @SuppressWarnings("unchecked")
+    public Optional<Value> getNumberOfWithdrawnProducts() {
+        List<Value> numberofwithproducts = jdbcTemplate.query("select COUNT(id) as value from products where withdrawn=1", new ValueRowMapper());
+
+        if (numberofwithproducts.size() == 1)  {
+            return Optional.of(numberofwithproducts.get(0));
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+    @SuppressWarnings("unchecked")
    	public Optional<Value> getNumberOfActivePrices() {
            List<Value> numberofactiveprices = jdbcTemplate.query("SELECT COUNT(product_id) as value from prices where dateTo > CURRENT_DATE", new ValueRowMapper());
 
@@ -920,5 +942,6 @@ public class DataAccess {
             return null; 
         } 
     }
+
 
 }
