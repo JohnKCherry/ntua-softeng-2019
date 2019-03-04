@@ -1,5 +1,6 @@
 package gr.ntua.ece.softeng18b.data;
 
+import gr.ntua.ece.softeng18b.data.model.FeedEntity;
 import gr.ntua.ece.softeng18b.data.model.Price;
 import gr.ntua.ece.softeng18b.data.model.PriceResult;
 import gr.ntua.ece.softeng18b.data.model.PriceResultSingleDateXprimal;
@@ -61,6 +62,11 @@ public class DataAccess {
     	Long[] params = new Long[] {status,limits.getStart(),(long)limits.getCount() };
     	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 order by "+sort+" limit ?,?", params_small, new ProductRowMapper());
     	return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where 1 and withdrawn =? order by "+sort+" limit ?,?", params, new ProductRowMapper());      
+    }
+    
+    @SuppressWarnings("unchecked")
+	public List<FeedEntity> getFeed() {
+    	return jdbcTemplate.query("select * from feed where 1 order by id DESC limit 20", new FeedEntityRowMapper());      
     }
     
     
@@ -717,7 +723,7 @@ public class DataAccess {
         else throw new ResourceException(404, "User not found");
     }
     
-    public User patchUser(String user_token, String update_parameter, String value) {
+    public User patchUser(String user_token, String update_parameter, String value, String user_id) {
 		
     	PreparedStatementCreator psc = new PreparedStatementCreator() {
     		String username = user_token.substring(64);
@@ -725,7 +731,7 @@ public class DataAccess {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
-                        "UPDATE users SET "+update_parameter+"=? where username =?",
+                        "UPDATE users SET "+update_parameter+"=? where ?",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 if(!update_parameter.equals("password")) {
@@ -734,7 +740,12 @@ public class DataAccess {
                 else {
                 	ps.setString(1, getSHA(value));
                 }
-                ps.setString(2, username);
+                if(!update_parameter.equals("authorization")) {
+                	ps.setString(2, "username ="+username);
+                }
+                else {
+                	ps.setString(2, "id ="+user_id);
+                }
                 return ps;
             }
         };

@@ -33,6 +33,9 @@ public class RestfulApp extends Application {
     	router.attach("/users/{id}", UserResource.class);
     	router.attach("/isadmin", IsAdminResource.class);
     	
+    	//GET
+        router.attach("/feed", FeedResource.class);
+    	
     	//POST
         router.attach("/login", LoginResource.class);
         
