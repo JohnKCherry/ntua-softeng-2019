@@ -2,6 +2,7 @@ package gr.ntua.ece.softeng18b.api;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import gr.ntua.ece.softeng18b.conf.Configuration;
 import org.restlet.data.Form;
@@ -37,11 +38,15 @@ public class SignupResource extends ServerResource {
         	String message = dataAccess.addUser(fullname, username, password, email, auth);
         	Map<String, Object> map = new HashMap<>();
             map.put("message", message);
-            map.put("token", dataAccess.getUserApiToken_username_only(username) + username);
+            String token_r = dataAccess.getUserApiToken_username_only(username).get() + username;
+            map.put("token", token_r);
             return new JsonMapRepresentation(map);
         }
         catch(org.springframework.dao.DuplicateKeyException e){
         	throw new ResourceException(400,"This username already exists in the database");
-        }   
+        }
+        catch(NoSuchElementException e) {
+        	throw new ResourceException(400, "Something went wrong with token retrieval. Please sign in.");
+        }
     }
 }
