@@ -75,23 +75,23 @@ public class DataAccess {
     @SuppressWarnings("unchecked")
 	public List<Product> getProductsByName(Limits limits, int status, String name, String sort, Boolean user_sort) {
     	String[] params = new String[]{name};
-    	String[] params_status = new String[]{name,""+status};
+    	String[] params_status = new String[]{""+status};
     	if(!user_sort) {
-    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
-    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
+    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where products.name LIKE '%"+name+"%' limit "+ limits.getStart() +","+ limits.getCount() +" ", new ProductRowMapper());      
+    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where products.name LIKE '%"+name+"%'  and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper()); 
     	}
     	else {
-    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) order by " + sort + " limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductRowMapper());      
-    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper());
+    		if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where products.name LIKE '%"+name+"%'  order by " + sort + " limit "+ limits.getStart() +","+ limits.getCount() +" ", new ProductRowMapper());      
+    		else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags from products where products.name LIKE '%"+name+"%'  and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductRowMapper());
     	}
     } 
     
     @SuppressWarnings("unchecked")
 	public List<ProductWithImage> getProductsByNameWithImage(Limits limits, long status, String name) {
     	String[] params = new String[]{name};
-    	String[] params_status = new String[]{name,""+status};
-    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ProductWithImageRowMapper());      
-    	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductWithImageRowMapper()); 
+    	String[] params_status = new String[]{""+status};
+    	if(status == -1) return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where products.name LIKE '%"+name+"%' limit "+ limits.getStart() +","+ limits.getCount() +" ", new ProductWithImageRowMapper());      
+    	else return jdbcTemplate.query("select id, name, description, category, withdrawn, tags, image from products where products.name LIKE '%"+name+"%' and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ProductWithImageRowMapper()); 
     }
     
     @SuppressWarnings("unchecked")
@@ -112,14 +112,14 @@ public class DataAccess {
     @SuppressWarnings("unchecked")
 	public List<Shop> getShopsByName(Limits limits, int status, String name, String sort, Boolean user_sort) {
     	String[] params = new String[]{name};
-    	String[] params_status = new String[]{name,""+status};
+    	String[] params_status = new String[]{""+status};
     	if(!user_sort) {
-    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
-    		else return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where shops.name LIKE '%"+name+"%' limit "+ limits.getStart() +","+ limits.getCount() +" ", new ShopRowMapper());      
+    		else return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where shops.name LIKE '%"+name+"%' and withdrawn = ? limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
     	}
     	else {
-    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params, new ShopRowMapper());      
-    		else return jdbcTemplate.query("select id, name, address, lST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where MATCH (name) AGAINST (? IN NATURAL LANGUAGE MODE) and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
+    		if(status == -1) return jdbcTemplate.query("select id, name, address, ST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where shops.name LIKE '%"+name+"%' order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", new ShopRowMapper());      
+    		else return jdbcTemplate.query("select id, name, address, lST_X(location) as x_coordinate, ST_Y(location) as y_coordinate, withdrawn, tags from shops where shops.name LIKE '%"+name+"%' and withdrawn = ? order by " + sort + "  limit "+ limits.getStart() +","+ limits.getCount() +" ", params_status, new ShopRowMapper()); 
     	}
     }
     
@@ -942,6 +942,34 @@ public class DataAccess {
             return null; 
         } 
     }
+
+	public void addContact(String fullname, String company, String mail, String choice, String subject,String message) {
+		PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement ps = con.prepareStatement(
+                        "insert into contact_forms(fullname, company, mail, choice, subject, message) values(?, ?, ?, ?, ?, ?)",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                ps.setString(1, fullname);
+                ps.setString(2, company);
+                ps.setString(3, mail);
+                ps.setString(4, choice);
+                ps.setString(5, subject);
+                ps.setString(6, message);
+                return ps;
+            }
+        };
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        int cnt = jdbcTemplate.update(psc, keyHolder);
+
+        if (cnt == 1) {
+           return;
+        }
+        else {
+            throw new RuntimeException("Creation of Product failed");
+        }
+	}
 
 
 }
