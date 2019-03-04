@@ -1,7 +1,6 @@
 $(document).ready(function() {
 
-    $("#homeBar").val("");
-    $("#searchBtn").click(function(){
+    function formSubmit(){
         var sel = $("#selector option:selected").text();
         var query = $("#homeBar").val();
         console.log(query);
@@ -18,5 +17,19 @@ $(document).ready(function() {
             window.location.href = " Homepage.html"; //to change
         }
         return ;
+    }
+
+    $("#homeBar").val("");
+    $("#homeForm").on('submit', function(){
+        console.log("home.js: Submit form");
+        formSubmit();
+
+        return false;
+    });
+
+
+    $("#searchBtn").click(function(){
+        formSubmit();
     }); 
+
 });
