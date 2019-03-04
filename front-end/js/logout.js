@@ -18,13 +18,13 @@ $(document).ready(function(){
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log(obj);
                 window.sessionStorage.clear();
-                location.reload();
+                window.location.href="Homepage.html"
             },
             error: function(err){
                 console.log("Logout.js : Error to logout");
                 console.log(err);
                 window.sessionStorage.clear();
-                location.reload();
+                window.location.href="Homepage.html"
             }
         });
     }
