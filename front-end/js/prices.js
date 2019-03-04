@@ -25,19 +25,19 @@ $(document).ready(function(){
     var productTags="";
     var shopTags="";
 
-    var query1 = getUrlParameter('query1');
-    if (query1 == null) $("#productBar").val("");
+    var pTag = getUrlParameter('pTag');
+    if (pTag == null) $("#productBar").val("");
     else {
-        $("#productBar").val(query1);
-        productTags = query.split(' ').join('+');
+        $("#productBar").val(pTag);
+        productTags = pTag.split(' ').join('+');
         console.log(productTags);
     }
 
-    var query2 = getUrlParameter('query2');
-    if (query2 == null) $("#shopBar").val("");
+    var sTag = getUrlParameter('sTag');
+    if (sTag == null) $("#shopBar").val("");
     else {
-        $("#shopBar").val(query2);
-        shopTags = query.split(' ').join('+');
+        $("#shopBar").val(sTag);
+        shopTags = sTag.split(' ').join('+');
         console.log(shopTags);
     }
 
@@ -75,7 +75,7 @@ $(document).ready(function(){
             //set timeout to be sure that will be hide
             setTimeout(function() {
                 $("#loadMe").modal("hide");
-            }, 2500);
+            }, 1000);
         }
         if(reload) $(".card-deck").empty();
         $("#errorFilters").empty();

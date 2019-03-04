@@ -69,7 +69,7 @@ $(document).ready(function(){
         //set timeout to be sure that will be hide
         setTimeout(function() {
             $("#loadMe").modal("hide");
-        }, 500);
+        }, 1000);
         if(clear) $(".card-deck").empty();
         orderStr = (order==1) ? "ASC" : "DESC";
         if (status == 1) statusStr = "ALL";
