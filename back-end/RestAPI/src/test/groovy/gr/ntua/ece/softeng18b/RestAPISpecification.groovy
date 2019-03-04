@@ -150,10 +150,10 @@ import groovy.json.JsonSlurper
 
 	def "User patches product" (){
 		when:
-		Product returned0 = api.patchProduct(id, "name", "Patched name", RestCallFormat.JSON)
+		Product returned0 = api.patchProduct(id, "name", "Patched nameXXXZZZ", RestCallFormat.JSON)
 
 		then:
-		returned0.name.equals("Patched name")
+		returned0.name.equals("Patched nameXXXZZZ")
 
 		when:
 		Product returned = api.patchProduct(id, "description", "Patched dscr", RestCallFormat.JSON)
@@ -266,8 +266,8 @@ import groovy.json.JsonSlurper
 		Shop sent = new Shop(
 			name 	:  "Shop 1",
 			address :  "Address 1",
-			lat	 	: 38.46361,
-			lng 	: 23.59944,
+			lat	 	: 38.455561,
+			lng 	: 23.595554,
 			tags	: ["Music", "Computers"]
 		)
 		Shop returned = api.postShop(sent, RestCallFormat.JSON)
@@ -286,7 +286,7 @@ import groovy.json.JsonSlurper
 		Shop sent = new Shop(
 			name 	:  "Shop 2",
 			address :  "Address 2",
-			lat		: 38.01324,
+			lat		: 39.01324,
 			lng		: 23.77223,
 			tags	: ["Music", "Computers", "Books"]
 		)
@@ -307,7 +307,7 @@ import groovy.json.JsonSlurper
 			name 	:  "Shop 3",
 			address :  "Address 3",
 			lat		: 38.01667,
-			lng		: 23.83333,
+			lng		: 24.83333,
 			tags	: ["Phones", "Computers", "Books"]
 		)
 		Shop returned = api.postShop(sent, RestCallFormat.JSON)
