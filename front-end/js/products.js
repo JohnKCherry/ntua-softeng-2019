@@ -70,7 +70,7 @@ $(document).ready(function(){
         //set timeout to be sure that will be hide
         setTimeout(function() {
             $("#loadMe").modal("hide");
-        }, 2500);
+        }, 500);
         if(clear) $(".card-deck").empty();
         orderStr = (order==1) ? "ASC" : "DESC";
         if (status == 1) statusStr = "ALL";
@@ -135,9 +135,7 @@ $(document).ready(function(){
 
 
 
-    //listener search bar send request
-    $("#searchBar").on("keyup", function() {
-        console.log("Products.js: Pliktrologw");
+    function formSubmit() {
         query = $("#searchBar").val();
         if (query != "") {
             byName = 1;
@@ -147,9 +145,20 @@ $(document).ready(function(){
         else byName = 0;
             
         getProducts(0,12,sort,order,status,1,byName);
-           
+        
+    }
+    
+    $("#bar").submit(function() {
+        console.log("prices.js: Form submit");
+        formSubmit();
+
+        return false;
     });
 
+    $("#searchBtn").on('click', function() {
+        console.log("prices.js: Search Button clicked");
+        formSubmit();
+    });
     // event listener order
     // order change reload products
     $("#order").change(function() {
@@ -178,7 +187,7 @@ $(document).ready(function(){
     // when scroll down load more products
     // trigger getProducts earlier
     $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() > getDocHeight() - 100) {
+        if($(window).scrollTop() + $(window).height() == getDocHeight()) {
             start = start+11;
             getProducts(start,12,sort,order,status,0,byName);
         }

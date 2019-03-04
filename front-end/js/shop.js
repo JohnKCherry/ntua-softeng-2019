@@ -56,7 +56,6 @@ $(document).ready(function(){
             document.title = obj.name;
             $("#shopName").text(obj.name);
             $("#shopLocation").append("<span class=\"h6\">"+obj.address+"</span>");
-            $("#shopType").append("<span class=\"h6\">"+obj.category+"</span>");
             tags = obj.tags;
             $.each(tags, function(key,value){
                 $("#tags").append("<li class=\"list-inline-item\"><span class=\"text-sm-left\">" + value + "</span><span id=\"" + key + "\" class=\"close\" style = \"visibility: hidden\">&times;</span></li>");
@@ -183,7 +182,6 @@ $(document).ready(function(){
 		$("#newTag").css("visibility","visible");
 		$("#shopLocation").replaceWith($('<div class=\"h4\">Physical Location: <input type=\"text\" id=\"shopLocation\" class="h4" value="' + Location + '"></input></div>'));
 		$("#shopName").replaceWith($('<div class=\"h2\">Name: <input type=\"text\" id=\"shopName\"  class="h4" value="' + name + '"></input></div>'));
-		$("#shopType").replaceWith($('<div class=\"h4\">Categories: <input type=\"text\" id=\"shopType\" class="h4" value="' + type + '"></input></div>'));
 		
 		
 		
@@ -234,13 +232,7 @@ $(document).ready(function(){
         });
     }
 		
-	
-	
-
     setMap(shopID);
-
-
-
 
 
 });

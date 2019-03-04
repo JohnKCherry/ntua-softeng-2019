@@ -169,17 +169,22 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
             <div class="row justify-content-center h1">Prices</div>
             <div id = "container" class="content main container-fluid p-3 mb-2 bg-light text-dark">
 
-                <div class="row">
-                    <div class="col">
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="">Product Tags | Shop Tags</span>
+                <form id="bars">
+                    <div class="form-group row">
+                        <div class="col">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="">Product Tags | Shop Tags</span>
+                                </div>
+                                <input id="productBar" type="search" class="form-control" placeholder="Κατηγορίες Προιόντος" aria-label="Κατηγορίες προιόντος" aria-describedby="basic-addon1">
+                                <input id="shopBar" type="search" class="form-control" placeholder="Κατηγορίες καταστήματος" aria-label="Κατηγορίες καταστήματος" aria-describedby="basic-addon1">
                             </div>
-                            <input id="productBar" type="search" class="form-control" placeholder="Κατηγορίες Προιόντος" aria-label="Κατηγορίες προιόντος" aria-describedby="basic-addon1">
-                            <input id="shopBar" type="search" class="form-control" placeholder="Κατηγορίες καταστήματος" aria-label="Κατηγορίες καταστήματος" aria-describedby="basic-addon1">
+                        </div>
+                        <div class="input-group-prepend">
+                            <button id="searchBtn" type="submit" class="input-group-text">Search</button>
                         </div>
                     </div>
-                </div>
+                </form>
                 <!-- Filters -->
                 <div class="row">
                     <div class="col dropdown">

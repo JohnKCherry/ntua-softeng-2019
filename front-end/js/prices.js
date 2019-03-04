@@ -64,17 +64,19 @@ $(document).ready(function(){
     var count = "";
 
     // get prices and shops
-    function getPrices(reload){
+    function getPrices(reload,loading){
 
-        $("#loadMe").modal({
-            backdrop: "static", //remove ability to close modal with click
-            keyboard: false, //remove option to close with keyboard
-            show: true //Display loader!
-        });
-        //set timeout to be sure that will be hide
-        setTimeout(function() {
-            $("#loadMe").modal("hide");
-        }, 2500);
+        if (loading) {
+            $("#loadMe").modal({
+                backdrop: "static", //remove ability to close modal with click
+                keyboard: false, //remove option to close with keyboard
+                show: true //Display loader!
+            });
+            //set timeout to be sure that will be hide
+            setTimeout(function() {
+                $("#loadMe").modal("hide");
+            }, 2500);
+        }
         if(reload) $(".card-deck").empty();
         $("#errorFilters").empty();
         $("#errorDeck").empty();
@@ -217,33 +219,39 @@ $(document).ready(function(){
         });
 
     }
-    //listener search bar send request
-    $("#productBar").on("keyup", function() {
-        console.log("Prices.js: Pliktrologw productTag");
+
+    function formSubmit() {
         var tmp = $("#productBar").val();
         if (tmp != "") {
             productTags = tmp.split(' ').join('+');
-            console.log(productTags);
+            console.log("prices.js: productTags: " +productTags);
         }
-        getPrices(1);
-
-    });
-    //listener search bar send request
-    $("#shopBar").on("keyup", function() {
-        console.log("Prices.js: Pliktrologw shopTag");
-        var tmp = $("#shopBar").val();
+        tmp = $("#shopBar").val();
         if (tmp != "") {
             shopTags = tmp.split(' ').join('+');
-            console.log(shopTags);
+            console.log("prices.js: shopTags: " +shopTags);
         }
-        getPrices(1);
+        getPrices(1,1);
+    }
 
+
+    $("#bars").submit(function() {
+        console.log("prices.js: Form submit");
+        formSubmit();
+
+        return false;
     });
+
+    $("#searchBtn").on('click', function() {
+        console.log("prices.js: Search Button clicked");
+        formSubmit();
+    });
+    
     // event listener order
     // order change reload products
     $("#order").change(function() {
         order = $("#order").val();
-        getPrices(1);
+        getPrices(1,1);
     });
 
 
@@ -260,7 +268,7 @@ $(document).ready(function(){
         console.log("Form submitted");
         // update shops and reload map
 
-        getPrices(1);
+        getPrices(1,1);
 
         return false;   //prevent default
     });
@@ -283,7 +291,7 @@ $(document).ready(function(){
     })
     // run...
 
-    getPrices(1);
+    getPrices(1,1);
 
     // get shop by id
     // input shop id
