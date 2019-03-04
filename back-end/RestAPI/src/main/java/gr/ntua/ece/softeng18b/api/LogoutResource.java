@@ -3,7 +3,6 @@ package gr.ntua.ece.softeng18b.api;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.restlet.data.Form;
 import org.restlet.data.Header;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
@@ -21,8 +20,8 @@ public class LogoutResource extends ServerResource {
 	@Override
     protected Representation post(Representation entity) throws ResourceException {
     	//Create a new restlet form
-        @SuppressWarnings("unused")
-		Form form = new Form(entity);
+        //@SuppressWarnings("unused")
+		//Form form = new Form(entity);
         //Read the parameters
         
         //authorization of user

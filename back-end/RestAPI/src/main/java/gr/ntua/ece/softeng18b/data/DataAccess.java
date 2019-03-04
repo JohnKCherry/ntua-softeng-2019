@@ -668,27 +668,32 @@ public class DataAccess {
     	String username = user_token.substring(64);
     	user_token.substring(0,64);
     	int tr = 10;
-    	while(isLogedIn(user_token)) { // in case the same salt is generated again...
-    		// Try to logout
-    		tr--;
-    		if(tr==0) throw new RuntimeException("Logout of Price failed");
-    		PreparedStatementCreator psc = new PreparedStatementCreator() {
-                @Override
-                public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-                    PreparedStatement ps = con.prepareStatement(
-                            "UPDATE users SET salt = ? WHERE username = ? ",
-                            Statement.RETURN_GENERATED_KEYS
-                    );
-                    ps.setLong(1, Integer.toUnsignedLong(ThreadLocalRandom.current().nextInt(1000, 10000000 + 1)));
-                    ps.setString(2, username);
-                    return ps;
-                }
-            };
-            GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-            int cnt = jdbcTemplate.update(psc, keyHolder);
+    	try {
+			while(isLogedIn(user_token)) { // in case the same salt is generated again...
+				// Try to logout
+				tr--;
+				if(tr==0) throw new RuntimeException("Logout of Price failed");
+				PreparedStatementCreator psc = new PreparedStatementCreator() {
+			        @Override
+			        public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+			            PreparedStatement ps = con.prepareStatement(
+			                    "UPDATE users SET salt = ? WHERE username = ? ",
+			                    Statement.RETURN_GENERATED_KEYS
+			            );
+			            ps.setLong(1, Integer.toUnsignedLong(ThreadLocalRandom.current().nextInt(1000, 10000000 + 1)));
+			            ps.setString(2, username);
+			            return ps;
+			        }
+			    };
+			    GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+			    int cnt = jdbcTemplate.update(psc, keyHolder);
 
-            if (cnt != 1) throw new RuntimeException("Logout of Price failed");
-    	}
+			    if (cnt != 1) throw new RuntimeException("Logout of Price failed");
+			}
+		} catch (ResourceException e) {
+			return;
+			//e.printStackTrace();
+		}
     }
     
     @SuppressWarnings("unchecked")
