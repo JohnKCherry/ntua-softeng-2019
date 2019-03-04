@@ -182,9 +182,26 @@ $(document).ready(function(){
 		$("#newTag").css("visibility","visible");
 		$("#shopLocation").replaceWith($('<div class=\"h4\">Physical Location: <input type=\"text\" id=\"shopLocation\" class="h4" value="' + Location + '"></input></div>'));
 		$("#shopName").replaceWith($('<div class=\"h2\">Name: <input type=\"text\" id=\"shopName\"  class="h4" value="' + name + '"></input></div>'));
+		$("#Map1").replaceWith('<div id =\"inpMap\"> </div>');
+		$("#inpMap").load("inputMap.html");
+		$("#coo").css("visibility","visible");
+		
+		console.log(lat);
 		
 		
 		
+		
+		
+		
+	});
+	
+	$("#coordinates").click(function(){
+	    mamap.setView([lat,lng])
+		if (marker1) mamap.removeLayer(marker1)
+            marker1 = L.marker([lat, lng]).addTo(mamap)
+                .bindPopup(lat + " " + lng);
+		$("#lat1").val(lat);
+		$("#lng1").val(lng);
 		
 	});
 	
@@ -195,11 +212,12 @@ $(document).ready(function(){
 		obj.name = $("#shopName").val();
 		console.log($("#shopName").val());
         console.log(obj.name);
-		obj.lat=lat;
-		obj.lng=lng;
-		obj.address = Location;
+		obj.lat=$("#lat1").val();
+		obj.lng=$("#lng1").val();
+		obj.address = $("#shopLocation").val();
 		obj.tags = tags.join(", ");
 		console.log(obj);
+		
 		sendUpdate(obj);
 	});
 	
