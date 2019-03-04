@@ -5,8 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta http-equiv="Pragma" content="no-cache">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title></title>
-        <link rel="stylesheet" href="css/product.css" />
+        <title>FAQ</title>
         <link rel="stylesheet" href="css/login.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="style/t_style.css" />
         <!-- Latest compiled and minified CSS -->
@@ -32,7 +31,6 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
         <script type="text/javascript" src="js/login.js"></script>
         <script type="text/javascript" src="js/logout.js"></script>
         <script type="text/javascript" src="js/header.js"></script>
-        <script type="text/javascript" src="js/product.js"></script>
     </head>
     <body>
 
@@ -167,100 +165,158 @@ integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcx
         <main>
         <div class="main">
             <div id = "container" class="content main container-fluid p-3 mb-2 bg-light text-dark">
+                <div class="row justify-content-center h1">FAQ</div>
+                <div id="accordion">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    1. Πώς μπορώ να δημιουργήσω λογαριασμό στο Crow Tech;
+                                </button>
+                            </h5>
+                        </div>
 
-                <!-- Image, Name, Descripion and Tags -->
-
-                <div class="row justify-content-start ">
-                    <div class="col-md-3 ">
-                        <img id="productImage" alt="Product Image" class="rounded border">
-                    </div>
-                    <div class="col">
-                        <div id="productName" class="h2"><u>Name of Product</u></div>
-                        <i id="fav" class="far fa-heart" title="Add to favourites" data-val="0" style="visibility:hidden"></i>
-                        <hr class="col-xs-12">
-                        <p id="productDescription"><u class="h5">Description</u>: </p>
-                        <hr class="col-xs-12">
-                        <p id="productCategory"><u class="h5">Category</u>: </p>
-                        <span id="tagsHeader"><u class="h5">Tags</u>:
-                            <ul id="tags" class="list-inline">
-                            </ul>
-                        </span>
-                        <input type="text" id="newTag" name="newTag" style="visibility: hidden" placeholder="One word or more with spaces" size="24">
-                        <button id="addButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-plus"></span> Add Tag</button>
-                        <div id="errorTag" class="h7" style="color:red; display: none"></div>
-                        <p class="h5"><u>Lowest Price</u>: <span id="lowestPrice" class="font-weight-bold"></span></p>
-                    </div>
-                </div>
-
-                <hr class="col-xs-12">
-
-                <div class="col-sm-1">
-                    <button id="editButton" type="button" class="btn btn-outline-secondary" style="visibility:hidden"><span class="fas fa-pencil-alt"></span> Edit</button>
-                    <div class="btn-group" role="group">
-                        <button id="applyButton" type="button" class="btn btn-outline-success" style="visibility:hidden">Apply</button>
-                        <button id="cancelButton" type="button" class="btn btn-outline-danger" style="visibility:hidden">Cancel</button>
-                    </div>
-                </div>
-
-                <!-- Filters -->
-                <div id="filterDiv" class="float-left" style="display:absolute">
-                    <p class="h2">Filters</p>
-                    <hr class="col-xs-12">
-                    <form id="filters">
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                            <label class="col-form-label"> Ταξινόμηση με βάση </label>
-                            <select id="sort" class="form-control form-control-sm">
-                                <option value="1">Τιμή</option>
-                                <option value="2">Ημέρα καταχώρησης</option>
-                                <option value="3">Απόσταση</option>
-                            </select>
-                            </li>
-                            <li class="list-group-item">
-                            <label class="col-form-label" for="distance">Distance: <span class="h6" id="geoDist"></span></label>
-                            <input type="range" name="distance" id="distance" value="" min="0" max="100">
-                            </li>
-                            <li class="list-group-item">
-                            <label class="col-form-label">Date From</label>
-                            <input class="form-control" type="date" value="" id="dateFrom">
-                            </li>
-                            <li class="list-group-item">
-                            <label class="col-form-label">Date To</label>
-                            <input class="form-control" type="date" value="" id="dateTo">
-                            </li>
-                        </ul>
-                        <input type="submit" value="Refresh Filters">
-                        <div id="errorFilters" class="h7" style="color:red"></div>
-                    </form>
-                </div>
-
-                <!-- Shops -->
-                <div class="row justify-content-start" id="shopsRow">
-                    <div id="shopsDiv" class="col">
-                        <p class="h2">Shops</p>
-                        <hr class="col-xs-12">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <select id="order" class="form-control form-control-sm" >
-                                    <option value="1">Αύξουσα Ταξινόμηση</option>
-                                    <option value="2">Φθίνουσα Ταξινόμηση</option>
-                                </select>
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                Για να δημιουργήσεις λογαριασμό στο Crow Tech πάτα <a href="signup.html">εδώ</a>.
                             </div>
                         </div>
-                        <ul id="shops" class="list-group"></ul>
                     </div>
-                </div>
-
-                <hr class="col-xs-12">
-
-                <!-- Map Row -->
-
-                <div class="row" id="mapRow">
-                    <div class="col">
-                        <div class="h2">Map</div>
-                        <div id="map">
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    2. Πώς μπορώ να δώ τιμές για διάφορα προϊόντα;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                Μπορείς να επισκεφθείς την σελίδα <a href="prices.html">Show Prices</a> για να δείς όλες τις τιμές των προϊόντων χρησιμοποιώντας τα κατάλληλα φίλτρα. Επίσης μπορείς να ψάξεις για ένα συγκεκριμένο προϊόν χρησιμοποιώντας την μπάρα αναζήτησης που βρίσκεται είτε στο <a href="Homepage.html">Home Page</a> επιλέγοντας από την λίστα "Products" είτε χρησιμοποιώντας την μπάρα αναζήτησης που βρίσκεται στην κορυφή κάθε σελίδας του Crow Tech.
+                            </div>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    3. Πως αναζητώ τιμές κοντά μου;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                                Για να βρείς τις κοντινότερες τιμές επισκέφθεσε την σελίδα <a href="prices.html">Show Prices</a> και επιλέγεις από το μενού "Φίλτρα" ταξινόμηση με βάση απόσταση, επιλέγεις την επθυμητή μέγιστη απόσταση και επιλέγεις "Refresh Filters". Απαραίτητο είναι να επιτρέψεις από τον browser να λάβει την τοποθεσία σου.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    4. Πως προσθέτω/ενημερώνω μια τιμή για ένα προϊόν;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                            <div class="card-body">
+                                Για να προσθέσεις ή ενημερώσεις μια τιμή για ένα προϊόν επισκέφθεσαι την σελίδα <a href="addprice.html">Add Price</a> και συμπληρώνεις την φόρμα.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFive">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    5. Πώς προσθέτω ένα καινούργιο προϊόν;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                            <div class="card-body">
+                                Για να προσθέσεις ένα καινούργιο προϊόν επισκέφθεσαι την σελίδα <a href="add-product.html">Add Product</a> και συμπληρώνεςι την φόρμα.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingSix">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                    6. Πώς προσθέτω ένα καινούργιο κατάστημα;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordion">
+                            <div class="card-body">
+                                Για να προσθέσεις ένα καινούργιο κατάστημα επισκέφθεσαι την σελίδα <a href="add-shop.html">Add Shop</a> και συμπληρώνεςι την φόρμα.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingSeven">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                    7. Πως ψάχνω τιμές περιγράφοντας χαρακτηριστικά του προϊόντος/καταστήματος;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordion">
+                            <div class="card-body">
+                                Για να ψάξεις τιμές προϊόντων με βάση τα χαρακτηριστικά τους επισκέφθεσαι την σελίδα <a href="prices.html">Show Prices</a> και πληκτρολογείς στις μπάρες αναζήτησεις τα χαρακτηριστικά του προϊόντος ή/και καταστήματος.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingEight">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+                                    8. Τις πληροφορίες του προφίλ μου ποιός μπορεί να τις δεί;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordion">
+                            <div class="card-body">
+                                Κάνεις δεν έχει πρόσβαση στις πληροφορίες του προφίλ σου παρά μόνο εσύ.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingNine">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                    9. Ποιός μπορεί να δεί την λίστα με τα αγαπημένα μου;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion">
+                            <div class="card-body">
+                                Κάνεις δεν έχει πρόσβαση στην λίστα με τα αγαπημένα σου παρά μόνο εσύ.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template card list element
+
+                    Πρεπει να βαλεις σαν id στο class="card-header" οπως τα προηγουμενα
+                    επειτα να βαλεις στο button τα data-target και aria-controls
+                    και τελος στο class="collpase" που μπαινει το κειμενο το id και το aria-labelledly
+
+                    <div class="card">
+                        <div class="card-header" id="headingTen">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+                                    10. Ερώτηση;
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-parent="#accordion">
+                            <div class="card-body">
+                                Απάντηση.
+                            </div>
+                        </div>
+                    </div>
+                    -->
+
                 </div>
             </div>
         </div>
