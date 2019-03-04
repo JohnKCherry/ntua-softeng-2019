@@ -1,0 +1,39 @@
+<div id="inputMap" style="visibility:visible" >
+			   <p style="visibility:hidden">11111</p>
+			   <p style="visibility:hidden">2222</p>
+			   
+				
+				<div id="mapid1" style="width: 800px; height: 400px;"></div>
+    
+	
+	<form>
+        <input type="text" name="lat1" id="lat1" value="37.9778" oninput="changeMap1()"></input>
+        <input type="text" name="lng1" id="lng1" value="23.7821" oninput="changeMap1()"></input>
+    </form>
+    <script>
+        var mamap = L.map('mapid1').setView([37.9778779, 23.7821791], 13);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 18, attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' + '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>', id: 'mapbox.streets' }).addTo(mamap);
+        var marker1 = L.marker([37.9778779, 23.7821791]).addTo(mamap)
+            .bindPopup("Choose Your Coordinations").openPopup();
+        mamap.on('click',function (e) {
+                var coord1 = e.latlng.toString().split(',');
+                var lat1 = coord1[0].split('(');
+                var lng1 = coord1[1].split(')');
+                //console.log("You clicked the map at latitude: " + lat[1] + " and longitude:" + lng[0]);
+                document.getElementById('lat1').value = lat1[1]
+                document.getElementById('lng1').value = lng1[0]
+                if (marker1) mamap.removeLayer(marker1)
+                marker1 = L.marker([lat1[1], lng1[0]]).addTo(mamap)
+                    .bindPopup(lat1[1] + " " + lng1[0]);
+            });
+        function changeMap1() {
+            var x1 = document.getElementById('lat1').value
+            var y1 = document.getElementById('lng1').value
+            mamap.setView([x1,y1])
+            if (marker1) mamap.removeLayer(marker1)
+            marker1 = L.marker([x1, y1]).addTo(mamap)
+                .bindPopup(x1 + " " + y1);
+        }
+    </script>
+	</div>
