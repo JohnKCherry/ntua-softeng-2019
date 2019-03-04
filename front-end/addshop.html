@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gimme a new shop</title>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="style/t_style.css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <!-- Bootstrap's own Javascript plugins -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <!-- Latest Leaflet library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+"sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+        crossorigin=""></script>
+
+    <script type="text/javascript" src="js/login.js"></script>
+    <script type="text/javascript" src="js/logout.js"></script>
+    <script type="text/javascript" src="js/header.js"></script>
+
+    <script type="text/javascript" src="js/add-shop.js"></script>
+
+    <style>
+        #map {
+            height: 360px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <div id="headerContainer">
+
+<div class="header">
+
+                <nav class="navbar">
+                    <div class="container-fluid">
+
+                        <ul class="nav nav-pills">
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">
+                                <img src="imgs/menu.svg" alt="menu"></img>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="products.html">Show Products</a>
+                                <a class="dropdown-item" href="shops.html">Show Shops</a>
+                                <a class="dropdown-item" href="#">Show Prices</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">About Us</a>
+                                <a class="dropdown-item" href="#">Contact Us</a>
+                            </div>
+                            </li>
+                            <li class="nav-item">
+                            <a class="navbar-brand nav-link" href="#/home">
+                                <img src="imgs/crow.svg" alt="logo, crow"> Crow Tech
+                            </a>
+                            </li>
+
+                            <li class="nav-item">
+                            <form class="form-inline" id="search-bar">
+                                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+                            </li>
+                        </ul>
+                        <ul class="nav nav-pills">
+                            <li class="nav-item dropdown" id="add-button">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false" style="margin-top: -3px">
+
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fas fa-plus"></i>
+                                    <p style="font-size:20px;display:inline-block; margin-left: 10px"> Add</p>
+
+                                </button>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Product</a>
+                                <a class="dropdown-item" href="#">Shop</a>
+                                <a class="dropdown-item" href="addprice.html">Price</a>
+                            </div>
+
+                            </li>
+                            <li class="nav nav-link" id='fav-button'>
+                            <a href="favourites.html">
+                                <button class="btn btn-default" type="submit">
+                                    <i style="color:red" class="fas fa-heart">Favourite</i>
+                                </button>
+                            </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fas fa-user-tie">
+                                        <p id="username-l" style="display:inline-block; margin-left: 10px"></p>
+                                    </i>
+                                </button>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item">
+                                    <p id="username"></p>
+                                </a>
+                                <div class="dropdown-divider"></div>
+
+                                <div id="login">
+                                    <a class="dropdown-item" href="#loginModal" data-toggle="modal">Sign In</a>
+                                    <a class="dropdown-item" href="signup.html">Sign-Up</a>
+                                </div>
+                                <a class="dropdown-item" role="button" id="logout">Log-Out</a>
+                            </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </nav>
+                <!-- Login Form popup -->
+                <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-target="#loginModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Login</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                                    <div class="form-group">
+                                        <a href="signup.html" class="float-right">New user?</a>
+                                        <label for="username">Username</label>
+                                        <input type="text" class="form-control form-control-lg" name="usernameLog" id="usernameLog" required="">
+                                        <div class="invalid-feedback">Oops, you missed this one.</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" class="form-control form-control-lg" id="password" required="" autocomplete="new-password">
+                                        <div class="invalid-feedback">Enter your password too!</div>
+                                    </div>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
+                                        <!--  <label class="custom-control-label" for="rememberMe">Remember me on this computer</label>-->
+                                    </div>
+                                    <div class="form-group py-4">
+                                        <button class="btn btn-outline-secondary btn-lg" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                        <button type="submit" class="btn btn-success btn-lg float-right" id="btnLogin">Login</button>
+                                    </div>
+                                    <div class="modal-header">
+                                        <h3 id="error" style="color:red"></h3>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+</div>
+
+    </div> <!-- Header Container -->
+
+
+    <!-- Main Body Container -->
+<main>
+<div class="main">
+<div class="content">
+
+    <div id="mainContainer" class="container-fluid">
+
+    <div class="row">
+        <div id="loginFormColumn" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <h3>Create an entry for a new product</h3>
+            <form id="formAddShop" class="form" role="form" autocomplete="off" method="POST">
+                <div class="form-group">
+                    <label for="shopname">Shop Name</label>
+                    <input type="text" class="form-control form-control-lg" name="productname" id="shopName" required="">
+                    <div class="invalid-feedback">Sorry, shop name is required</div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Address</label>
+                    <input type="text" class="form-control form-control-lg" name="description" id="shopAddress" required="">
+                    <div class="invalid-feedback">Address is required</div>
+                </div>
+                <div class="form-group">
+                    <label>Tags</label>
+                    <input type="text" class="form-control form-control-lg" id="shopTags" required="">
+                    <div class="invalid-feedback">You must provide us with some tags!</div>
+                </div>
+                <div class="form-group py-4">
+                    <button type="submit" class="btn btn-success btn-lg float-center" id="btnAddShop">Submit</button>
+                </div>
+                <div class="modal-header">
+                    <h3 id="error" style="color:red"></h3>
+                </div>
+           </form>
+        </div>
+        <div id="mapColumn" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="h2">Map</div>
+            <div id="map"></div>
+        </div>
+    </div>
+
+    </div>
+
+</div>
+</div>
+</main>
+
+    <script>
+        var mapSelectShopLocation = L.map("map").setView([37.9778779, 23.7821791], 14);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(mapSelectShopLocation);
+
+        var mylatlng;
+        var popup = L.popup();
+        function onMapClick(event) {
+            popup.setLatLng(event.latlng).setContent("You clicked here. If you are certain, please click Submit!").openOn(mapSelectShopLocation);
+            mylatlng = event.latlng;
+        }
+        mapSelectShopLocation.on('click', onMapClick);
+    </script>
+
+    <!-- Footer -->
+
+    <div id="footerContainer">
+
+    <footer>
+        <div id="footer" class="footer">
+            <div class="about_us_section">
+                <div style="height:auto; font-size: auto">
+                    <a href="#">
+                        <h3>About Us</h3>
+                    </a>
+                    <p>
+                    And those were the days of roses
+                    Poetry and prose and Martha
+                    All I had was you and all you had was me
+                    There was no tomorrows
+                    We'd packed away our sorrows
+                    And we saved them for a rainy day.
+                    </p>
+                </div>
+            </div>
+            <div class="faq_section">
+                <a href="#" style="color : darkgray;">F.A.Q.</a>
+            </div>
+            <div class="contact_section">
+                <a href="#" style="">Contact</a>
+            </div>
+            <div class="map_section">
+                <div id="mapid"></div>
+                <div class="address">
+                    <p>
+                    National Technical University of Athens
+                    School of Electrical and Computer Engineering<br>
+                    9, Iroon Polytechniou St
+                    Athens, Postal Code 157 80
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+var mymap = L.map('mapid').setView([37.9778779, 23.7821791], 24);
+console.log(mymap);
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 15,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox.streets'
+}).addTo(mymap);
+    </script>
+
+    </div> <!-- footerContainer -->
+
+</body>
+
+</html>
