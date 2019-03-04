@@ -171,12 +171,19 @@ public class PricesResource extends ServerResource {
         Boolean geo = false;
         String have_clause= "";
        	if(geoDistAttr!= null && geoLngAttr != null && geoLatAttr != null && !geoDistAttr.isEmpty() && !geoLngAttr.isEmpty()) {
-            Double check_lng = toDouble(geoLngAttr);
-            Double check_lat = toDouble(geoLatAttr);
-            Double check_dist = toDouble(geoDistAttr);
+            Double check_lng	= null;
+			Double check_lat	= null;
+			Double check_dist	= null;
+			try {
+				check_lng = toDouble(geoLngAttr);
+				check_lat = toDouble(geoLatAttr);
+				check_dist = toDouble(geoDistAttr);
+			} catch (NumberFormatException e) {
+				throw new ResourceException(400,"Bad geospatial values");
+			}
             if(check_lng == null || check_lat == null || check_dist == null) throw new ResourceException(400,"Bad parameters for lng or lat");
         	have_clause += " HAVING shopDist <="+ geoDistAttr;
-        	shopDist = "(6371 * acos (cos ( radians("+geoLngAttr +") )* cos( radians( ST_Y(shops.location) ) )* cos( radians( ST_X(shops.location) ) - radians("+geoLatAttr+") )+ sin ( radians("+geoLngAttr+") )* sin( radians( ST_Y(shops.location) ) ))) as shopDist";
+        	shopDist = "(6371 * acos (cos ( radians("+geoLatAttr +") )* cos( radians( ST_Y(shops.location) ) )* cos( radians( "+geoLngAttr +" ) - radians( ST_X(shops.location)) )+ sin ( radians("+geoLatAttr+") )* sin( radians( ST_Y(shops.location) ) ))) as shopDist";
         	geo = true;
         }
        	else if((geoDistAttr!= null && !geoDistAttr.isEmpty()) || (geoLngAttr != null && !geoLngAttr.isEmpty()) || (geoLatAttr != null && !geoLatAttr.isEmpty())) throw new ResourceException(400,"Not enough parameters for geolocation processing");
