@@ -45,6 +45,7 @@ public class ProfileResource extends ServerResource {
         String email = form.getFirstValue("email");
         String password = form.getFirstValue("password");
         String authorization = form.getFirstValue("authorization");
+        String user_id = form.getFirstValue("user_id");
         
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
@@ -75,7 +76,7 @@ public class ProfileResource extends ServerResource {
         	update_parameter = "password";
         	value = password;
         }
-        else if(authorization != null && password==null && fullname == null && username == null && email == null) {
+        else if(user_id != null && authorization != null && password==null && fullname == null && username == null && email == null) {
             update_parameter = "authorization";
             if(!dataAccess.isAdmin(user_token)) throw new ResourceException(401,"You are not authorized for this action"); 
             value = authorization;
@@ -85,7 +86,7 @@ public class ProfileResource extends ServerResource {
 
         try{
         	try{
-        		dataAccess.patchUser(user_token, update_parameter,value);
+        		dataAccess.patchUser(user_token, update_parameter,value, user_id);
         	}
         	catch(Exception e) {
         	}

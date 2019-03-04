@@ -717,7 +717,7 @@ public class DataAccess {
         else throw new ResourceException(404, "User not found");
     }
     
-    public User patchUser(String user_token, String update_parameter, String value) {
+    public User patchUser(String user_token, String update_parameter, String value, String user_id) {
 		
     	PreparedStatementCreator psc = new PreparedStatementCreator() {
     		String username = user_token.substring(64);
@@ -725,7 +725,7 @@ public class DataAccess {
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
-                        "UPDATE users SET "+update_parameter+"=? where username =?",
+                        "UPDATE users SET "+update_parameter+"=? where ?",
                         Statement.RETURN_GENERATED_KEYS
                 );
                 if(!update_parameter.equals("password")) {
@@ -734,7 +734,12 @@ public class DataAccess {
                 else {
                 	ps.setString(1, getSHA(value));
                 }
-                ps.setString(2, username);
+                if(!update_parameter.equals("password")) {
+                	ps.setString(2, "username ="+username);
+                }
+                else {
+                	ps.setString(2, "id ="+user_id);
+                }
                 return ps;
             }
         };
