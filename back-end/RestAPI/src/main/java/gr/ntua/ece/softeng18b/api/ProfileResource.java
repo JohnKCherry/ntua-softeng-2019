@@ -14,7 +14,7 @@ import gr.ntua.ece.softeng18b.data.DataAccess;
 import gr.ntua.ece.softeng18b.data.model.User;
 
 public class ProfileResource extends ServerResource {
-
+	
 	private final DataAccess dataAccess = Configuration.getInstance().getDataAccess();
 
     @SuppressWarnings({ "unused", "unchecked" })
@@ -23,7 +23,7 @@ public class ProfileResource extends ServerResource {
     	//Create a new restlet form
         Form form = new Form(entity);
         //Read the parameters
-
+        
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
         String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
@@ -32,7 +32,7 @@ public class ProfileResource extends ServerResource {
         User profile = dataAccess.getUserProfile(user_token);
         return new JsonUserRepresentation(profile);
     }
-
+    
     @SuppressWarnings("unchecked")
 	@Override
     protected Representation patch(Representation entity) throws ResourceException {
@@ -44,11 +44,11 @@ public class ProfileResource extends ServerResource {
         String username = form.getFirstValue("username");
         String email = form.getFirstValue("email");
         String password = form.getFirstValue("password");
-
+        
         //authorization of user
         Series<Header> headers = (Series<Header>) getRequestAttributes().get("org.restlet.http.headers");
         String user_token = headers.getFirstValue("X-OBSERVATORY-AUTH");
-
+        
         if(user_token == null || user_token.isEmpty()) throw new ResourceException(401, "Not loged in");
         if(!dataAccess.isLogedIn(user_token))throw new ResourceException(401, "Not loged in");
         //validate the values (in the general case)
@@ -74,8 +74,8 @@ public class ProfileResource extends ServerResource {
         	update_parameter = "password";
         	value = password;
         }
-
-        else  throw new ResourceException(400,"None or more than one values where found for patch request!");
+        
+        else  throw new ResourceException(400,"None or more than one values where found for patch request!");        
 
         try{
         	try{
@@ -87,8 +87,8 @@ public class ProfileResource extends ServerResource {
         }
         catch(org.springframework.dao.DuplicateKeyException e){
         	throw new ResourceException(400,"Input parameters have conflict with another product in the database");
-        }
+        } 
 
-
+        
     }
 }
