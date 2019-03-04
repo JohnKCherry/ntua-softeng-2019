@@ -1,0 +1,35 @@
+
+
+.content{
+    background: mintcream;
+    text-align: center;
+}
+
+
+table, th, td {
+  border: 1px solid ;
+  border-collapse: collapse;
+  width: 500px;
+}
+th, td {
+  padding: 5px;
+  text-align: left;
+}
+
+th {
+    text-align: center;
+    color: black;
+    background: lightgray;
+}
+
+td {
+    text-align: center;
+    color: gray;
+    background: #efefef ;
+}
+
+.container{
+    float: left;
+    padding-top : 30px;
+    padding-left: 35%;
+}

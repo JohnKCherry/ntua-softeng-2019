@@ -25,6 +25,7 @@ public class RestfulApp extends Application {
     	router.attach("/numberofactiveshops", NumberOfActiveShopsResource.class);
     	router.attach("/numberofwithdrawnshops", NumberOfWithdrawnShopsResource.class);
     	router.attach("/numberofactiveproducts", NumberOfActiveProductsResource.class);
+        router.attach("/numberofwithdrawnproducts", NumberOfWithdrawnProductsResource.class);
     	router.attach("/numberofactiveprices", NumberOfActivePricesResource.class);
     	router.attach("/numberofpastprices", NumberOfPastPricesResource.class);
     	router.attach("/users", UsersResource.class);

@@ -872,6 +872,17 @@ public class DataAccess {
            }
        }
     @SuppressWarnings("unchecked")
+    public Optional<Value> getNumberOfWithdrawnProducts() {
+        List<Value> numberofwithproducts = jdbcTemplate.query("select COUNT(id) as value from products where withdrawn=1", new ValueRowMapper());
+
+        if (numberofwithproducts.size() == 1)  {
+            return Optional.of(numberofwithproducts.get(0));
+        }
+        else {
+            return Optional.empty();
+        }
+    }
+    @SuppressWarnings("unchecked")
    	public Optional<Value> getNumberOfActivePrices() {
            List<Value> numberofactiveprices = jdbcTemplate.query("SELECT COUNT(product_id) as value from prices where dateTo > CURRENT_DATE", new ValueRowMapper());
 
@@ -931,5 +942,6 @@ public class DataAccess {
             return null; 
         } 
     }
+
 
 }
