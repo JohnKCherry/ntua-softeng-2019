@@ -726,28 +726,28 @@ public class DataAccess {
     public User patchUser(String user_token, String update_parameter, String value, String user_id) {
     	String username = user_token.substring(64);
     	System.out.println(">>>>>>>>>"+username);
-		System.out.println(">>>>>>>>>"+update_parameter);
-		System.out.println(">>>>>>>>>"+value);
+		//System.out.println(">>>>>>>>>"+update_parameter);
+		//System.out.println(">>>>>>>>>"+value);
 		String upd;
 		String whr;
 		if(user_id != null) System.out.println(user_id);
 		 if(!update_parameter.equals("password")) {
          	upd = value;
-         	System.out.println(">>>>>>>>>>>Not password");
+         	//System.out.println(">>>>>>>>>>>Not password");
          }
          else {
          	upd= getSHA(value);
-         	System.out.println(">>>>>>>>>>>Password");
+         	//System.out.println(">>>>>>>>>>>Password");
 
          }
 		 if(!update_parameter.equals("authorization")) {
          	whr = " username ='"+ username+"'";
-         	System.out.println(">>>>>>>>>>>Not authorization");
+         	//System.out.println(">>>>>>>>>>>Not authorization");
 
          }
          else {
          	whr = " id ="+user_id +" ";
-         	System.out.println(">>>>>>>>>>>Authorization");
+         	//System.out.println(">>>>>>>>>>>Authorization");
 
          }
     	PreparedStatementCreator psc = new PreparedStatementCreator() {
