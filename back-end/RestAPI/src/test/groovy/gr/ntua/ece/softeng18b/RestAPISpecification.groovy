@@ -64,10 +64,10 @@ import groovy.json.JsonSlurper
 	def "User adds product_test_1" (){
 		when:
 		Product sent = new Product(
-			name: "Προϊόν 1",
-			description: "Περιγραφή Προϊόντος 1",
-			category: "Πρώτη Κατηγορία Προϊόντος",
-			tags: ["Υπολογιστές"]
+			name: "Product 1",
+			description: "Product Description 1",
+			category: "First Categorty",
+			tags: ["Computers"]
 		)
 		Product returned = api.postProduct(sent, RestCallFormat.JSON)
 		test_products_id[0] = returned.id;

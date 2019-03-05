@@ -75,7 +75,7 @@ $(document).ready(function(){
             //set timeout to be sure that will be hide
             setTimeout(function() {
                 $("#loadMe").modal("hide");
-            }, 1000);
+            }, 1500);
         }
         if(reload) $(".card-deck").empty();
         $("#errorFilters").empty();
@@ -172,7 +172,7 @@ $(document).ready(function(){
                         var hash = shopName.split(' ').join('');
                         hash += productID;
                         getProduct(productID);        
-                        $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\""+productImage+"\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"product.html?id="+productID+"\" class=\"card-title\">"+productName+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#"+hash+"\">Price</a><div id=\""+hash+"\" class=\"\" aria-expanded=\"true\"><p class=\"card-text\">"+productPrice+"&euro;</p></div><button id=\"modalBtn\" data-product=\""+productID+"\" data-shop=\""+shopID+"\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#mapModal\">Show Map</button></div><div class=\"card-footer\"><a href=\"shop.html?=id="+shopID+"\"<small class=\"text-muted\">"+shopName+"</small></a></div></div></div></div>"
+                        $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"text-center\"><img class=\"card-img-top img-fluid\" src=\""+productImage+"\" alt=\"Product Image\"></div><div class=\"card-body\"><a href=\"product.html?id="+productID+"\" class=\"card-title\">"+productName+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#"+hash+"\">Price</a><div id=\""+hash+"\" class=\"\" aria-expanded=\"true\"><p class=\"card-text\">"+productPrice+"&euro;</p></div><button id=\"modalBtn\" data-product=\""+productID+"\" data-shop=\""+shopID+"\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#mapModal\">Show Map</button></div><div class=\"card-footer\"><a href=\"shop.html?=id="+shopID+"\"<small class=\"text-muted\">"+shopName+"</small></a></div></div></div></div>"
                                               );
                     });
                     // if (reload == 1) setMap(shopsID);
@@ -231,6 +231,7 @@ $(document).ready(function(){
             shopTags = tmp.split(' ').join('+');
             console.log("prices.js: shopTags: " +shopTags);
         }
+        console.log("prices.js: Kalw thn get products eimai form submit");
         getPrices(1,1);
     }
 
@@ -242,15 +243,12 @@ $(document).ready(function(){
         return false;
     });
 
-    $("#searchBtn").on('click', function() {
-        console.log("prices.js: Search Button clicked");
-        formSubmit();
-    });
     
     // event listener order
     // order change reload products
     $("#order").change(function() {
         order = $("#order").val();
+        console.log("prices.js: Kalw thn get products eimai order change");
         getPrices(1,1);
     });
 
@@ -268,6 +266,7 @@ $(document).ready(function(){
         console.log("Form submitted");
         // update shops and reload map
 
+        console.log("prices.js: Kalw thn get products eimai filters refresh");
         getPrices(1,1);
 
         return false;   //prevent default
@@ -291,6 +290,7 @@ $(document).ready(function(){
     })
     // run...
 
+    console.log("prices.js: Kalw thn get products eimai init run");
     getPrices(1,1);
 
     // get shop by id

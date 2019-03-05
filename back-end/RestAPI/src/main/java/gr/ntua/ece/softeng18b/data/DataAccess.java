@@ -724,28 +724,43 @@ public class DataAccess {
     }
     
     public User patchUser(String user_token, String update_parameter, String value, String user_id) {
-		
+    	String username = user_token.substring(64);
+    	System.out.println(">>>>>>>>>"+username);
+		//System.out.println(">>>>>>>>>"+update_parameter);
+		//System.out.println(">>>>>>>>>"+value);
+		String upd;
+		String whr;
+		if(user_id != null) System.out.println(user_id);
+		 if(!update_parameter.equals("password")) {
+         	upd = value;
+         	//System.out.println(">>>>>>>>>>>Not password");
+         }
+         else {
+         	upd= getSHA(value);
+         	//System.out.println(">>>>>>>>>>>Password");
+
+         }
+		 if(!update_parameter.equals("authorization")) {
+         	whr = " username ='"+ username+"'";
+         	//System.out.println(">>>>>>>>>>>Not authorization");
+
+         }
+         else {
+         	whr = " id ="+user_id +" ";
+         	//System.out.println(">>>>>>>>>>>Authorization");
+
+         }
     	PreparedStatementCreator psc = new PreparedStatementCreator() {
-    		String username = user_token.substring(64);
     		
             @Override
             public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
                 PreparedStatement ps = con.prepareStatement(
-                        "UPDATE users SET "+update_parameter+"=? where ?",
+                        "UPDATE users SET  "+update_parameter+"='" + upd+ "' where "+whr,
                         Statement.RETURN_GENERATED_KEYS
                 );
-                if(!update_parameter.equals("password")) {
-                	ps.setString(1, value);
-                }
-                else {
-                	ps.setString(1, getSHA(value));
-                }
-                if(!update_parameter.equals("authorization")) {
-                	ps.setString(2, "username ="+username);
-                }
-                else {
-                	ps.setString(2, "id ="+user_id);
-                }
+               
+                
+               
                 return ps;
             }
         };

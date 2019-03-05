@@ -19,12 +19,14 @@ $(document).ready(function(){
     function addShop(event) {
         event.preventDefault();
         event.stopPropagation();
+        $("#successForm").empty();
+        $("#error").empty();
         var form = $("#formAddShop");
 
         /*if (!form[0].checkValidity()) {event.preventDefault(); event.stopPropagation();}    // ?????*/
-        if (mylatlng === undefined) {
-            $("error").text("you did not give me a location!");
-            alert("gimme a point!");
+        if ($("#shopName").val()=="" || $("#shopAddress").val()=="" || $("#shopTags").val() || mylatlng === undefined) {
+            $("#error").text("Please fill all form");
+            alert("Please fill all form and select location");
             return;
         }
             
@@ -49,9 +51,11 @@ $(document).ready(function(){
             },
             success: function(data) {
                 console.log("Success adding shop!");
+                $("#successForm").text("Shop Added");
+                window.location.href="Homepage.html";
             },
             error: function() {
-                $("error").text("Ajax error to add a new shop");
+                $("#error").text("Ajax error to add a new shop");
                 console.log("add-shop.js : Error to add new shop");
             }
         });

@@ -33,3 +33,9 @@ td {
     padding-top : 30px;
     padding-left: 35%;
 }
+
+.hidden_button{
+  display: inline-block;
+  color:darkgray;
+  background-color: lightgray;
+}

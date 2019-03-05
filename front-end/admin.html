@@ -2,7 +2,7 @@
 <html lang="en">
 
     <head>
-        <title>Crow Tech</title>
+        <title>Admin Dashboard</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -14,7 +14,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
-        <link rel="stylesheet" type="text/css" media="screen" href="style/t_style.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/t_style.css" />
 
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/login.js"></script>
@@ -241,8 +241,28 @@
 
                         </table>
                     </div>
-                </div>
 
+                    <div class="container">
+                        <button class="user-button" onclick="openUser()" id="open-user-form-button"> Users </button><br><br>
+                        <div id="user-form" style="display:none;">
+                            <div id="selectType">
+                            <input type="button" class="hidden_button" id="Administrator" value="Hide Administrators">
+                            <input type="button" class="hidden_button" id="Active_Crowdsourcer" value="Hide Active Crowdsources">
+                            <input type="button" class="hidden_button" id="Blocked_Crowdsourcer" value="Hide Banned Users"><br><br>
+                        </div>
+                            <table id="user-list" style="margin-bottom:30px">
+                                <tr>
+                                    <th colspan='3'>Users</th>
+                                </tr>
+                                <tr>
+                                    <th> Username </th>
+                                    <th> Fullname </th>
+                                    <th> Status </th>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 

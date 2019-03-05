@@ -114,7 +114,7 @@ $(document).ready(function(){
                     }
                     else imgSrc="imgs/product.jpg";
                     // create html
-                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\""+imgSrc+"\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"product.html?id="+id+"\" class=\"card-title\">"+name+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#collapse"+id+"\">Read Description</a><div id=\"collapse"+id+"\" class=\"collapse\"><p class=\"card-text\">"+description+"</p></div></div><div class=\"card-footer\"><small class=\"text-muted\">"+category+"</small></div></div></div></div>"
+                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"text-center\"><img class=\"card-img-top img-fluid\" src=\""+imgSrc+"\" alt=\"Product Image\"></div><div class=\"card-body\"><a href=\"product.html?id="+id+"\" class=\"card-title\">"+name+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#collapse"+id+"\">Read Description</a><div id=\"collapse"+id+"\" class=\"collapse\"><p class=\"card-text\">"+description+"</p></div></div><div class=\"card-footer\"><small class=\"text-muted\">"+category+"</small></div></div></div></div>"
                                           );
                 });
                 $("#loadMe").modal("hide");
@@ -131,6 +131,8 @@ $(document).ready(function(){
     if ( query == null) byName = 0;
     else byName = 1;
 
+
+    console.log("products.js: Kalw thn get products eimai init run");
     getProducts(start,count,sort,order,statusStr,1,byName);
 
 
@@ -144,25 +146,23 @@ $(document).ready(function(){
         }
         else byName = 0;
             
+        console.log("products.js: Kalw thn get products eimai form submit");
         getProducts(0,12,sort,order,status,1,byName);
         
     }
     
     $("#bar").submit(function() {
-        console.log("prices.js: Form submit");
+        console.log("products.js: Form submit");
         formSubmit();
 
         return false;
     });
 
-    $("#searchBtn").on('click', function() {
-        console.log("prices.js: Search Button clicked");
-        formSubmit();
-    });
     // event listener order
     // order change reload products
     $("#order").change(function() {
         order = $("#order").val();
+        console.log("products.js: Kalw thn get products eimai order change");
         getProducts(0,12,sort,order,status,1,byName);
     });
 
@@ -170,6 +170,7 @@ $(document).ready(function(){
     $("#status").change(function() {
         status = $("#status").val();
         console.log("Status changed to " + status);
+        console.log("products.js: Kalw thn get products eimai status");
         getProducts(0,12,sort,order,status,1);
     });
 
@@ -189,6 +190,7 @@ $(document).ready(function(){
     $(window).scroll(function() {
         if($(window).scrollTop() + $(window).height() == getDocHeight()) {
             start = start+11;
+            console.log("products.js: scroll window");
             getProducts(start,12,sort,order,status,0,byName);
         }
     });
