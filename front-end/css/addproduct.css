@@ -1,0 +1,7 @@
+input[type="file"] {
+    white-space: normal;
+    word-wrap: break-word;
+    width: 400px;
+    overflow: auto;
+}
+
