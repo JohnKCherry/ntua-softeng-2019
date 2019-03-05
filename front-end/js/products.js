@@ -131,6 +131,8 @@ $(document).ready(function(){
     if ( query == null) byName = 0;
     else byName = 1;
 
+
+    console.log("products.js: Kalw thn get products eimai init run");
     getProducts(start,count,sort,order,statusStr,1,byName);
 
 
@@ -144,25 +146,23 @@ $(document).ready(function(){
         }
         else byName = 0;
             
+        console.log("products.js: Kalw thn get products eimai form submit");
         getProducts(0,12,sort,order,status,1,byName);
         
     }
     
     $("#bar").submit(function() {
-        console.log("prices.js: Form submit");
+        console.log("products.js: Form submit");
         formSubmit();
 
         return false;
     });
 
-    $("#searchBtn").on('click', function() {
-        console.log("prices.js: Search Button clicked");
-        formSubmit();
-    });
     // event listener order
     // order change reload products
     $("#order").change(function() {
         order = $("#order").val();
+        console.log("products.js: Kalw thn get products eimai order change");
         getProducts(0,12,sort,order,status,1,byName);
     });
 
@@ -170,6 +170,7 @@ $(document).ready(function(){
     $("#status").change(function() {
         status = $("#status").val();
         console.log("Status changed to " + status);
+        console.log("products.js: Kalw thn get products eimai status");
         getProducts(0,12,sort,order,status,1);
     });
 
@@ -189,6 +190,7 @@ $(document).ready(function(){
     $(window).scroll(function() {
         if($(window).scrollTop() + $(window).height() == getDocHeight()) {
             start = start+11;
+            console.log("products.js: scroll window");
             getProducts(start,12,sort,order,status,0,byName);
         }
     });

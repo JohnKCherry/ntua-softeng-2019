@@ -150,16 +150,12 @@ $(document).ready(function(){
     }
     
     $("#bar").submit(function() {
-        console.log("prices.js: Form submit");
+        console.log("shops.js: Form submit");
         formSubmit();
 
         return false;
     });
 
-    $("#searchBtn").on('click', function() {
-        console.log("prices.js: Search Button clicked");
-        formSubmit();
-    });
     // event listener order
     // order change reload products
     $("#order").change(function() {
