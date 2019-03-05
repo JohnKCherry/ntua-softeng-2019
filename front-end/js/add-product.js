@@ -20,6 +20,9 @@ $(document).ready(function(){
 
     function addProduct(event) {
 
+        $("#successForm").empty();
+        $("#error").empty();
+        
         event.preventDefault()
         event.stopPropagation()
         //Fetch form to apply custom Bootstrap validation
@@ -39,6 +42,11 @@ $(document).ready(function(){
         console.log($("#tags").val());
         console.log($("#productImage").val());
 
+        if ($("#productname").val() == "" || $("#description").val()=="" || $("#category").val()=="" || $("#tags").val()=="") {
+            $("#error").text("Please fill all form");
+            alert("Please fill all form");
+            return false;
+        }
         if ($("#productImage").val() == "") {
             $.ajax({
                 type: "POST",
@@ -49,6 +57,8 @@ $(document).ready(function(){
                 success: function(data){
                     console.log("Success");
                     var obj = JSON.parse(JSON.stringify(data));
+                    $("#successForm").text("Product Added");
+                    window.location.href="Homepage.html";
                 },
                 error: function(){
                     $("error").text("Error to add a new product");
@@ -76,9 +86,11 @@ $(document).ready(function(){
                 success: function(data){
                     console.log("Success");
                     var obj = JSON.parse(JSON.stringify(data));
+                    $("#successForm").text("Product Added");
+                    window.location.href="Homepage.html";
                 },
                 error: function(){
-                    $("error").text("Error to add a new product with image");
+                    $("#error").text("Error to add a new product with image");
                     $("#formAddProduct")[0].reset();
                     console.log("add-product.js : Error to add product with image");
                 }
