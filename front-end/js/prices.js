@@ -231,6 +231,7 @@ $(document).ready(function(){
             shopTags = tmp.split(' ').join('+');
             console.log("prices.js: shopTags: " +shopTags);
         }
+        console.log("prices.js: Kalw thn get products eimai form submit");
         getPrices(1,1);
     }
 
@@ -242,15 +243,12 @@ $(document).ready(function(){
         return false;
     });
 
-    $("#searchBtn").on('click', function() {
-        console.log("prices.js: Search Button clicked");
-        formSubmit();
-    });
     
     // event listener order
     // order change reload products
     $("#order").change(function() {
         order = $("#order").val();
+        console.log("prices.js: Kalw thn get products eimai order change");
         getPrices(1,1);
     });
 
@@ -268,6 +266,7 @@ $(document).ready(function(){
         console.log("Form submitted");
         // update shops and reload map
 
+        console.log("prices.js: Kalw thn get products eimai filters refresh");
         getPrices(1,1);
 
         return false;   //prevent default
@@ -291,6 +290,7 @@ $(document).ready(function(){
     })
     // run...
 
+    console.log("prices.js: Kalw thn get products eimai init run");
     getPrices(1,1);
 
     // get shop by id
