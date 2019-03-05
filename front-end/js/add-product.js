@@ -13,9 +13,9 @@ $(document).ready(function(){
     }
     else {
         console.log("Not connected.");
-        $("#loginBtn").trigger('click"');
-        $("#submitBtn").prop('disabled',true);
-        $("#errorForm").text("You need to login to add new product");
+        $("#loginBtn").trigger('click');
+        $("#btnAddProduct").prop('disabled',true);
+        $("#error").text("You need to login to add new product");
     }
 
     function addProduct(event) {
@@ -58,17 +58,21 @@ $(document).ready(function(){
             });
         }
         else {
+            var data = new FormData();
+            data.append("name", $("#productname").val());
+            data.append("description", $("#description").val());
+            data.append("category", $("#category").val());
+            data.append("tags", $("#tags").val());
+            data.append("fileToUpload", jQuery("#productImage")[0].files[0]);
             $.ajax({
                 type: "POST",
                 dataType: "json",
                 headers: {'X-OBSERVATORY-AUTH' : token},
                 url: "https://localhost:8765/observatory/api/productswithimage",
-                data:{ "name":$("#productname").val(), 
-                       "description":$("#description").val(),
-                       "category":$("#category").val(), 
-                       "tags":$("#tags").val(),
-                       "fileToUpload":$("#productImage").val()
-                    },
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
                 success: function(data){
                     console.log("Success");
                     var obj = JSON.parse(JSON.stringify(data));
@@ -85,13 +89,13 @@ $(document).ready(function(){
     $("#formAddProduct").keypress(function(event) {
         if(event.keyCode==13) {
             console.log("Enter");
-            addproduct(event);
+            addProduct(event);
         }
     });
 
     $("#btnAddProduct").click(function(event) {
 
-        addproduct(event);
+        addProduct(event);
     });
 
 });

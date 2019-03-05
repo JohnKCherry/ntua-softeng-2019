@@ -266,7 +266,7 @@
 
 
                     <div class="container">
-                        <button class="popper product-button" onclick="showProducts()" id="open-product-form-button"> Shops </button><br><br>
+                        <button class="popper product-button" onclick="showProducts()" id="open-product-form-button"> Products </button><br><br>
                         <div id="product-form" style="display:none; post">
                             <table id="products-list" style="margin-bottom:30px" style="display:none">
                                 <tr>
@@ -276,6 +276,24 @@
                                     <th> Id </th>
                                     <th> Name </th>
                                     <th> Category </th>
+                                    <th> Withdrawn</th>
+                                    <th></th>
+                                </tr>
+                            </table>
+                        </div>
+                </div>
+
+                <div class="container">
+                        <button class="popper shop-button" onclick="showShops()" id="open-shop-form-button"> Shops </button><br><br>
+                        <div id="shop-form" style="display:none; post">
+                            <table id="shop-list" style="margin-bottom:30px" style="display:none">
+                                <tr>
+                                    <th colspan='5'>Shop</th>
+                                </tr>
+                                <tr>
+                                    <th> Id </th>
+                                    <th> Name </th>
+                                    <th> Address </th>
                                     <th> Withdrawn</th>
                                     <th></th>
                                 </tr>

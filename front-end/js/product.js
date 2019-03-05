@@ -19,8 +19,6 @@ var token = window.sessionStorage.getItem("token");
 $(document).ready(function(){
     console.log("ready");
 
-    $('#header').load("./header.html");
-    $('#footer').load("./footer.html")
     if ($(window).innerWidth()<=660) {
         $("#filterDiv").removeClass("float-left");
         //   $("#filterDiv").addClass("float-sm-left");
@@ -301,12 +299,28 @@ $(document).ready(function(){
             map.off();
             map.remove();
         }
-        //        if( gps[0] == "") map = L.map('map').setView([37.592724,23.441932], 8);
-        //      else map = L.map('map').setView([gps[0],gps[1]], 12);
 
+        if (gps == null || gps[0] == "" || gps[1] == "") {
+            // to pio panw magazi
+            map = L.map('map').setView([locations[0][1],locations[0][2]], 12);
+        }else {
+            map = L.map('map', {
+                center: [gps[0], gps[1]],
+                zoom: 12
+            });
+            var greenIcon = new L.Icon({
+                iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+            var you = new L.marker([gps[0],gps[1]],{icon: greenIcon})
+            .bindPopup("You");
 
-        // to pio panw magazi
-        map = L.map('map').setView([locations[0][1],locations[0][2]], 12);
+            markersLayer.addLayer(you); 
+        }
 
 
 
@@ -340,12 +354,15 @@ $(document).ready(function(){
 
 
     // event listener distance input
-    $("#distance").on("change mousemove", function() {
+    $("#distance").on("mousemove", function() {
         $("#geoDist").html($("#distance").val() + " Khm");
     });
 
     $("#distance").on("change", function() {
-        findLocation();
+        if($("#sort").val()==3) {
+            findLocation();
+            shopsUpdate(1);
+        }
     });
     // event listener submit form
     $("#filters").submit(function() {

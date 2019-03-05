@@ -59,16 +59,27 @@ $(document).ready(function(){
     function getShops(start,count,sort,order,status,clear,byName) {
         // get shops general info
 
+
+
+        $("#loadMe").modal({
+            backdrop: "static", //remove ability to close modal with click
+            keyboard: false, //remove option to close with keyboard
+            show: true //Display loader!
+        });
+        //set timeout to be sure that will be hide
+        setTimeout(function() {
+            $("#loadMe").modal("hide");
+        }, 1000);
         if(clear) $(".card-deck").empty();
         orderStr = (order==1) ? "ASC" : "DESC";
         if (status == 1) statusStr = "ALL";
         else if (status == 2) statusStr = "ACTIVE";
-        
+
         // if byName == 1 get request to endpoint productsbynamewithimage
         // else productswithimage
         if (byName == 1) endpoint = "shopsbyname/"+ret;
         else endpoint = "shops";
-        
+
         var url = "https://localhost:8765/observatory/api/"+endpoint+"?start="+start
         +"&count="+count
         +"&sort="+sort
@@ -90,11 +101,13 @@ $(document).ready(function(){
                     name = value.name;
                     address = value.address;
                     // create html
-                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\"imgs/shop.png\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"shop.html?id="+id+"\" class=\"card-title\">"+name+"</a><p class=\"card-text\">"+address+"</p></div></div></div>");
+                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"text-center\"><img class=\"card-img-top img-fluid\" src=\"imgs/shop.png\" alt=\"Shop Image\"></div><div class=\"card-body\"><a href=\"shop.html?id="+id+"\" class=\"card-title\">"+name+"</a><p class=\"card-text\">"+address+"</p></div></div></div>");
                 });
+                $("#loadMe").modal("hide");
             },
             error: function(){
                 console.log("Shops.js : Error get shops !!");
+                $("#loadMe").modal("hide");
                 $("body").load("404.html");
                 return false;
             }
@@ -103,9 +116,10 @@ $(document).ready(function(){
 
     if ( query == null) byName = 0;
     else byName = 1;
-    
+
     getShops(start,count,sort,order,statusStr,1,byName);
-    
+
+    /*
     //listener search bar send request
     $("#searchBar").on("keyup", function() {
         console.log("Products.js: Pliktrologw");
@@ -117,11 +131,35 @@ $(document).ready(function(){
             console.log(ret);
         }
         else byName = 0;
+
+        getShops(0,12,sort,order,status,1,byName);
+
+    });
+*/
+    function formSubmit() {
+        query = $("#searchBar").val();
+        if (query != "") {
+            byName = 1;
+            ret = query.split(' ').join('+');
+            console.log(ret);
+        }
+        else byName = 0;
             
         getShops(0,12,sort,order,status,1,byName);
-           
+        
+    }
+    
+    $("#bar").submit(function() {
+        console.log("prices.js: Form submit");
+        formSubmit();
+
+        return false;
     });
 
+    $("#searchBtn").on('click', function() {
+        console.log("prices.js: Search Button clicked");
+        formSubmit();
+    });
     // event listener order
     // order change reload products
     $("#order").change(function() {
@@ -133,7 +171,7 @@ $(document).ready(function(){
     $("#status").change(function() {
         status = $("#status").val();
         console.log("Status changed to " + status);
-       // getShops(0,12,sort,order,status,1);
+        getShops(0,12,sort,order,status,1);
     });
 
     // function take height for all browsers
@@ -149,7 +187,7 @@ $(document).ready(function(){
     // when scroll down load more products
     // trigger getProducts earlier
     $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() > getDocHeight() - 100) {
+        if($(window).scrollTop() + $(window).height() == getDocHeight()) {
             start = start+11;
             getShops(start,12,sort,order,status,0,byName);
         }

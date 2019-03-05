@@ -5,6 +5,13 @@ $(document).ready(function(){
     console.log("Signup ready");
     function signup(event) {
 
+        $("#error").empty();
+        if ($("#username").val()==""||$("#fullname").val()==""||$("#email").val()==""||$("#password").val()=="") {
+            console.log("Fill all");
+            $("#error").text("Please fill all inputs");
+           // return false;
+        }
+
         event.preventDefault()
         event.stopPropagation()
         //Fetch form to apply custom Bootstrap validation
@@ -18,6 +25,12 @@ $(document).ready(function(){
         console.log("PErasan ton elegxo");
         //  event.preventDefault()
         form.addClass('was-validated');
+
+        if( !validateEmail($("#email").val())) {
+            console.log("Wrong email");
+            $("#error").text("Wrong email");
+            return false;
+        }
 
         console.log($("#fullname").val());
         console.log($("#username").val());
@@ -35,14 +48,12 @@ $(document).ready(function(){
                 console.log(token);
                 window.sessionStorage.setItem("token", token);
                 window.sessionStorage.setItem("username", $("#username").val());
-                var b = window.sessionStorage.getItem("token");
-                console.log(b);
                 $(".modal-dialog").hide();
-                $("#signup").html("<div class=\"h2\">Welcome "+$("#username").val()+"</div>");
+            //    $("#signup").html("<div class=\"h2\">Welcome "+$("#username").val()+"</div>");
                 //redirect after 1 seconds
                 $("body").load("success.html");
                 window.setTimeout(function() {
-                    window.location.href = 'product.html';}, 1000);
+                    window.location.href = 'Homepage.html';}, 1000);
                     //window.location.href="product.html";
             },
             error: function(){
@@ -65,4 +76,8 @@ $(document).ready(function(){
         signup(event);
     });
 
+     function validateEmail($email) {
+  var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+  return emailReg.test( $email );
+}
 });
