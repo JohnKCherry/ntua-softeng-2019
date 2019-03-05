@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
         <link rel="stylesheet" type="text/css" media="screen" href="css/t_style.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="css/cards.css" />
 
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/login.js"></script>
@@ -223,6 +224,7 @@
                             </g>
                         </svg>
                     </div>
+
                     <form id="homeForm">
                         <div class="form-group">
                             <input id="homeBar" type="text" value="Search" placeholder="Search">
@@ -241,6 +243,31 @@
 
             </div>
 
+            <div class="row mb-5 justify-content-center">
+                <!-- Button trigger modal -->
+                <button id="newsFeedBtn" type="button" class="btn btn-warning" data-toggle="modal" data-target="#newsFeed">
+                    Latest Prices
+                </button>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="newsFeed" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Latest Prices</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="modalBody" class="modal-body">
+                        </div>
+                        <h3 id="errorModal" style="color:red"></h3>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         </main>
 

@@ -114,7 +114,7 @@ $(document).ready(function(){
                     }
                     else imgSrc="imgs/product.jpg";
                     // create html
-                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\""+imgSrc+"\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"product.html?id="+id+"\" class=\"card-title\">"+name+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#collapse"+id+"\">Read Description</a><div id=\"collapse"+id+"\" class=\"collapse\"><p class=\"card-text\">"+description+"</p></div></div><div class=\"card-footer\"><small class=\"text-muted\">"+category+"</small></div></div></div></div>"
+                    $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"text-center\"><img class=\"card-img-top img-fluid\" src=\""+imgSrc+"\" alt=\"Product Image\"></div><div class=\"card-body\"><a href=\"product.html?id="+id+"\" class=\"card-title\">"+name+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#collapse"+id+"\">Read Description</a><div id=\"collapse"+id+"\" class=\"collapse\"><p class=\"card-text\">"+description+"</p></div></div><div class=\"card-footer\"><small class=\"text-muted\">"+category+"</small></div></div></div></div>"
                                           );
                 });
                 $("#loadMe").modal("hide");
