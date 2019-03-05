@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Contact</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/x-icon" href="imgs/crow.svg" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="style/t_style.css" />
+
+
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            //$('#header').load("./header.html");
+            $('#footer').load('./footer.html')
+        });
+
+    </script>
+
+</head>
+
+
+<body style="background:black">
+    <header>
+            <div class="header">
+
+                    <script>
+                        $(document).ready(function () {
+                    if (document.title == "Crow Tech") {
+                        document.getElementById("search-bar").style.display = "none";
+                    }
+                    var token = window.sessionStorage.getItem("token");
+                    var username = "";
+                    if (token == null) {
+                        username = "Guest";
+                        document.getElementById("logout").style.display = "none";
+                        document.getElementById("fav-button").style.display = "none";
+                        document.getElementById("add-button").style.display = "none";
+                    }
+                    else {
+                        username = window.sessionStorage.getItem("username");
+                        document.getElementById("login").style.display = "none";
+                    }
+                    document.getElementById("username").textContent = username;
+                    document.getElementById("username-l").textContent = username;
+                })
+                    </script>
+                
+                
+                
+                                <nav class="navbar">
+                                    <div class="container-fluid">
+                
+                                        <ul class="nav nav-pills">
+                                            <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                <img src="imgs/menu.svg" alt="menu">
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="products.html">Show Products</a>
+                                                <a class="dropdown-item" href="shops.html">Show Shops</a>
+                                                <a class="dropdown-item" href="#">Show Prices</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">About Us</a>
+                                                <a class="dropdown-item" href="#">Contact Us</a>
+                                            </div>
+                                            </li>
+                                            <li class="nav-item">
+                                            <a class="navbar-brand nav-link" href="#/home">
+                                                <img src="imgs/crow.svg" alt="logo, crow"> Crow Tech
+                                            </a>
+                                            </li>
+                
+                                            <li class="nav-item">
+                                            <form class="form-inline" id="search-bar">
+                                                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                                                <button class="btn btn-default" type="submit">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </form>
+                                            </li>
+                                        </ul>
+                                        <ul class="nav nav-pills">
+                                            <li class="nav-item dropdown" id="add-button">
+                                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                                aria-haspopup="true" aria-expanded="false" style="margin-top: -3px">
+                
+                                                <button class="btn btn-default" type="submit">
+                                                    <i class="fas fa-plus"></i>
+                                                    <p style="font-size:20px;display:inline-block; margin-left: 10px"> Add</p>
+                
+                                                </button>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="#">Product</a>
+                                                <a class="dropdown-item" href="#">Shop</a>
+                                                <a class="dropdown-item" href="addprice.html">Price</a>
+                                            </div>
+                
+                                            </li>
+                                            <li class="nav nav-link" id='fav-button'>
+                                            <a href="favourites.html">
+                                                <button class="btn btn-default" type="submit">
+                                                    <i style="color:red" class="fas fa-heart">Favourite</i>
+                                                </button>
+                                            </a>
+                                            </li>
+                                            <li class="nav-item dropdown">
+                                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                <button class="btn btn-default" type="submit">
+                                                    <i class="fas fa-user-tie">
+                                                        <p id="username-l" style="display:inline-block; margin-left: 10px"></p>
+                                                    </i>
+                                                </button>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item">
+                                                    <p id="username"></p>
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                
+                                                <div id="login">
+                                                    <a class="dropdown-item" href="#loginModal" data-toggle="modal">Sign In</a>
+                                                    <a class="dropdown-item" href="signup.html">Sign-Up</a>
+                                                </div>
+                                                <a class="dropdown-item" role="button" id="logout">Log-Out</a>
+                                            </div>
+                                            </li>
+                
+                                        </ul>
+                                    </div>
+                                </nav>
+                                <!-- Login Form popup -->
+                                <div id="loginModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-target="#loginModal">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3>Login</h3>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                                                    <div class="form-group">
+                                                        <a href="signup.html" class="float-right">New user?</a>
+                                                        <label for="username">Username</label>
+                                                        <input type="text" class="form-control form-control-lg" name="usernameLog" id="usernameLog" required="">
+                                                        <div class="invalid-feedback">Oops, you missed this one.</div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Password</label>
+                                                        <input type="password" class="form-control form-control-lg" id="password" required="" autocomplete="new-password">
+                                                        <div class="invalid-feedback">Enter your password too!</div>
+                                                    </div>
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="rememberMe">
+                                                        <!--  <label class="custom-control-label" for="rememberMe">Remember me on this computer</label>-->
+                                                    </div>
+                                                    <div class="form-group py-4">
+                                                        <button class="btn btn-outline-secondary btn-lg" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                                                        <button type="submit" class="btn btn-success btn-lg float-right" id="btnLogin">Login</button>
+                                                    </div>
+                                                    <div class="modal-header">
+                                                        <h3 id="error" style="color:red"></h3>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                
+                </div>
+    </header>
+
+    <main>
+        <div class="main">
+            <div class="content" style="background: gray">
+                <div class="container" style="text-align:left; background-color: grey; width: 60%; height: 750px;">
+                    <div id="contact-form" style="padding-top: 50px; padding-left: 300px">
+
+                        <select id="gender">
+                            <option value="male">Mr.</option>
+                            <option value="female">Mrs.</option>
+                            <option value="other"></option>
+                        </select>
+                        <br>
+
+                    <label for="fname">First Name:  </label><br>
+                        <input type="text" id="fname" name="fname" placeholder="Firstname" style="width: 400px;"
+                            required>
+                        <br>
+
+                        <label for="lname">Last Name:   </label><br>
+                        <input type="text" id="lname" name="fname" placeholder="Lastname" style="width: 400px;"
+                            required>
+                        <br>
+
+                        <label for="company">Company:   </label><br>
+                        <input type="text" id="company" name="company" style="width: 400px;" placeholder="Company">
+                        <br>
+
+                        <label for="email">E-mail:  </label><br>
+                        <input type="email" id="mail" name="mail" placeholder="example@mail.com" style="width: 400px;"
+                            required>
+                        <br>
+
+                        <label for="contact">Select a Choice:   </label><br>
+                        <select id="choice" name="choice">
+                            <option value="contact">Contact</option>
+                            <option value="complain">Compliance</option>
+                            <option value="report">Report Problem</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <br>
+
+                        <label for="subject">Subject:   </label><br>
+                        <input type="text" id="subject" name="subject" placeholder="Subject" style="width: 400px;"
+                            required>
+                        <br>
+
+                        <label for="Message" style="text-align: left">Message:</label><br>
+                        <textarea id="message" name="message" placeholder="Write your message.."
+                            style="height:300px;width: 400px"></textarea>
+
+                        <br>
+
+                        <input id="submit_btn" type="submit" value="Submit" onclick="sendMessage()">
+
+                    </div>
+
+                    <script>
+
+                        function sendMessage(){
+                            
+                            var obj = new Object();
+                            obj.fullname = $(fname).val() + " " + $(lname).val();
+                            obj.company = $(company).val();
+                            obj.mail = $(mail).val();
+                            obj.choice = $(choice).val();
+                            obj.subject = $(subject).val();
+                            obj.message = $(message).val();
+
+                            console.log(obj);
+
+                            $.ajax({
+                                type: "POST",
+                                dataType: "json",
+                                url: "https://localhost:8765/observatory/api/contact",
+                                data: obj,
+                                success: function(data){
+                                    console.log("Success");
+                                    var obj = JSON.parse(JSON.stringify(data));
+                                    
+                                },
+                                error: function(){
+                                    $("error").text("Error to add a new product");
+                                    console.log("contact.js : Error");
+                                }
+                            });
+                        }
+                            
+
+                    </script>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div id="footer">
+
+        </div>
+    </footer>
+</body>
+
+</html>
