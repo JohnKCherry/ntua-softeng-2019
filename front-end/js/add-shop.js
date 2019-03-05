@@ -24,9 +24,9 @@ $(document).ready(function(){
         var form = $("#formAddShop");
 
         /*if (!form[0].checkValidity()) {event.preventDefault(); event.stopPropagation();}    // ?????*/
-        if ($("#shopName").val()=="" || $("#shopAddress").val()=="" || $("#shopTags").val() || mylatlng === undefined) {
+        if ($("#shopName").val()=="" || $("#shopAddress").val()=="" || $("#shopTags").val()=="" || mylatlng === undefined) {
             $("#error").text("Please fill all form");
-            alert("Please fill all form and select location");
+            alert("Please fill all forms and select location");
             return;
         }
             

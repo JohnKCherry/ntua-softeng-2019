@@ -44,7 +44,7 @@ $(document).ready(function(){
 
         if ($("#productname").val() == "" || $("#description").val()=="" || $("#category").val()=="" || $("#tags").val()=="") {
             $("#error").text("Please fill all form");
-            alert("Please fill all form");
+            alert("Please fill all forms");
             return false;
         }
         if ($("#productImage").val() == "") {
