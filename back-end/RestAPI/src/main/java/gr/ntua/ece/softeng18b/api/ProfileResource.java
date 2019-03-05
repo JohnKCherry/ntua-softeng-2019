@@ -85,11 +85,7 @@ public class ProfileResource extends ServerResource {
         else  throw new ResourceException(400,"None or more than one values where found for patch request!");        
 
         try{
-        	try{
-        		dataAccess.patchUser(user_token, update_parameter,value, user_id);
-        	}
-        	catch(Exception e) {
-        	}
+        	dataAccess.patchUser(user_token, update_parameter,value, user_id);
         	return new JsonMessageRepresentation("OK");
         }
         catch(org.springframework.dao.DuplicateKeyException e){
