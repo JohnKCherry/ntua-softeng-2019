@@ -1,13 +1,13 @@
+var token = window.sessionStorage.getItem("token");
+$(document).ready(function(){
+    console.log("ready");
+
 var id;
 var fullname;
 var username;
 var email;
 var word;
 var word1
-var token = window.sessionStorage.getItem("token");
-$(document).ready(function(){
-    console.log("ready");
-
     console.log("Token ");
     console.log(token);
 
@@ -85,7 +85,7 @@ $(document).ready(function(){
     $("#applyButton").click(function(){
         console.log("Update Fullname");
         fullname = $("#pName2").val();
-        console.log(fullname);
+        console.log("to allazw se "+fullname);
         updateFullName(fullname);
 
     });
@@ -143,6 +143,7 @@ $(document).ready(function(){
                 var obj = JSON.parse(JSON.stringify(data));
                 console.log(obj);
                 location.reload();
+
             },
             error: function(err){
                 console.log(err);

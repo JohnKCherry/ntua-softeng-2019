@@ -75,7 +75,7 @@ $(document).ready(function(){
             //set timeout to be sure that will be hide
             setTimeout(function() {
                 $("#loadMe").modal("hide");
-            }, 1000);
+            }, 1500);
         }
         if(reload) $(".card-deck").empty();
         $("#errorFilters").empty();
@@ -172,7 +172,7 @@ $(document).ready(function(){
                         var hash = shopName.split(' ').join('');
                         hash += productID;
                         getProduct(productID);        
-                        $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><img class=\"card-img-top img-fluid\" src=\""+productImage+"\" alt=\"Product Image\"><div class=\"card-body\"><a href=\"product.html?id="+productID+"\" class=\"card-title\">"+productName+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#"+hash+"\">Price</a><div id=\""+hash+"\" class=\"\" aria-expanded=\"true\"><p class=\"card-text\">"+productPrice+"&euro;</p></div><button id=\"modalBtn\" data-product=\""+productID+"\" data-shop=\""+shopID+"\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#mapModal\">Show Map</button></div><div class=\"card-footer\"><a href=\"shop.html?=id="+shopID+"\"<small class=\"text-muted\">"+shopName+"</small></a></div></div></div></div>"
+                        $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"text-center\"><img class=\"card-img-top img-fluid\" src=\""+productImage+"\" alt=\"Product Image\"></div><div class=\"card-body\"><a href=\"product.html?id="+productID+"\" class=\"card-title\">"+productName+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#"+hash+"\">Price</a><div id=\""+hash+"\" class=\"\" aria-expanded=\"true\"><p class=\"card-text\">"+productPrice+"&euro;</p></div><button id=\"modalBtn\" data-product=\""+productID+"\" data-shop=\""+shopID+"\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#mapModal\">Show Map</button></div><div class=\"card-footer\"><a href=\"shop.html?=id="+shopID+"\"<small class=\"text-muted\">"+shopName+"</small></a></div></div></div></div>"
                                               );
                     });
                     // if (reload == 1) setMap(shopsID);
