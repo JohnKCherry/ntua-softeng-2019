@@ -155,8 +155,8 @@ $(document).ready(function(){
         }
         var orderStr = (order==1) ? "ASC" : "DESC";
         if(sortStr=="dist" && gps!=null && gps[0]!="" && gps[1]!="") {
-            geoLng = gps[0];
-            geoLat = gps[1];
+            geoLng = gps[1];
+            geoLat = gps[0];
             geoDist = $("#distance").val();
             console.log("shopsUpdate: allow location einai ta eksis lng = " +geoLng + " lat = " + geoLat + " dist = " +geoDist);
         }
@@ -171,12 +171,12 @@ $(document).ready(function(){
 
         // an dialekseis sort me hmerominia prepei na exeis dialeksei kai ta 2
         if (sort == 2 && (dateFrom=="" || dateTo=="")) {
-            $("#errorFilters").text("Please select date from/to"); 
+            $("#errorFilters").text("Please select date from/to");
         }
         // compare dates
         //
         if (dateFrom > dateTo) {
-            $("#errorFilters").text("Date From must be earlier than Date To"); 
+            $("#errorFilters").text("Date From must be earlier than Date To");
             shopsNotFound();
         }
         var url = "https://localhost:8765/observatory/api/prices?verbose=false&geoDist="+geoDist
@@ -189,7 +189,7 @@ $(document).ready(function(){
         +"&tags="+tags
         +"&sort="+sortStr
         +"|"+orderStr;
-        console.log(url); 
+        console.log(url);
         var shopsID = new Array();
         $.ajax({
             type: "GET",
@@ -319,12 +319,12 @@ $(document).ready(function(){
             var you = new L.marker([gps[0],gps[1]],{icon: greenIcon})
             .bindPopup("You");
 
-            markersLayer.addLayer(you); 
+            markersLayer.addLayer(you);
         }
 
 
 
-        mapLink = 
+        mapLink =
             '<a href="https://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -337,7 +337,7 @@ $(document).ready(function(){
             marker = new L.marker([locations[i][1],locations[i][2]])
             .bindPopup(locations[i][0]);
             // .addTo(map);
-            markersLayer.addLayer(marker); 
+            markersLayer.addLayer(marker);
         }
 
         markersLayer.addTo(map);
@@ -378,7 +378,7 @@ $(document).ready(function(){
     // init
 
 
-    // Set default order = 1 asceding 
+    // Set default order = 1 asceding
     var order = 1;
     $("#order").val("1");
     $("#sort").val("1");
@@ -459,21 +459,21 @@ $(document).ready(function(){
         sendUpdate(obj);
     });
 
-    // Cancel reload page 
+    // Cancel reload page
     $('#cancelButton').click(function() {
         location.reload();
     });
 
     var findLocation = function() {
         if(gps!=null && gps[0]!="" && gps[1]!="") return ;
-        if ("geolocation" in navigator){  
+        if ("geolocation" in navigator){
             navigator.geolocation.getCurrentPosition(function(position){
                 gps[0] = position.coords.latitude;
                 gps[1] = position.coords.longitude;
                 shopsUpdate(1);
             }, function() {
                 console.log("Don't allow location");
-                $("#errorFilters").text("Allow location please"); 
+                $("#errorFilters").text("Allow location please");
             });
         }else{
             console.log("Browser doesn't support geolocation!");
@@ -565,4 +565,3 @@ $(document).ready(function(){
         });
     }
 });
-

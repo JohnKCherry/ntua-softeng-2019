@@ -49,7 +49,7 @@ $(document).ready(function(){
     var shopID;
 
 
-    // Set default order = 1 asceding 
+    // Set default order = 1 asceding
     var order = 1;
     var sort = 1;
     $("#order").val("1");
@@ -106,8 +106,8 @@ $(document).ready(function(){
         console.log("Order " + order);
         var orderStr = (order==1) ? "ASC" : "DESC";
         if(sortStr=="dist" && gps!=null && gps[0]!="" && gps[1]!="") {
-            geoLng = gps[0];
-            geoLat = gps[1];
+            geoLng = gps[1];
+            geoLat = gps[0];
             geoDist = $("#distance").val();
             console.log("shopsUpdate: allow location einai ta eksis lng = " +geoLng + " lat = " + geoLat + " dist = " +geoDist);
         }
@@ -122,12 +122,12 @@ $(document).ready(function(){
 
         // an dialekseis sort me hmerominia prepei na exeis dialeksei kai ta 2
         if (sort == 2 && (dateFrom=="" || dateTo=="")) {
-            $("#errorFilters").text("Please select date from/to"); 
+            $("#errorFilters").text("Please select date from/to");
         }
         // compare dates
         //
         if (dateFrom > dateTo) {
-            $("#errorFilters").text("Date From must be earlier than Date To"); 
+            $("#errorFilters").text("Date From must be earlier than Date To");
             shopsNotFound();
         }
 
@@ -145,7 +145,7 @@ $(document).ready(function(){
         +"&shopTags="+shopTags
         +"&sort="+sortStr
         +"|"+orderStr;
-        console.log(url); 
+        console.log(url);
         // var shopsID = new Array();
         $.ajax({
             type: "GET",
@@ -171,7 +171,7 @@ $(document).ready(function(){
                         // for show price id
                         var hash = shopName.split(' ').join('');
                         hash += productID;
-                        getProduct(productID);        
+                        getProduct(productID);
                         $(".card-deck").append("<div class=\"col-sm-6 col-md-4 col-lg-3\"><div class=\"card mb-4\"><div class=\"text-center\"><img class=\"card-img-top img-fluid\" src=\""+productImage+"\" alt=\"Product Image\"></div><div class=\"card-body\"><a href=\"product.html?id="+productID+"\" class=\"card-title\">"+productName+"</a><br /><a class=\"text-secondary collapsed card-link\" data-toggle=\"collapse\" href=\"#"+hash+"\">Price</a><div id=\""+hash+"\" class=\"\" aria-expanded=\"true\"><p class=\"card-text\">"+productPrice+"&euro;</p></div><button id=\"modalBtn\" data-product=\""+productID+"\" data-shop=\""+shopID+"\" type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#mapModal\">Show Map</button></div><div class=\"card-footer\"><a href=\"shop.html?=id="+shopID+"\"<small class=\"text-muted\">"+shopName+"</small></a></div></div></div></div>"
                                               );
                     });
@@ -181,7 +181,7 @@ $(document).ready(function(){
 
             },
             error: function(){
-                console.log("prices.js :Prices GET Error!");  
+                console.log("prices.js :Prices GET Error!");
                 $("#loadMe").modal("hide");
 
                 return ;
@@ -243,7 +243,7 @@ $(document).ready(function(){
         return false;
     });
 
-    
+
     // event listener order
     // order change reload products
     $("#order").change(function() {
@@ -359,7 +359,7 @@ $(document).ready(function(){
             var you = new L.marker([gps[0],gps[1]],{icon: greenIcon})
             .bindPopup("You");
 
-            markersLayer.addLayer(you); 
+            markersLayer.addLayer(you);
         }
 
 
@@ -368,7 +368,7 @@ $(document).ready(function(){
 
 
 
-        mapLink = 
+        mapLink =
             '<a href="https://openstreetmap.org">OpenStreetMap</a>';
         L.tileLayer(
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -379,7 +379,7 @@ $(document).ready(function(){
         marker = new L.marker([locations[1],locations[2]])
         .bindPopup(locations[0]);
 
-        markersLayer.addLayer(marker); 
+        markersLayer.addLayer(marker);
 
         markersLayer.addTo(map);
     }
@@ -389,14 +389,14 @@ $(document).ready(function(){
 
     var findLocation = function(flag,shopsID) {
         if(gps!=null && gps[0]!="" && gps[1]!="") return ;
-        if ("geolocation" in navigator){  
+        if ("geolocation" in navigator){
             navigator.geolocation.getCurrentPosition(function(position){
                 gps[0] = position.coords.latitude;
                 gps[1] = position.coords.longitude;
                 setMap(shopsID);
             }, function() {
                 console.log("Don't allow location");
-                $("#errorFilters").text("Allow location please"); 
+                $("#errorFilters").text("Allow location please");
             });
         }else{
             console.log("Browser doesn't support geolocation!");
@@ -405,4 +405,3 @@ $(document).ready(function(){
     };
 
 });
-
